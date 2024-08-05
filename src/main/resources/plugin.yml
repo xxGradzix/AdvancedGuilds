@@ -1,0 +1,11 @@
+name: AdvancedGuilds
+version: '${project.version}'
+main: me.xxgradzix.advancedclans.AdvancedGuilds
+api-version: '1.17'
+
+commands:
+  klan:
+    description: klan
+
+  gracz:
+    description: gracz

@@ -2,9 +2,10 @@ package me.xxgradzix.advancedclans.listener;
 
 import me.xxgradzix.advancedclans.AdvancedGuilds;
 import me.xxgradzix.advancedclans.data.database.entities.User;
+import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
 import me.xxgradzix.advancedclans.entities.AntySystemRank;
 import me.xxgradzix.advancedclans.events.PointsChangeUserEvent;
-import me.xxgradzix.advancedclans.manager.UserManager;
+import me.xxgradzix.advancedclans.controllers.UserController;
 import me.xxgradzix.advancedclans.utils.SystemPoint;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -23,14 +24,14 @@ public class PlayerDeathListener implements Listener {
 //    private LangMessage lang;
 //    private Config config;
 
-    private final UserManager userManager;
+    private final UserController userController;
     private HashMap<UUID, AntySystemRank> antySystem = new HashMap<>();
-    public PlayerDeathListener(AdvancedGuilds plugin, UserManager userManager)
+    public PlayerDeathListener(AdvancedGuilds plugin, UserController userController)
     {
         this.plugin = plugin;
 //        this.config = plugin.getConfigPlugin();
 //        this.lang = plugin.lang;
-        this.userManager = userManager;
+        this.userController = userController;
     }
     @EventHandler(priority = EventPriority.LOWEST)
     public void onDeath(PlayerDeathEvent event)
@@ -38,7 +39,7 @@ public class PlayerDeathListener implements Listener {
         Player player = event.getEntity();
         Player killer = player.getKiller();
 
-        User userDeath = userManager.getUserData().get(player.getUniqueId());
+        User userDeath = ClanAndUserDataManager.getCachedUser(player.getUniqueId());
 
         if(userDeath == null)
             return;
@@ -61,7 +62,7 @@ public class PlayerDeathListener implements Listener {
             return;
         }
 
-        User userKiller = userManager.getUserData().get(killer.getUniqueId());
+        User userKiller = ClanAndUserDataManager.getCachedUser(killer.getUniqueId());
         if(userKiller == null)
             return;
 

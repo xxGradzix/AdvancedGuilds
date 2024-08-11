@@ -5,10 +5,11 @@ import me.clip.placeholderapi.expansion.Relational;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.User;
+import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
 import me.xxgradzix.advancedclans.entities.PlayerStat;
 import me.xxgradzix.advancedclans.entities.RankType;
-import me.xxgradzix.advancedclans.manager.ClanManager;
-import me.xxgradzix.advancedclans.manager.UserManager;
+import me.xxgradzix.advancedclans.controllers.ClanController;
+import me.xxgradzix.advancedclans.controllers.UserController;
 import me.xxgradzix.advancedclans.scheduler.TopRankScheduler;
 import me.xxgradzix.advancedclans.utils.ColorFixer;
 import org.bukkit.OfflinePlayer;
@@ -42,15 +43,15 @@ public class ClanPlaceholder extends PlaceholderExpansion implements Relational 
 
     private final AdvancedGuilds plugin;
     
-    private final UserManager userManager;
-    private final ClanManager clanManager;
+    private final UserController userController;
+    private final ClanController clanController;
     private final TopRankScheduler topRankScheduler;
 //    private Config config;
-    public ClanPlaceholder(AdvancedGuilds plugin, UserManager userManager, ClanManager clanManager, TopRankScheduler topRankScheduler)
+    public ClanPlaceholder(AdvancedGuilds plugin, UserController userController, ClanController clanController, TopRankScheduler topRankScheduler)
     {
         this.plugin = plugin;
-        this.userManager = userManager;
-        this.clanManager = clanManager;
+        this.userController = userController;
+        this.clanController = clanController;
         this.topRankScheduler = topRankScheduler;
 //        this.config = plugin.getConfigPlugin();
         this.register();
@@ -80,7 +81,7 @@ public class ClanPlaceholder extends PlaceholderExpansion implements Relational 
 
         }
         if (identifier.startsWith("user")) {
-            User user = userManager.getUserData().get(player.getUniqueId());
+            User user = ClanAndUserDataManager.getCachedUser(player.getUniqueId());
             if (user == null) {
                 return "";
             }
@@ -102,13 +103,13 @@ public class ClanPlaceholder extends PlaceholderExpansion implements Relational 
             return null;
         }
         if (identifier.startsWith("clan")) {
-            User user = userManager.getUserData().get(player.getUniqueId());
+            User user = ClanAndUserDataManager.getCachedUser(player.getUniqueId());
             if (user == null) {
                 return "";
             }
             switch (identifier.toLowerCase()) {
                 case "clan_format_points":
-                    String averagePoints = clanManager.getAveragePoint(player);
+                    String averagePoints = clanController.getAveragePoint(player);
                     return ColorFixer.addColors(
 //                            config.formatClanPoints.replace("{points}", averagePoints)
                             averagePoints // TODO get from config
@@ -121,7 +122,7 @@ public class ClanPlaceholder extends PlaceholderExpansion implements Relational 
                     );
                 case "clan_points":
                     if (user.getClan() == null) return "";
-                    return clanManager.getAveragePoint(player);
+                    return clanController.getAveragePoint(player);
                 case "clan_tag":
                     if (user.getClan() == null) return "";
                     return user.getClan().getTag();
@@ -130,7 +131,7 @@ public class ClanPlaceholder extends PlaceholderExpansion implements Relational 
                     return String.valueOf(user.getClan().getMembers().size());
                 case "clan_members_online":
                     if (user.getClan() == null) return "0";
-                    return String.valueOf(clanManager.countOnlineMember(user.getClan()));
+                    return String.valueOf(clanController.countOnlineMember(user.getClan()));
             }
             return null;
         }
@@ -142,8 +143,8 @@ public class ClanPlaceholder extends PlaceholderExpansion implements Relational 
         if (first == null || second == null) return null;
 
         if (identifier.equalsIgnoreCase("tag")) {
-            User user1 = userManager.getUserData().get(first.getUniqueId());
-            User user2 = userManager.getUserData().get(second.getUniqueId());
+            User user1 = ClanAndUserDataManager.getCachedUser(first.getUniqueId());
+            User user2 = ClanAndUserDataManager.getCachedUser(second.getUniqueId());
 
             if (user1 == null || user2 == null) return null;
 

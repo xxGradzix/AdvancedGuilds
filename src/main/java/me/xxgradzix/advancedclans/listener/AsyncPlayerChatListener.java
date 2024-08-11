@@ -4,8 +4,8 @@ import io.papermc.paper.event.player.AsyncChatEvent;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.User;
-import me.xxgradzix.advancedclans.manager.UserManager;
-import me.xxgradzix.advancedclans.messages.MessageManager;
+import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
+import me.xxgradzix.advancedclans.controllers.UserController;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.entity.Player;
@@ -17,13 +17,13 @@ public class AsyncPlayerChatListener implements Listener {
 
     private AdvancedGuilds plugin;
     
-    private UserManager userManager;
+    private UserController userController;
 //    private Config config;
 
-    public AsyncPlayerChatListener(AdvancedGuilds plugin, UserManager userManager){
+    public AsyncPlayerChatListener(AdvancedGuilds plugin, UserController userController){
         this.plugin = plugin;
 //        this.config = plugin.getConfigPlugin();
-        this.userManager = userManager;
+        this.userController = userController;
     }
     @EventHandler(priority = EventPriority.LOWEST)
     public void onSendMessage(AsyncChatEvent event)
@@ -36,7 +36,7 @@ public class AsyncPlayerChatListener implements Listener {
         TextComponent textMessage = (TextComponent) messageComponent;
         String message = textMessage.content();
 
-        User user = userManager.getUserData().get(player.getUniqueId());
+        User user = ClanAndUserDataManager.getCachedUser(player.getUniqueId());
         if(!user.hasClan())
             return;
 

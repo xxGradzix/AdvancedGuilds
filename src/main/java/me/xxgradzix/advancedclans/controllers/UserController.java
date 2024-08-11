@@ -1,9 +1,8 @@
-package me.xxgradzix.advancedclans.manager;
+package me.xxgradzix.advancedclans.controllers;
 
-import lombok.Getter;
 import lombok.Setter;
-import me.xxgradzix.advancedclans.data.DataManager;
 import me.xxgradzix.advancedclans.data.database.entities.User;
+import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.messages.MessageType;
 import me.xxgradzix.advancedclans.scheduler.TopRankScheduler;
@@ -12,35 +11,24 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.UUID;
 
-public class UserManager {
+public class UserController {
 
-    private final DataManager dataManager;
-    @Getter
-    private final HashMap<UUID, User> userData = new HashMap<>();
     @Setter
     private TopRankScheduler topRankScheduler;
 
-
-    public UserManager(DataManager dataManager) {
-        this.dataManager = dataManager;
-    }
-
-
     public void loadUser(Player player)
     {
-        User user = userData.get(player.getUniqueId());
+        User user = ClanAndUserDataManager.getCachedUser(player.getUniqueId());
         if(user==null)
         {
             user = new User(player, 1000); // todo get default points
-            // add user to system of ranking
             topRankScheduler.addUser(user);
-//             todo add to ranking system
-
-            userData.put(player.getUniqueId(), user);
-            dataManager.createUser(user);
-
+            ClanAndUserDataManager.updateUser(user);
         }
     }
 
@@ -49,21 +37,21 @@ public class UserManager {
         user.resetKill();
         user.resetDeath();
 
-        dataManager.updateUser(user);
+        ClanAndUserDataManager.updateUser(user);
     }
     public void resetPoints(User user) {
-        user.setPoints(1000);
-        dataManager.updateUser(user);
-    } // todo get default points
+        user.setPoints(1000); // todo get default points
+        ClanAndUserDataManager.updateUser(user);
+    }
 
     public void resetKill(User user) {
         user.resetKill();
-        dataManager.updateUser(user);
+        ClanAndUserDataManager.updateUser(user);
     }
 
     public void resetDeath(User user) {
         user.resetDeath();
-        dataManager.updateUser(user);
+        ClanAndUserDataManager.updateUser(user);
     }
 
 
@@ -92,8 +80,11 @@ public class UserManager {
 
     }
 
-    public Optional<User> findUserByUUID(UUID uuid) {
-        return Optional.ofNullable(userData.get(uuid));
+    public static Optional<User> findUserByUUID(UUID uuid) {
+        return Optional.ofNullable(ClanAndUserDataManager.getCachedUser(uuid));
+    }
+    public static void updateUser(User user) {
+        ClanAndUserDataManager.updateUser(user);
     }
 
     public Optional<User> findUserByPlayer(Player player) {
@@ -101,6 +92,6 @@ public class UserManager {
     }
 
     public void loadAllUsers() {
-        dataManager.getAllUsers().forEach(user -> userData.put(user.getUuid(), user));
+        ClanAndUserDataManager.loadAllUsers();
     }
 }

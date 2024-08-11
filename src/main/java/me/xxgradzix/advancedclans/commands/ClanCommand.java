@@ -1,7 +1,8 @@
 package me.xxgradzix.advancedclans.commands;
 
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
-import me.xxgradzix.advancedclans.manager.ClanManager;
+import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
+import me.xxgradzix.advancedclans.controllers.ClanController;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.messages.MessageType;
 import org.bukkit.command.Command;
@@ -17,10 +18,10 @@ import java.util.List;
 
 public class ClanCommand implements CommandExecutor, TabCompleter {
 
-    private final ClanManager clanManager;
+    private final ClanController clanController;
 
-    public ClanCommand(ClanManager clanManager) {
-        this.clanManager = clanManager;
+    public ClanCommand(ClanController clanController) {
+        this.clanController = clanController;
     }
 
     @Override
@@ -30,7 +31,7 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
         }
         if(strings.length == 2) {
             if(strings[0].equalsIgnoreCase(SubCommands.INFO.name().toLowerCase()) || strings[0].equalsIgnoreCase(SubCommands.USUN.name().toLowerCase())) {
-                return clanManager.getClansData().values().stream().map(Clan::getTag).toList();
+                return ClanAndUserDataManager.getAllCachedClans().stream().map(Clan::getTag).toList();
             }
         }
         return null;
@@ -75,12 +76,12 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
                         sendHelpMessage(player);
                         return false;
                     }
-                    Clan clan = clanManager.getClan(args[1]);
+                    Clan clan = clanController.getClan(args[1]);
                     if (clan == null) {
                         MessageManager.sendMessageFormated(player, MessageManager.CLAN_NOT_FOUND.replace("{clan}", args[1]), MessageType.CHAT);
                         return false;
                     }
-                    clanManager.infoClan(player, clan);
+                    clanController.infoClan(player, clan);
                 }
                 break;
             case USUN: {
@@ -88,7 +89,7 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
                         sendHelpMessage(player);
                         return false;
                     }
-                    clanManager.deleteClan(player);
+                    clanController.deleteClan(player);
                 }
                 break;
             case STWORZ: {
@@ -96,7 +97,7 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
                         sendHelpMessage(player);
                         return false;
                     }
-                    clanManager.createClan(player, args[1]);
+                    clanController.createClan(player, args[1]);
                 }
                 break;
             case OPUSC: {
@@ -104,7 +105,7 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
                         sendHelpMessage(player);
                         return false;
                     }
-                    clanManager.leaveClan(player);
+                    clanController.leaveClan(player);
                 }
                 break;
             case USTAWLIDERA: {
@@ -117,7 +118,7 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
                         MessageManager.sendMessageFormated(player, MessageManager.PLAYER_NOT_FOUND, MessageType.CHAT);
                         return false;
                     }
-                    clanManager.setOwner(player, target);
+                    clanController.setOwner(player, target);
                 }
                 break;
             case USTAWZASTEPCE: {
@@ -130,7 +131,7 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
                         MessageManager.sendMessageFormated(player, MessageManager.PLAYER_NOT_FOUND, MessageType.CHAT);
                         return false;
                     }
-                    clanManager.setDeputy(player, target);
+                    clanController.setDeputy(player, target);
                 }
                 break;
             case ZAPROS: {
@@ -143,7 +144,7 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
                         MessageManager.sendMessageFormated(player, MessageManager.PLAYER_NOT_FOUND, MessageType.CHAT);
                         return false;
                     }
-                    clanManager.inviteUser(player, target);
+                    clanController.inviteUser(player, target);
                 }
                 break;
             case WYRZUC: {
@@ -151,7 +152,7 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
                         sendHelpMessage(player);
                         return false;
                     }
-                    clanManager.kickUser(player, args[1]);
+                    clanController.kickUser(player, args[1]);
                 }
                 break;
             case PVP: {
@@ -159,7 +160,7 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
                         sendHelpMessage(player);
                         return false;
                     }
-                    clanManager.changePvpStatus(player);
+                    clanController.changePvpStatus(player);
                 }
                 break;
         }

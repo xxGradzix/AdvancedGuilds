@@ -2,10 +2,11 @@ package me.xxgradzix.advancedclans.scheduler;
 
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.User;
+import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
 import me.xxgradzix.advancedclans.entities.PlayerStat;
 import me.xxgradzix.advancedclans.entities.RankType;
-import me.xxgradzix.advancedclans.manager.ClanManager;
-import me.xxgradzix.advancedclans.manager.UserManager;
+import me.xxgradzix.advancedclans.controllers.ClanController;
+import me.xxgradzix.advancedclans.controllers.UserController;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -14,14 +15,14 @@ import java.util.*;
 
 public class TopRankScheduler extends BukkitRunnable {
 
-    private final UserManager userManager;
-    private final ClanManager clanManager;
+    private final UserController userController;
+    private final ClanController clanController;
     private final Comparator<PlayerStat> comparator = (a, b) -> Integer.compare(b.getInt(), a.getInt());
 
     private final HashMap<RankType, PriorityQueue<PlayerStat>> rankData = new HashMap<>();
-    public TopRankScheduler(UserManager userManager, ClanManager clanManager) {
-        this.userManager = userManager;
-        this.clanManager = clanManager;
+    public TopRankScheduler(UserController userController, ClanController clanController) {
+        this.userController = userController;
+        this.clanController = clanController;
     }
     @Override
     public void run() {
@@ -34,7 +35,7 @@ public class TopRankScheduler extends BukkitRunnable {
     }
 
     private void implementsClan() {
-        Queue<Clan> clanQueue = new LinkedList<>(clanManager.getClansData().values());
+        Queue<Clan> clanQueue = new LinkedList<>(ClanAndUserDataManager.getAllCachedClans());
         int size = clanQueue.size();
         for (int i = 0; i < size; i++) {
             Clan clan = clanQueue.poll();
@@ -49,7 +50,7 @@ public class TopRankScheduler extends BukkitRunnable {
         rankData.put(RankType.CLAN_POINTS, new PriorityQueue<>(comparator));
     }
     private void implementsUser() {
-        Queue<User> userQueue = new LinkedList<>(userManager.getUserData().values());
+        Queue<User> userQueue = new LinkedList<>(ClanAndUserDataManager.getAllCachedUsers());
         int queueSize = userQueue.size();
         for (int i = 0; i < queueSize; i++) {
             User user = userQueue.poll();
@@ -69,11 +70,11 @@ public class TopRankScheduler extends BukkitRunnable {
 
     public void addClan(Clan clan) {
         // check size of members fulfill threshold to counting a ranking
-        if(!clanManager.doesClanFulfillThreshold(clan)) {
+        if(!clanController.doesClanFulfillThreshold(clan)) {
             return;
         }
         String tag = clan.getTag();
-        String averagePoint = clanManager.getAveragePoint(clan);
+        String averagePoint = clanController.getAveragePoint(clan);
 
         PriorityQueue<PlayerStat> playerStats = rankData.get(RankType.CLAN_POINTS);
         playerStats.add(new PlayerStat(tag, Integer.parseInt(averagePoint)));

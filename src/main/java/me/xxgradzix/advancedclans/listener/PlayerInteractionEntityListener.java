@@ -2,7 +2,7 @@ package me.xxgradzix.advancedclans.listener;
 
 import me.xxgradzix.advancedclans.data.database.entities.User;
 import me.xxgradzix.advancedclans.manager.CooldownManager;
-import me.xxgradzix.advancedclans.manager.UserManager;
+import me.xxgradzix.advancedclans.controllers.UserController;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,12 +14,12 @@ import java.util.Optional;
 public class PlayerInteractionEntityListener implements Listener {
 
 //    private final LangMessage lang;
-    private final UserManager userManager;
+    private final UserController userController;
     private final CooldownManager cooldownManager;
 
-    public PlayerInteractionEntityListener(UserManager userManager, CooldownManager cooldownManager) {
+    public PlayerInteractionEntityListener(UserController userController, CooldownManager cooldownManager) {
 //        this.lang = lang;
-        this.userManager = userManager;
+        this.userController = userController;
         this.cooldownManager = cooldownManager;
     }
 
@@ -42,11 +42,11 @@ public class PlayerInteractionEntityListener implements Listener {
             cooldownManager.addCooldown(player);
 
             // find clicked user data
-            Optional<User> userByPlayer = userManager.findUserByPlayer(clickPlayer);
+            Optional<User> userByPlayer = userController.findUserByPlayer(clickPlayer);
             if(userByPlayer.isPresent()) {
                 User user = userByPlayer.get();
                 // send player message about clicked user
-                userManager.infoPlayer(player, user);
+                userController.infoPlayer(player, user);
             }
 
         }

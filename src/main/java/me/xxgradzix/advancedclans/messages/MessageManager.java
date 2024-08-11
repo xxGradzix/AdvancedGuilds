@@ -6,11 +6,11 @@ import me.xxgradzix.advancedclans.utils.ColorFixer;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.units.qual.C;
 
 import static me.xxgradzix.advancedclans.messages.MessageType.*;
 
 public class MessageManager extends OkaeriConfig {
-
 
     @Comment("Messages")
     @Comment("Only for players message")
@@ -217,6 +217,24 @@ public class MessageManager extends OkaeriConfig {
             &8|&7 /ɢʀᴀᴄᴢ <ɢʀᴀᴄᴢ> - ɪɴғᴏʀᴍᴀᴄᴊᴇ ᴏ ɢʀᴀᴄᴢᴜ\s
             """;
 
+    @Comment("Admin command when world is not starting with 'guild' ")
+    public static String NOT_IN_GUILD_WORLD = "&7ᴋʀʏᴊóᴡᴋᴀ ɢɪʟᴅᴀ ᴍᴏżᴇ ʙʏć ᴛʏʟᴋᴏ ᴡ śᴡɪᴇᴄɪᴇ ᴢ ᴘʀᴢᴇᴅʀᴏꜱᴛᴋɪᴇᴍ \"ɢᴜɪʟᴅ\"";
+
+    @Comment("You don't belong to any clan")
+    public static String YOU_DONT_BELONG_TO_ANY_CLAN = "&7ɴɪᴇ ɴᴀʟᴇżʏꜱᴢ ᴅᴏ żᴀᴅɴᴇɢᴏ ᴋʟᴀɴᴜ";
+    @Comment("Your clan does not have hideout")
+    public static String YOUR_CLAN_DOES_NOT_HAVE_HIDEOUT = "&7ᴛᴡóᴊ ᴋʟᴀɴ ɴɪᴇ ᴍᴀ ᴋʀʏᴊóᴡᴋɪ";
+    @Comment("Hideout already have this upgrade")
+    public static String HIDEOUT_ALREADY_HAVE_THIS_UPGRADE = "&7ᴋʀʏᴊóᴡᴋᴀ ᴊᴜż ᴍᴀ ᴛᴏ ᴜʟᴇᴘꜱᴢᴇɴɪᴇ";
+    @Comment("Hideout upgrade bought")
+    public static String UPGRADE_IS_BOUGHT = "&7ᴛᴏ ᴜʟᴇᴘꜱᴢᴇɴɪᴇ ᴢᴏꜱᴛᴀᴌᴏ ᴊᴜż ᴋᴜᴘɪᴏɴᴇ";
+
+    @Comment("Hideout upgrade not finished yet")
+    public static String UPGRADE_IS_NOT_FINISHED_YET = "&7ᴛᴏ ᴜʟᴇᴘꜱᴢᴇɴɪᴇ ᴢᴏꜱᴛᴀᴌᴏ ᴊᴜż ᴋᴜᴘɪᴏɴᴇ ᴀʟᴇ ɴɪᴇ ᴊᴇꜱᴛ ᴊᴇꜱᴢᴄᴢᴇ ɢᴏᴛᴏᴡᴇ";
+
+    @Comment("Does not belong to this hideout")
+    public static String YOU_DONT_BELONG_TO_THIS_HIDEOUT = "&7ɴɪᴇ ɴᴀʟᴇżʏꜱᴢ ᴅᴏ ᴛᴇᴊ ᴋʀʏᴊóᴡᴋɪ";
+
     public static void sendMessageFormated(Player player, String message, MessageType type) {
         message = ColorFixer.addColors(message);
         switch (type) {
@@ -255,5 +273,24 @@ public class MessageManager extends OkaeriConfig {
                 Bukkit.broadcastMessage(message);
                 break;
         }
+    }
+
+    public static String secondsToTimeFormat(int seconds) {
+        int minutes = seconds / 60;
+        int sec = seconds % 60;
+        int hours = minutes / 60;
+        minutes %= 60;
+        StringBuilder sb = new StringBuilder();
+        if(hours > 0) {
+            sb.append(hours).append(" godzin ");
+        }
+        if(minutes > 0) {
+            sb.append(minutes).append(" minut ");
+        }
+        if(sec > 0) {
+            sb.append(sec).append(" sekund");
+        }
+
+        return sb.toString();
     }
 }

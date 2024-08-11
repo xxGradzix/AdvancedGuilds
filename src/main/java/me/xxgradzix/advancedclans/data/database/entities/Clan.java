@@ -40,6 +40,10 @@ public class Clan {
     @DatabaseField
     private boolean pvpEnable;
 
+    @Getter
+    @Setter
+    @DatabaseField(foreign = true)
+    private GuildHideout hideout;
 
     private List<User> invitedPlayers = new ArrayList<>();
 
@@ -49,6 +53,8 @@ public class Clan {
     public Clan(String tag, User owner, User deputyOwner, boolean pvpEnable) {
         this(tag, owner, pvpEnable);
         this.ownerDeputy = deputyOwner;
+        this.hideout = null;
+
     }
 
     public Clan(String tag, User owner, boolean pvpEnable) {
@@ -60,6 +66,8 @@ public class Clan {
         this.pvpEnable = pvpEnable;
 //        members = new F<>();
         alliances = new ArrayList<>();
+
+        this.hideout = null;
     }
 
     public Clan() {
@@ -178,5 +186,9 @@ public class Clan {
 
     public void togglePvp() {
         pvpEnable = !pvpEnable;
+    }
+
+    public boolean hasHideOut() {
+        return hideout != null;
     }
 }

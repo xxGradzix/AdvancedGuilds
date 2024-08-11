@@ -1,10 +1,10 @@
-package me.xxgradzix.advancedclans.manager;
+package me.xxgradzix.advancedclans.controllers;
 
 import lombok.Setter;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
-import me.xxgradzix.advancedclans.data.DataManager;
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.User;
+import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
 import me.xxgradzix.advancedclans.events.*;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.messages.MessageType;
@@ -18,29 +18,26 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
-public class ClanManager {
+public class ClanController {
     private final AdvancedGuilds plugin;
-    private final DataManager dataManager;
+    private final ClanAndUserDataManager clanAndUserDataManager;
 
-    private final UserManager userManager;
     @Setter
     private TopRankScheduler topRankScheduler;
 
-    private final HashMap<String, Clan> clansData = new HashMap<>();
 
-    public ClanManager(AdvancedGuilds plugin, DataManager dataManager, UserManager userManager)
+    public ClanController(AdvancedGuilds plugin, ClanAndUserDataManager clanAndUserDataManager)
     {
         this.plugin = plugin;
-        this.dataManager = dataManager;
-        this.userManager = userManager;
+        this.clanAndUserDataManager = clanAndUserDataManager;
     }
 
     public void setOwner(Player executor, Player target) {
 
-        User owner = userManager.getUserData().get(executor.getUniqueId());
+        User owner = ClanAndUserDataManager.getCachedUser(executor.getUniqueId());
         Clan ownerClan = owner.getClan();
 
-        User targerUser = userManager.getUserData().get(target.getUniqueId());
+        User targerUser = ClanAndUserDataManager.getCachedUser(target.getUniqueId());
 
         boolean isExecutorOwner = isOwner(ownerClan, owner);
 
@@ -60,7 +57,6 @@ public class ClanManager {
             return;
         }
 
-        // check event and set new owner
         boolean success = handleSetOwner(ownerClan, targerUser);
         if(success) {
             MessageManager.sendMessageFormated(executor, MessageManager.NEW_OWNER_SET.replace("{player}", target.getName()), MessageType.CHAT);
@@ -73,14 +69,15 @@ public class ClanManager {
         if (!event.isCancelled()) {
             clan.setOwner(newOwnerUUID);
 
-            dataManager.updateClan(clan);
+            ClanAndUserDataManager.updateClan(clan);
             return true;
         }
         return false;
     }
 
     public void changePvpStatus(Player deputyOwner) {
-        User user = userManager.getUserData().get(deputyOwner.getUniqueId());
+        User user = ClanAndUserDataManager.getCachedUser(deputyOwner.getUniqueId());
+
         Clan clan = user.getClan();
 
         if (!isDeputyOwner(clan, deputyOwner) && !isOwner(clan, user)) {
@@ -93,35 +90,13 @@ public class ClanManager {
         } else {
             MessageManager.sendMessageFormated(deputyOwner, MessageManager.PVP_DISABLED, MessageType.CHAT);
         }
-        dataManager.updateClan(clan);
+        ClanAndUserDataManager.updateClan(clan);
     }
 
-
-//    public void forceSetOwner(Player sender, String username) {
-//        if(!(sender.isOp())) return;
-//
-//        Optional<UUID> uuidOptional = getPlayerUUIDByNickname(username);
-//        if(uuidOptional.isEmpty()) {
-//            MessageManager.sendMessageFormated(sender, MessageManager.PLAYER_NOT_ONLINE, MessageType.CHAT);
-//            return;
-//        }
-//        UUID newOwnerUUID = uuidOptional.get();
-//        User user = userManager.getUserData().get(newOwnerUUID);
-//        if(!user.hasClan()) {
-//            MessageUtil.sendMessage(sender, lang.langAdminUserNoClan);
-//            return;
-//        }
-//        Clan clan = user.getClan();
-//        // check event and set new owner
-//        boolean success = handleSetOwner(clan, newOwnerUUID);
-//        if(success)
-//            MessageUtil.sendMessage(sender, lang.langadminSuccessfullySetOwner);
-//    }
-
     public void inviteUser(Player deputyOwner, Player target) {
-        User user = userManager.getUserData().get(deputyOwner.getUniqueId());
+        User user = ClanAndUserDataManager.getCachedUser(deputyOwner.getUniqueId());
         Clan clan = user.getClan();
-        User targetUser = userManager.getUserData().get(target.getUniqueId());
+        User targetUser = ClanAndUserDataManager.getCachedUser(target.getUniqueId());
 
         if(!isDeputyOwner(clan, deputyOwner) && !isOwner(clan, user)) {
             MessageManager.sendMessageFormated(deputyOwner, MessageManager.NOT_DEPUTY, MessageType.CHAT);
@@ -129,12 +104,10 @@ public class ClanManager {
         }
 
         if(!target.isOnline()) {
-
             MessageManager.sendMessageFormated(deputyOwner, MessageManager.PLAYER_NOT_ONLINE, MessageType.CHAT);
             return;
         }
 
-        // limit clan
         if(isLimitMember(clan)) {
             MessageManager.sendMessageFormated(deputyOwner, MessageManager.LIMIT_MEMBERS_REACHED, MessageType.CHAT);
             return;
@@ -144,9 +117,7 @@ public class ClanManager {
             MessageManager.sendMessageFormated(deputyOwner, MessageManager.PLAYER_BELONGS_TO_ANOTHER_CLAN, MessageType.CHAT);
             return;
         }
-        if(clan.hasInvite(targetUser))
-        {
-            // cancel invite to clan
+        if(clan.hasInvite(targetUser)) {
             CancelInviteClanEvent event = new CancelInviteClanEvent(clan, target);
             Bukkit.getPluginManager().callEvent(event);
             if (!event.isCancelled()) {
@@ -157,7 +128,6 @@ public class ClanManager {
             return;
         }
 
-        // invite player
         InviteClanEvent event = new InviteClanEvent(clan, target);
         Bukkit.getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
@@ -169,7 +139,7 @@ public class ClanManager {
     }
 
     private boolean hasClan(Player target) {
-        User user = userManager.getUserData().get(target.getUniqueId());
+        User user = ClanAndUserDataManager.getCachedUser(target.getUniqueId());
         return user.hasClan();
     }
 
@@ -180,45 +150,14 @@ public class ClanManager {
     }
 
     private boolean isLimitMember(Clan clan) {
-        return clan.getMembers().size()>= 15;   // TODO COnfig get max members | was getMaxMember(clan);
+        return clan.getMembers().size()>= 15;   // TODO Config get max members | was getMaxMember(clan);
     }
 
-
-    // checking permission and count members
-//    public int getMaxMember(Clan clan)
-//    {
-//        int ownerMax = getUserMaxMember(clan.getOwnerUUID());
-//        int deputyOwnerMax = getUserMaxMember(clan.getDeputyOwnerUUID());
-//        return Math.max(ownerMax, deputyOwnerMax);
-//    }
-//
-//    private int getUserMaxMember(UUID uuid) {
-//        if(uuid==null)
-//            return 0;
-//
-//        Player player = Bukkit.getPlayer(uuid);
-//        if(player!=null)
-//        {
-//            Map<String, Integer> permissionLimitMember = config.permissionLimitMember;
-//            for(Map.Entry<String, Integer> permissionData : permissionLimitMember.entrySet())
-//            {
-//                String permission = permissionData.getKey();
-//                int max = permissionData.getValue();
-//                if(player.hasPermission(permission))
-//                    return max;
-//            }
-//        }
-//        return 0;
-//    }
-
-
     public void infoClan(Player player, Clan clan) {
-
         OptionalInt clanRankIndexByTag = topRankScheduler.getClanRankIndexByTag(clan.getTag());
         int index = 9999;
         if(clanRankIndexByTag.isPresent())
             index = clanRankIndexByTag.getAsInt()+1;
-
         String infoMessage = MessageManager.CLAN_INFO;
 
         infoMessage = infoMessage.replace("{tag}", clan.getTag())
@@ -234,19 +173,9 @@ public class ClanManager {
     }
 
     private String getClanMembers(Clan clan) {
-//        ForeignCollection<User> members = clan.getMembers();
         List<UUID> members = clan.getMembers();
         List<String> membersText = new ArrayList<>();
 
-//        for(User user : members)
-//        {
-//            OfflinePlayer player = Bukkit.getOfflinePlayer(user.getUuid());
-//            if(player.isOnline())
-//                membersText.add(ChatColor.GREEN +player.getName()); // TODO add color of online player
-//            else
-//                membersText.add(ChatColor.RED+player.getName()); // TODO add color of offline player
-//
-//        }
         for(UUID uuid : members)
         {
             OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
@@ -261,11 +190,6 @@ public class ClanManager {
 
     public int countOnlineMember(Clan clan) {
         int online = 0;
-//        for (User user : clan.getMembers()) {
-//            Player player = Bukkit.getPlayer(user.getUuid());
-//            if(player!=null)
-//                online++;
-//        }
         for (UUID uuid : clan.getMembers()) {
             Player player = Bukkit.getPlayer(uuid);
             if(player!=null)
@@ -276,7 +200,7 @@ public class ClanManager {
 
     public String getAveragePoint(Player player)
     {
-        User user = userManager.getUserData().get(player.getUniqueId());
+        User user = ClanAndUserDataManager.getCachedUser(player.getUniqueId());
         if(user==null || !user.hasClan())
             return "Nie ma klanu"; // TODO none points or clan not found from config
 
@@ -289,23 +213,11 @@ public class ClanManager {
 
     public String getAveragePoint(Clan clan)
     {
-//        ForeignCollection<User> members = clan.getMembers();
         List<UUID> members = clan.getMembers();
         int sum = 0;
         int count = 0;
-
-//        for (User user : members) {
-//            User tempUser = userManager.getUserData().get(user.getUuid());
-//            if(tempUser==null) {
-//                OfflinePlayer player = Bukkit.getOfflinePlayer(user.getUuid());
-//                plugin.getLogger().info(ConsoleColor.RED+"Bląd - Gracz o nazwie " + player.getName() + "  nalezy do klanu "+clan.getTag() + " ale nie znajduje go jako obiekt User");
-//                continue;
-//            }
-//            sum += tempUser.getPoints();
-//            count++;
-//        }
         for (UUID uuid : members) {
-            User tempUser = userManager.getUserData().get(uuid);
+            User tempUser = ClanAndUserDataManager.getCachedUser(uuid);
             if(tempUser==null) {
                 OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
                 plugin.getLogger().info(ConsoleColor.RED+"Bląd - Gracz o nazwie " + player.getName() + "  nalezy do klanu "+clan.getTag() + " ale nie znajduje go jako obiekt User");
@@ -333,27 +245,19 @@ public class ClanManager {
     }
     public void joinClan(Player player, Clan clan)
     {
-        User user = userManager.getUserData().get(player.getUniqueId());
-        if(user.hasClan())
-        {
+        User user = ClanAndUserDataManager.getCachedUser(player.getUniqueId());
+        if(user.hasClan()) {
             MessageManager.sendMessageFormated(player, MessageManager.PLAYER_BELONGS_TO_ANOTHER_CLAN, MessageType.CHAT);
             return;
         }
-        if(!clan.hasInvite(user))
-        {
-            // not received invite
+        if(!clan.hasInvite(user)) {
             MessageManager.sendMessageFormated(player, MessageManager.NOT_RECEIVED_INVITE, MessageType.CHAT);
-            return;
-        }
-        if(isLimitMember(clan))
-        {
+            return;}
+        if(isLimitMember(clan)) {
             MessageManager.sendMessageFormated(player, MessageManager.LIMIT_MEMBERS_REACHED, MessageType.CHAT);
             return;
         }
-
-        // join to clan - call event
         joinClanCheckEvent(player, clan);
-
     }
 
     public void forceJoin(Player admin, User user, Clan clan) {
@@ -367,112 +271,79 @@ public class ClanManager {
             MessageManager.sendMessageFormated(admin, MessageManager.PLAYER_BELONGS_TO_ANOTHER_CLAN, MessageType.CHAT);
             return;
         }
-        // join to clan - call event
         joinClanCheckEvent(player, clan);
     }
 
     private void joinClanCheckEvent(Player player, Clan clan) {
-        User user = userManager.getUserData().get(player.getUniqueId());
+        User user = ClanAndUserDataManager.getCachedUser(player.getUniqueId());
         JoinClanEvent event = new JoinClanEvent(clan, player);
         Bukkit.getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
             user.setClan(clan);
             clan.joinUser(user);
-
-            dataManager.updateClan(clan);
-            dataManager.updateUser(user);
-
+            ClanAndUserDataManager.updateClan(clan);
+            ClanAndUserDataManager.updateUser(user);
             MessageManager.sendMessageFormated(player, MessageManager.CLAN_INVITE_ACCEPTED, MessageType.CHAT);
         }
     }
     public void deleteClan(Player owner)
     {
-        User user = userManager.getUserData().get(owner.getUniqueId());
-
+        User user = ClanAndUserDataManager.getCachedUser(owner.getUniqueId());
         Clan clan = user.getClan();
-
         isOwner(clan, user);
-
-        // call event and delete clan
         handleDeleteClan(clan, owner);
     }
 
     public void deleteClanByAdmin(Player admin, Clan clan) {
-        // call event and delete clan
         boolean isDeleted = handleDeleteClan(clan, null);
         if(isDeleted) {
             MessageManager.sendMessageFormated(admin, MessageManager.CLAN_DELETED.replace("{clan}", clan.getTag()), MessageType.CHAT);
         }
     }
     private boolean handleDeleteClan(Clan clan, Player player) {
-        // null mean the player deleted clan is admin
-        if(player==null) {
-            return deleteClan(clan, null);
-        }
-
+        if(player==null) return deleteClan(clan, null);
         DeleteClanEvent event = new DeleteClanEvent(player, clan);
         Bukkit.getPluginManager().callEvent(event);
-        if (!event.isCancelled()) {
-            return deleteClan(clan, player);
-        }
-
+        if (!event.isCancelled()) return deleteClan(clan, player);
         return false;
     }
 
     private boolean deleteClan(Clan clan, Player player) {
         String tag = clan.getTag();
-//        for(User user : clan.getMembers()) {
-//            user.setClan(null);
-//            dataManager.updateUser(user);
-//        }
         for(UUID uuid : clan.getMembers()) {
-            User user = userManager.getUserData().get(uuid);
+            User user = ClanAndUserDataManager.getCachedUser(uuid);
             user.setClan(null);
-            dataManager.updateUser(user);
+            ClanAndUserDataManager.updateUser(user);
         }
-
         for(String alliance : clan.getAlliances()) {
-            Clan allianceClan = clansData.get(alliance.toUpperCase());
+            Clan allianceClan = clanAndUserDataManager.getCachedClan(alliance);
             if(allianceClan==null){
                 plugin.getLogger().info("Alliance clan not found: "+alliance);
                 continue;
             }
             allianceClan.removeAlliance(clan);
-            dataManager.updateClan(allianceClan);
+            ClanAndUserDataManager.updateClan(allianceClan);
         }
-
         deleteClan(tag);
-
-        dataManager.deleteClan(clan);
-        // remove clan to system ranking
+        clanAndUserDataManager.deleteClan(clan);
         topRankScheduler.removeClan(clan);
-
-        // if player is null that mean clan is removed by admin
-        if(player!=null) {
-            MessageManager.broadcastMessageFormated(MessageManager.CLAN_DELETED.replace("{clan}", tag), MessageType.CHAT);
-        }
+        if(player!=null) MessageManager.broadcastMessageFormated(MessageManager.CLAN_DELETED.replace("{clan}", tag), MessageType.CHAT);
         return true;
     }
     public void createClan(Player player, String tag) {
-        if(hasClan(player))
-        {
+        if(hasClan(player)) {
             MessageManager.sendMessageFormated(player, MessageManager.YOU_ALREADY_BELONG_TO_CLAN, MessageType.CHAT);
             return;
         }
-
-        // check MIN AND MAX LENGTHS of tag
-        if(tag.length() < 3 || tag.length() > 5)
-        {
+        if(tag.length() < 3 || tag.length() > 5) {
             MessageManager.sendMessageFormated(player, MessageManager.TAG_LENGTH, MessageType.CHAT);
             return;
         }
-        // check the name is not busy
-        if(isTagClaimed(tag.toUpperCase()))
-        {
+        if(isTagClaimed(tag.toUpperCase())) {
             MessageManager.sendMessageFormated(player, MessageManager.TAG_ALREADY_EXISTS, MessageType.CHAT);
             return;
         }
-        User user = userManager.getUserData().get(player.getUniqueId());
+        User user = ClanAndUserDataManager.getCachedUser(player.getUniqueId());
         if(user==null)
             return;
 
@@ -482,25 +353,17 @@ public class ClanManager {
             if(!status)
                 return;
         }
-
-        // create clan
         CreateClanEvent event = new CreateClanEvent(player, tag);
         Bukkit.getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
             Clan clan = new Clan(tag.toUpperCase(), user, false);
-            clansData.put(tag.toUpperCase(), clan);
+            ClanAndUserDataManager.updateClan(clan);
             user.setClan(clan);
-
-            dataManager.createIfNotExist(clan);
-            dataManager.updateUser(user);
-
-            // add clan to system ranking
+            ClanAndUserDataManager.updateClan(clan);
+            ClanAndUserDataManager.updateUser(user);
             topRankScheduler.addClan(clan);
-            // TODO add clan to ranking
             MessageManager.sendMessageFormated(player, MessageManager.CLAN_CREATED.replace("{clan}", tag), MessageType.CHAT);
-
         }
-
     }
 
     private boolean checkPayments(Player player) {
@@ -536,9 +399,7 @@ public class ClanManager {
             MessageManager.sendMessageFormated(sender, MessageManager.PLAYER_DOES_NOT_BELONG_TO_ANY_CLAN, MessageType.CHAT);
             return;
         }
-        // get user clan
         Clan clan = user.getClan();
-        // kick player from clan
         handleKickUser(null, user, clan);
     }
     private Optional<UUID> getPlayerUUIDByNickname(String nickname) {
@@ -554,11 +415,8 @@ public class ClanManager {
     }
 
     public void kickUser(Player player, String nickname) {
-
-        User deputyOwner = userManager.getUserData().get(player.getUniqueId());
-
+        User deputyOwner = ClanAndUserDataManager.getCachedUser(player.getUniqueId());
         Clan clan = deputyOwner.getClan();
-
         Optional<UUID> optionalUUID = getPlayerUUIDByNickname(nickname);
         if(optionalUUID.isEmpty()) {
             MessageManager.sendMessageFormated(player, MessageManager.PLAYER_NOT_ONLINE, MessageType.CHAT);
@@ -569,9 +427,6 @@ public class ClanManager {
             MessageManager.sendMessageFormated(player, MessageManager.PLAYER_DOES_NOT_BELONG_TO_YOUR_CLAN, MessageType.CHAT);
             return;
         }
-
-
-
         if(isSame(player, targetUUID))
         {
             MessageManager.sendMessageFormated(player, MessageManager.CANNOT_KICK_YOURSELF, MessageType.CHAT);
@@ -581,8 +436,7 @@ public class ClanManager {
             MessageManager.sendMessageFormated(player, MessageManager.CANNOT_KICK_OWNER, MessageType.CHAT);
             return;
         }
-        // kick player from clan
-        User kUser = userManager.getUserData().get(targetUUID);
+        User kUser = ClanAndUserDataManager.getCachedUser(targetUUID);
         handleKickUser(player, kUser, clan);
     }
 
@@ -593,20 +447,11 @@ public class ClanManager {
         if (!event.isCancelled()) {
             clan.removeMember(kickedUser);
             kickedUser.setClan(null);
-
             Player kickedPlayer = Bukkit.getPlayer(kickedUser.getUuid());
-
-            if(kickedPlayer!=null) {
-                MessageManager.sendMessageFormated(kickedPlayer, MessageManager.KICKED_FROM_CLAN, MessageType.CHAT);
-            }
-
-            dataManager.updateClan(clan);
-            dataManager.updateUser(kickedUser);
-
-            // if its null then mean the kicked user is from the console
-            if(player!=null) {
-                MessageManager.sendMessageFormated(player, MessageManager.SUCCESSFULLY_KICKED_PLAYER.replace("{player}", player.getName()), MessageType.CHAT);
-            }
+            if(kickedPlayer!=null) MessageManager.sendMessageFormated(kickedPlayer, MessageManager.KICKED_FROM_CLAN, MessageType.CHAT);
+            ClanAndUserDataManager.updateClan(clan);
+            ClanAndUserDataManager.updateUser(kickedUser);
+            if(player!=null) MessageManager.sendMessageFormated(player, MessageManager.SUCCESSFULLY_KICKED_PLAYER.replace("{player}", player.getName()), MessageType.CHAT);
         }
     }
 
@@ -615,46 +460,40 @@ public class ClanManager {
     }
 
     public void leaveClan(Player player) {
-        User user = userManager.getUserData().get(player.getUniqueId());
+        User user = ClanAndUserDataManager.getCachedUser(player.getUniqueId());
         Clan clan = user.getClan();
-        if(isOwner(clan, user))
-        {
+        if(isOwner(clan, user)) {
             MessageManager.sendMessageFormated(player, MessageManager.CANNOT_LEAVE_WHILE_OWNER, MessageType.CHAT);
             return;
         }
-        // left clan
         LeaveClanEvent event = new LeaveClanEvent(player, clan);
         Bukkit.getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
             clan.removeMember(user);
             user.setClan(null);
-
-            dataManager.updateClan(clan);
-            dataManager.updateUser(user);
-
+            ClanAndUserDataManager.updateClan(clan);
+            ClanAndUserDataManager.updateUser(user);
             MessageManager.sendMessageFormated(player, MessageManager.LEAVE_CLAN, MessageType.CHAT);
         }
     }
     private boolean isMemberInYourClan(Clan clan, User user) {
-        return clan.getMembers().contains(user);
+        return clan.getMembers().contains(user.getUuid());
     }
 
     private boolean isOwner(Clan clan, User user) {
-        if(clan == null)
-            return false;
+        if(clan == null) return false;
         return clan.getOwnerUUID().equals(user);
     }
     private boolean isOwner(Clan clan, UUID user) {
-        if(clan == null)
-            return false;
+        if(clan == null) return false;
         return clan.getOwnerUUID().getUuid().equals(user);
     }
     private boolean isTagClaimed(String tag) {
-        return clansData.get(tag) != null;
+        return clanAndUserDataManager.getCachedClan(tag) != null;
     }
 
     public void alliance(Player player, Clan allianceClan) {
-        User deputyOwner = userManager.getUserData().get(player.getUniqueId());
+        User deputyOwner = ClanAndUserDataManager.getCachedUser(player.getUniqueId());
         if(!isDeputyOwner(deputyOwner.getClan(), player) && !isOwner(deputyOwner.getClan(), deputyOwner))
         {
             MessageManager.sendMessageFormated(player, MessageManager.NOT_DEPUTY, MessageType.CHAT);
@@ -667,69 +506,47 @@ public class ClanManager {
             return;
         }
         if(clan.isAlliance(allianceClan.getTag())) {
-
             DisbandAllianceEvent event = new DisbandAllianceEvent(clan, allianceClan);
             Bukkit.getPluginManager().callEvent(event);
             if (!event.isCancelled()) {
-                // remove alliance from both clan
                 clan.removeAlliance(allianceClan);
                 allianceClan.removeAlliance(clan);
-                // add to database
-//                clanService.deleteAlliance(clan.getTag());
-                dataManager.updateClan(clan);
-                dataManager.updateClan(allianceClan);
-
-                // message
+                ClanAndUserDataManager.updateClan(clan);
+                ClanAndUserDataManager.updateClan(allianceClan);
                 MessageManager.sendMessageFormated(player, MessageManager.ALLIANCE_DISBANDED, MessageType.CHAT);
             }
             return;
         }
-        // check limit
         if(isLimitAlliance(clan)) {
             MessageManager.sendMessageFormated(player, MessageManager.LIMIT_ALLIANCES_REACHED, MessageType.CHAT);
             return;
         }
-
-        // check if you have already been invited to the alliance.
-        if(allianceClan.isSuggestAlliance(clan))
-        {
+        if(allianceClan.isSuggestAlliance(clan)) {
             CreateAllianceEvent event = new CreateAllianceEvent(clan, allianceClan);
             Bukkit.getPluginManager().callEvent(event);
             if (!event.isCancelled()) {
-                // add to both clan alliance
                 allianceClan.removeSuggestAlliance(clan);
                 clan.addAlliance(allianceClan);
                 allianceClan.addAlliance(clan);
-                // add to database
-
-                dataManager.updateClan(clan);
-                dataManager.updateClan(allianceClan);
-
-                // message
+                ClanAndUserDataManager.updateClan(clan);
+                ClanAndUserDataManager.updateClan(allianceClan);
                 MessageManager.sendMessageFormated(player, MessageManager.ALLIANCE_CREATED, MessageType.CHAT);
             }
             return;
         }
-        if(!clan.isSuggestAlliance(allianceClan))
-        {
+        if(!clan.isSuggestAlliance(allianceClan)) {
             clan.inviteAlliance(allianceClan);
-
             MessageManager.sendMessageFormated(player, MessageManager.INVITED_CLAN_TO_ALLIANCE.replace("{clan}", allianceClan.getTag()), MessageType.CHAT);
             Player allianceOwner = Bukkit.getPlayer(allianceClan.getOwnerUUID().getUuid());
-            if (allianceOwner != null)
-                MessageManager.sendMessageFormated(allianceOwner, MessageManager.YOUR_CLAN_WAS_INVITED_TO_ALLIANCE.replace("{clan}", clan.getTag()), MessageType.CHAT);
-
+            if (allianceOwner != null) MessageManager.sendMessageFormated(allianceOwner, MessageManager.YOUR_CLAN_WAS_INVITED_TO_ALLIANCE.replace("{clan}", clan.getTag()), MessageType.CHAT);
         } else {
             clan.removeInviteAlliance(allianceClan);
             MessageManager.sendMessageFormated(player, MessageManager.CANCELED_INVITE_FROM_ALLIANCE.replace("{clan}", allianceClan.getTag()), MessageType.CHAT);
-
         }
-
-
     }
 
     public void removeDeputy(Player owner) {
-        User user = userManager.getUserData().get(owner.getUniqueId());
+        User user = ClanAndUserDataManager.getCachedUser(owner.getUniqueId());
         Clan clan = user.getClan();
         Player player = owner.getPlayer();
         if(deputyIsEmpty(clan)) {
@@ -740,7 +557,7 @@ public class ClanManager {
         Bukkit.getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
             clan.setDeputyOwnerUUID(null);
-            dataManager.updateClan(clan);
+            ClanAndUserDataManager.updateClan(clan);
             MessageManager.sendMessageFormated(player, MessageManager.DEPUTY_REMOVED, MessageType.CHAT);
         }
     }
@@ -750,8 +567,8 @@ public class ClanManager {
     }
 
     public void setDeputy(Player owner, Player target) {
-        User user = userManager.getUserData().get(owner.getUniqueId());
-        User targetUser = userManager.getUserData().get(target.getUniqueId());
+        User user = ClanAndUserDataManager.getCachedUser(owner.getUniqueId());
+        User targetUser = ClanAndUserDataManager.getCachedUser(target.getUniqueId());
 
         if(!isDeputyOwner(user.getClan(), owner) && !isOwner(user.getClan(), user)){
             MessageManager.sendMessageFormated(owner, MessageManager.NOT_DEPUTY, MessageType.CHAT);
@@ -759,8 +576,7 @@ public class ClanManager {
         }
 
         Clan clan = user.getClan();
-        if(!isMemberInYourClan(clan, targetUser))
-        {
+        if(!isMemberInYourClan(clan, targetUser)) {
             MessageManager.sendMessageFormated(owner, MessageManager.PLAYER_DOES_NOT_BELONG_TO_YOUR_CLAN, MessageType.CHAT);
             return;
         }
@@ -775,7 +591,7 @@ public class ClanManager {
 
         if (!event.isCancelled()) {
             clan.setDeputyOwnerUUID(targetUser);
-            dataManager.updateClan(clan);
+            ClanAndUserDataManager.updateClan(clan);
             MessageManager.sendMessageFormated(owner, MessageManager.CLAN_DEPUTY_SET.replace("{player}", target.getName()).replace("{clan}", clan.getTag()), MessageType.CHAT);
         }
     }
@@ -788,22 +604,16 @@ public class ClanManager {
     }
 
     public Clan getClan(String tag) {
-        return clansData.get(tag.toUpperCase());
+        return clanAndUserDataManager.getCachedClan(tag);
     }
 
-    public Clan deleteClan(String tag) {
-        return clansData.remove(tag.toUpperCase());
-    }
-
-    public HashMap<String, Clan> getClansData() {
-        return clansData;
+    public void deleteClan(String tag) {
+        clanAndUserDataManager.deleteClan(clanAndUserDataManager.getCachedClan(tag));
     }
 
 
     public void loadAllClans() {
-//        clanEntityRepository.getAllEntities().forEach(clan -> clansData.put(clan.getTag(), clan));
-        dataManager.getAllClans().forEach(clan -> clansData.put(clan.getTag().toUpperCase(), clan));
-
+        clanAndUserDataManager.loadAllClans();
     }
 
 }

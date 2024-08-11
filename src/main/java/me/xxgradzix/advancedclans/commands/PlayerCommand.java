@@ -1,7 +1,8 @@
 package me.xxgradzix.advancedclans.commands;
 
 import me.xxgradzix.advancedclans.data.database.entities.User;
-import me.xxgradzix.advancedclans.manager.UserManager;
+import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
+import me.xxgradzix.advancedclans.controllers.UserController;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.messages.MessageType;
 import org.bukkit.Bukkit;
@@ -17,10 +18,10 @@ import java.util.UUID;
 
 public class PlayerCommand implements CommandExecutor {
 
-    private final UserManager userManager;
+    private final UserController userController;
 
-    public PlayerCommand(UserManager userManager) {
-        this.userManager = userManager;
+    public PlayerCommand(UserController userController) {
+        this.userController = userController;
     }
 
 
@@ -45,14 +46,14 @@ public class PlayerCommand implements CommandExecutor {
             return false;
         }
 
-        User user = userManager.getUserData().get(targetUUIDOptional.get());
+        User user = ClanAndUserDataManager.getCachedUser(targetUUIDOptional.get());
 
         if(user==null) {
             MessageManager.sendMessageFormated(player, MessageManager.PLAYER_NOT_FOUND, MessageType.CHAT);
             return false;
         }
 
-        userManager.infoPlayer(player, user);
+        userController.infoPlayer(player, user);
 
         return false;
     }

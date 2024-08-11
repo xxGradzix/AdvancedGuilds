@@ -6,16 +6,22 @@ import com.j256.ormlite.table.TableUtils;
 import eu.okaeri.configs.ConfigManager;
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
 import me.xxgradzix.advancedclans.commands.ClanCommand;
+import me.xxgradzix.advancedclans.commands.HideOutAdminCommands;
 import me.xxgradzix.advancedclans.commands.PlayerCommand;
+import me.xxgradzix.advancedclans.data.database.services.GuildHideOutDataManager;
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
+import me.xxgradzix.advancedclans.data.database.entities.GuildHideout;
 import me.xxgradzix.advancedclans.data.database.entities.User;
 import me.xxgradzix.advancedclans.data.database.repositories.ClanEntityRepository;
-import me.xxgradzix.advancedclans.data.DataManager;
+import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
+import me.xxgradzix.advancedclans.data.database.repositories.GuildHideoutEntityRepository;
 import me.xxgradzix.advancedclans.data.database.repositories.UserEntityRepository;
 import me.xxgradzix.advancedclans.listener.*;
-import me.xxgradzix.advancedclans.manager.ClanManager;
+import me.xxgradzix.advancedclans.listener.guildHideOut.HideOutUpgrade;
+import me.xxgradzix.advancedclans.controllers.ClanController;
 import me.xxgradzix.advancedclans.manager.CooldownManager;
-import me.xxgradzix.advancedclans.manager.UserManager;
+import me.xxgradzix.advancedclans.controllers.GuildHideOutController;
+import me.xxgradzix.advancedclans.controllers.UserController;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.placeholder.ClanPlaceholder;
 import me.xxgradzix.advancedclans.scheduler.TopRankScheduler;
@@ -34,20 +40,22 @@ public final class AdvancedGuilds extends JavaPlugin {
     private static AdvancedGuilds instance;
 
     // manager
-    private UserManager userManager;
-    private ClanManager clansManager;
+    private UserController userController;
+    private ClanController clansManager;
     private CooldownManager cooldownManager;
 
     private TopRankScheduler topRankScheduler;
 
-    private DataManager dataManager;
+    private ClanAndUserDataManager clanAndUserDataManager;
+    private GuildHideOutController guildHideOutController;
     private MessageManager messages;
-
-
     private ConnectionSource connectionSource;
 
     private ClanEntityRepository clanEntityRepository;
     private UserEntityRepository userEntityRepository;
+    private GuildHideoutEntityRepository guildHideoutEntityRepository;
+    private GuildHideOutDataManager guildHideOutDataManager;
+
     Properties loadConfig() {
         Properties prop = new Properties();
         InputStream input = getClass().getClassLoader().getResourceAsStream("application.properties");
@@ -78,9 +86,13 @@ public final class AdvancedGuilds extends JavaPlugin {
         this.connectionSource = new JdbcConnectionSource(databaseUrl, user, password);
 
         TableUtils.createTableIfNotExists(connectionSource, User.class);
+        TableUtils.createTableIfNotExists(connectionSource, GuildHideout.class);
         TableUtils.createTableIfNotExists(connectionSource, Clan.class);
+
         clanEntityRepository = new ClanEntityRepository(connectionSource);
         userEntityRepository = new UserEntityRepository(connectionSource);
+        guildHideoutEntityRepository = new GuildHideoutEntityRepository(connectionSource);
+
     }
 
     private ClanPlaceholder clanPlaceholder;
@@ -92,9 +104,7 @@ public final class AdvancedGuilds extends JavaPlugin {
 
         try {
             configureDB();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
+        } catch (SQLException | IOException e) {
             throw new RuntimeException(e);
         }
 
@@ -104,7 +114,6 @@ public final class AdvancedGuilds extends JavaPlugin {
                 it.withBindFile(new File(this.getDataFolder(), "messages.yml"));
                 it.saveDefaults();
                 it.load(true);
-
             });
         } catch (Exception exception) {
             this.getLogger().log(Level.SEVERE, "Error loading messages.yml", exception);
@@ -112,39 +121,45 @@ public final class AdvancedGuilds extends JavaPlugin {
             return;
         }
 
-        dataManager = new DataManager(clanEntityRepository, userEntityRepository);
+        clanAndUserDataManager = new ClanAndUserDataManager(clanEntityRepository, userEntityRepository);
+        guildHideOutDataManager = new GuildHideOutDataManager(guildHideoutEntityRepository);
 
-        userManager = new UserManager(dataManager);
+        userController = new UserController();
+        clansManager = new ClanController(this, clanAndUserDataManager);
+        guildHideOutController = new GuildHideOutController(guildHideOutDataManager, userController, this);
 
-        clansManager = new ClanManager(this, dataManager, userManager);
 
-        topRankScheduler = new TopRankScheduler(userManager, clansManager);
+        topRankScheduler = new TopRankScheduler(userController, clansManager);
 
         topRankScheduler.runTaskTimerAsynchronously(this, 0, 20 * 60 * 2);
 
         clansManager.setTopRankScheduler(topRankScheduler);
-        userManager.setTopRankScheduler(topRankScheduler);
+        userController.setTopRankScheduler(topRankScheduler);
 
         // manager
 
         cooldownManager = new CooldownManager();
 
         if(getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            clanPlaceholder = new ClanPlaceholder(this, userManager, clansManager, topRankScheduler);
+            clanPlaceholder = new ClanPlaceholder(this, userController, clansManager, topRankScheduler);
         }
+
+        clansManager.loadAllClans();
+        userController.loadAllUsers();
+        guildHideOutController.loadHideOuts();
+
         Stream.of(
-                new PlayerConnectionListener(this, cooldownManager, userManager),
-                new PlayerDeathListener(this, userManager),
-                new EntityDamageListener(this, userManager),
-                new AsyncPlayerChatListener(this, userManager),
-                new PlayerInteractionEntityListener(userManager, cooldownManager)
+                new PlayerConnectionListener(this, cooldownManager, userController),
+                new PlayerDeathListener(this, userController),
+                new EntityDamageListener(this, userController),
+                new AsyncPlayerChatListener(this, userController),
+                new PlayerInteractionEntityListener(userController, cooldownManager),
+                new HideOutUpgrade(guildHideOutController)
         ).forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
 
         getCommand("klan").setExecutor(new ClanCommand(clansManager));
-        getCommand("gracz").setExecutor(new PlayerCommand(userManager));
-
-        clansManager.loadAllClans();
-        userManager.loadAllUsers();
+        getCommand("gracz").setExecutor(new PlayerCommand(userController));
+        getCommand("stworzkryjowke").setExecutor(new HideOutAdminCommands(instance));
 
     }
 

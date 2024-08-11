@@ -4,7 +4,7 @@ import me.xxgradzix.advancedclans.AdvancedGuilds;
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.User;
 import me.xxgradzix.advancedclans.manager.CooldownManager;
-import me.xxgradzix.advancedclans.manager.UserManager;
+import me.xxgradzix.advancedclans.controllers.UserController;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,12 +19,12 @@ public class PlayerConnectionListener implements Listener {
     private final AdvancedGuilds plugin;
     private final CooldownManager cooldownManager;
     
-    private final UserManager userManager;
+    private final UserController userController;
 
-    public PlayerConnectionListener(AdvancedGuilds plugin, CooldownManager cooldownManager, UserManager userManager) {
+    public PlayerConnectionListener(AdvancedGuilds plugin, CooldownManager cooldownManager, UserController userController) {
         this.plugin = plugin;
         this.cooldownManager = cooldownManager;
-        this.userManager = userManager;
+        this.userController = userController;
     }
 
 
@@ -36,7 +36,7 @@ public class PlayerConnectionListener implements Listener {
 
             @Override
             public void run() {
-                userManager.loadUser(player);
+                userController.loadUser(player);
             }
 
         }.runTaskAsynchronously(plugin);
@@ -50,7 +50,7 @@ public class PlayerConnectionListener implements Listener {
         // delete cooldown [PlayerInteractionEntityEvent]
         cooldownManager.delPlayerFromCooldown(player);
 
-        Optional<User> userByPlayer = userManager.findUserByPlayer(player);
+        Optional<User> userByPlayer = userController.findUserByPlayer(player);
         if(userByPlayer.isEmpty())
             return;
 

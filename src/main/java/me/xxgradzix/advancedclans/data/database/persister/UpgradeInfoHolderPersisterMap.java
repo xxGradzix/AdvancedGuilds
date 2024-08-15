@@ -4,7 +4,7 @@ import com.j256.ormlite.field.FieldType;
 import com.j256.ormlite.field.SqlType;
 import com.j256.ormlite.field.types.StringType;
 import me.xxgradzix.advancedclans.data.database.entities.GuildHideout;
-import me.xxgradzix.advancedclans.data.database.entities.UpgradeInfoHolder;
+import me.xxgradzix.advancedclans.data.database.entities.fields.UpgradeInfoHolder;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;

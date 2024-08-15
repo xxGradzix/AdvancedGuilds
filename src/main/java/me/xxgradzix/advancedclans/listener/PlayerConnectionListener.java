@@ -3,6 +3,7 @@ package me.xxgradzix.advancedclans.listener;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.User;
+import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
 import me.xxgradzix.advancedclans.manager.CooldownManager;
 import me.xxgradzix.advancedclans.controllers.UserController;
 import org.bukkit.entity.Player;
@@ -58,7 +59,7 @@ public class PlayerConnectionListener implements Listener {
         if(!user.hasClan())
             return;
 
-        Clan clan = user.getClan();
+        Clan clan = ClanAndUserDataManager.getCachedClan(user.getClanTag());
         boolean owner = clan.isOwner(player.getUniqueId());
         if(owner)
             clan.resetInvite();

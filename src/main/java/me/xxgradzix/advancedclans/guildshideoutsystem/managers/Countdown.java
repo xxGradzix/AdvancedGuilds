@@ -1,7 +1,5 @@
 package me.xxgradzix.advancedclans.guildshideoutsystem.managers;
 
-import dev.triumphteam.gui.builder.item.ItemBuilder;
-import dev.triumphteam.gui.guis.GuiItem;
 import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import org.bukkit.Bukkit;
@@ -9,17 +7,16 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Countdown implements Runnable {
+public class Countdown extends BukkitRunnable {
 
     private final JavaPlugin plugin;
 
     private Integer assignedTaskId;
 
-    private final int seconds;
     private int secondsLeft;
 
     private final Hologram hologram;
@@ -29,7 +26,6 @@ public class Countdown implements Runnable {
     public Countdown(final JavaPlugin plugin, final int seconds, Location location, Action action) {
 
         this.plugin = plugin;
-        this.seconds = seconds;
         this.secondsLeft = seconds;
         this.action = action;
 
@@ -65,71 +61,43 @@ public class Countdown implements Runnable {
         if (minutes > 0) {
             formattedTime.append(minutes).append("m ");
         }
-        if (seconds > 0 || (mills > 0 && formattedTime.length() == 0)) {
+        if (seconds > 0 || (mills > 0 && formattedTime.isEmpty())) {
             formattedTime.append(seconds).append("s");
         }
-
         return formattedTime.toString().trim();
     }
-
-//    @Override
-//    public void run() {
-//        if (this.secondsLeft < 1) {
-//            this.scheduleTimer();
-//            if (this.assignedTaskId != null) {
-//                Bukkit.getScheduler().cancelTask(this.assignedTaskId);
-//            }
-//            return;
-//        }
-//        DHAPI.setHologramLine(this.hologram, 0, ChatColor.GREEN+ "Ten generator odnowi sie za: " + format(this.secondsLeft * 1000));
-//        hologram.updateAll();
-//        --this.secondsLeft;
-//    }
 
     @Override
     public void run() {
         if (this.secondsLeft < 1) {
-//            this.secondsLeft = this.seconds; // Reset the countdown
             action.execute();
             this.killTask();
-            return;
+            cancel();
         } else {
-            // Only update the hologram when there are significant changes
-//            if (this.secondsLeft == this.seconds) {
-                DHAPI.setHologramLine(this.hologram, 0, ChatColor.GRAY+ "To ulepszenie zostanie ukończone za:");
-                DHAPI.setHologramLine(this.hologram, 1, ChatColor.GREEN + format(this.secondsLeft * 1000));
+            DHAPI.setHologramLine(this.hologram, 0, ChatColor.GRAY+ "To ulepszenie zostanie ukończone za:"); //TODO config
+            DHAPI.setHologramLine(this.hologram, 1, ChatColor.GREEN + format(this.secondsLeft * 1000L));
 
-                hologram.updateAll();
-//            }
+            hologram.updateAll();
             --this.secondsLeft;
         }
     }
 
-    public int getTotalSeconds() {
-        return this.seconds;
-    }
-
-    public int getSecondsLeft() {
-        return this.secondsLeft;
-    }
-
-    public Integer getTaskId() {
+    public int getTaskId() {
         return this.assignedTaskId;
     }
 
     public void killTask() {
-//        hologram.delete();
+
+        hologram.getLocation().getWorld().spawnParticle(Particle.CLOUD, hologram.getLocation(), 120, 2, 2 ,2, 0.005);
         hologram.destroy();
         hologram.unregister();
 
-        hologram.getLocation().getWorld().spawnParticle(Particle.CLOUD, 120, 2, 2 ,2, 0.005);
         Bukkit.getScheduler().cancelTask(this.assignedTaskId);
     }
 
     public void scheduleTimer() {
-        // If a task is already running, don't schedule a new one
         if (this.assignedTaskId == null || Bukkit.getScheduler().isCurrentlyRunning(this.assignedTaskId)) {
-            this.assignedTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(this.plugin, this, 0L, 20L);
+            this.assignedTaskId = runTaskTimer(this.plugin, 0L, 20L).getTaskId();
         }
     }
 }

@@ -84,6 +84,7 @@ public class ItemManager {
         }
 
         itemMeta.setLore(lore);
+        item.setItemMeta(itemMeta);
 
         return item;
     }

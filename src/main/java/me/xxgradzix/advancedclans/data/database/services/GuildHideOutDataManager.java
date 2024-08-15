@@ -2,8 +2,10 @@ package me.xxgradzix.advancedclans.data.database.services;
 
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.GuildHideout;
-import me.xxgradzix.advancedclans.data.database.repositories.ClanEntityRepository;
 import me.xxgradzix.advancedclans.data.database.repositories.GuildHideoutEntityRepository;
+import me.xxgradzix.advancedclans.exceptions.hideOuts.HideOutDoesNotExistException;
+import org.bukkit.Bukkit;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -11,7 +13,7 @@ import java.util.List;
 
 public class GuildHideOutDataManager {
 
-    private static HashMap<String, GuildHideout> guildHideouts = new HashMap<>();
+    private static final HashMap<String, GuildHideout> guildHideouts = new HashMap<>();
 
     private static GuildHideoutEntityRepository guildHideoutEntityRepository;
 
@@ -24,50 +26,47 @@ public class GuildHideOutDataManager {
 
     public static GuildHideout resetOrCreateHideOut(String hideOutWorldName) {
 
-            GuildHideout guildHideout = guildHideouts.get(hideOutWorldName);
+        GuildHideout guildHideout = guildHideouts.get(hideOutWorldName);
 
-            if (guildHideout == null) {
-                guildHideout = new GuildHideout(hideOutWorldName, new HashMap<>(), null);
-            }
+        if (guildHideout == null) {
+            guildHideout = new GuildHideout(hideOutWorldName, new HashMap<>(), null);
+        }
 
-            Clan clan = guildHideout.getClan();
+        Clan clan = ClanAndUserDataManager.getCachedClan(guildHideout.getClanTag());
 
-            if(clan != null){
-                clan.setHideout(null);
-                ClanAndUserDataManager.updateClan(clan);
-            }
+        if(clan != null){
+            clan.setHideoutId(null);
+            ClanAndUserDataManager.updateClan(clan);
+        }
 
-            guildHideout.reset();
+        guildHideout.reset();
 
-            try {
-                guildHideouts.put(hideOutWorldName, guildHideout);
+        try {
+            guildHideouts.put(hideOutWorldName, guildHideout);
 
-                guildHideoutEntityRepository.createOrUpdateEntity(guildHideout);
+            guildHideoutEntityRepository.createOrUpdateEntity(guildHideout);
 
-                return guildHideout;
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            return guildHideout;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /** PLAYER METHODS **/
 
-
-    public static void occupyHideOut(String hideOutWorldName, Clan clan) {
+    public static void occupyHideOut(String hideOutWorldName, Clan clan) throws HideOutDoesNotExistException {
 
         GuildHideout guildHideout = guildHideouts.get(hideOutWorldName);
 
-        if (guildHideout == null) {
-            // TODO MESSAGE send message to player that hideout does not exist
-            return;
-        }
+        if (guildHideout == null) throw new HideOutDoesNotExistException("Hideout does not exist");
 
         guildHideout = resetOrCreateHideOut(hideOutWorldName);
+        guildHideout.setClanTag(clan);
 
-        guildHideout.setClan(clan);
-        clan.setHideout(guildHideout);
-
+        clan.setHideoutId(guildHideout.getWorldName());
         ClanAndUserDataManager.updateClan(clan);
+
         updateHideOut(guildHideout);
     }
 
@@ -78,7 +77,6 @@ public class GuildHideOutDataManager {
             guildHideouts.put(hideout.getWorldName(), hideout);
         } catch (SQLException e) {
             // todo MESSAGE send message to player that sql exception occurred
-            return;
         }
     }
 
@@ -92,5 +90,9 @@ public class GuildHideOutDataManager {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static GuildHideout getHideOut(@NotNull String name) {
+        return guildHideouts.get(name);
     }
 }

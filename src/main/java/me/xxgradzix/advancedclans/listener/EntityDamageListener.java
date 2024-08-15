@@ -34,11 +34,11 @@ public class EntityDamageListener implements Listener {
         Player attacker = (Player) event.getDamager();
 
         User victimUserData = ClanAndUserDataManager.getCachedUser(victim.getUniqueId());
-        if (victimUserData == null || victimUserData.getClan() == null) {
+        if (victimUserData == null || ClanAndUserDataManager.getCachedClan(victimUserData.getClanTag()) == null) {
             return;
         }
 
-        Clan victimClan = victimUserData.getClan();
+        Clan victimClan = ClanAndUserDataManager.getCachedClan(victimUserData.getClanTag());
 
         if (victimClan.isMember(attacker.getUniqueId())) {
             if (!victimClan.isPvpEnable()) {
@@ -48,11 +48,11 @@ public class EntityDamageListener implements Listener {
         }
 
         User attackerUserData = ClanAndUserDataManager.getCachedUser(attacker.getUniqueId());
-        if (attackerUserData == null || attackerUserData.getClan() == null) {
+        if (attackerUserData == null || ClanAndUserDataManager.getCachedClan(attackerUserData.getClanTag()) == null) {
             return;
         }
 
-        Clan attackerClan = attackerUserData.getClan();
+        Clan attackerClan = ClanAndUserDataManager.getCachedClan(attackerUserData.getClanTag());
 
         if (victimClan.isAlliance(attackerClan.getTag())) {
             if (!false) { // TODO get if pvpAlliance is enabled globally

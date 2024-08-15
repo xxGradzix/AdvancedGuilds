@@ -4,11 +4,11 @@ import me.xxgradzix.advancedclans.data.database.entities.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.User;
 import me.xxgradzix.advancedclans.data.database.repositories.ClanEntityRepository;
 import me.xxgradzix.advancedclans.data.database.repositories.UserEntityRepository;
+import org.bukkit.Bukkit;
 
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 public class ClanAndUserDataManager {
@@ -26,17 +26,30 @@ public class ClanAndUserDataManager {
 
 
     public static User getCachedUser(UUID uuid) {
-        return userData.get(uuid);
+//        return userData.get(uuid);
+        try {
+            return userEntityRepository.getEntityById(uuid);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static Clan getCachedClan(String tag) {
-        return clansData.get(tag.toUpperCase());
+//        return clansData.get(tag.toUpperCase());
+        try {
+            return clanEntityRepository.getEntityById(tag);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void updateClan(Clan clan) {
         try {
             clanEntityRepository.createOrUpdateEntity(clan);
             clansData.put(clan.getTag().toUpperCase(), clan);
+
+            Bukkit.broadcastMessage("Clan " + clan.getTag() + " updated " + clan.getHideoutId());
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -64,7 +64,7 @@ public class UserController {
         if(clanRankIndexByTag.isPresent())
             index = clanRankIndexByTag.getAsInt()+1;
 
-        String clan = (user.getClan() == null) ? "config.noneTag" : ColorFixer.addColors("config.formatTag.replace({tag}, user.getClan().getTag())");
+        String clan = (!user.hasClan()) ? "config.noneTag" : ColorFixer.addColors("config.formatTag.replace({tag}, user.getClan().getTag())");
 
         String infoMessage = MessageManager.PLAYER_INFO;
 

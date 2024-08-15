@@ -40,7 +40,7 @@ public class AsyncPlayerChatListener implements Listener {
         if(!user.hasClan())
             return;
 
-        Clan clan = user.getClan();
+        Clan clan = ClanAndUserDataManager.getCachedClan(user.getClanTag());
         if(message.startsWith("!!"))
         {
             event.setCancelled(true);

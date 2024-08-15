@@ -7,6 +7,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.checkerframework.checker.units.qual.C;
+import org.jetbrains.annotations.NotNull;
 
 import static me.xxgradzix.advancedclans.messages.MessageType.*;
 
@@ -234,6 +235,9 @@ public class MessageManager extends OkaeriConfig {
 
     @Comment("Does not belong to this hideout")
     public static String YOU_DONT_BELONG_TO_THIS_HIDEOUT = "&7ɴɪᴇ ɴᴀʟᴇżʏꜱᴢ ᴅᴏ ᴛᴇᴊ ᴋʀʏᴊóᴡᴋɪ";
+
+    @Comment("Hideout does not exist")
+    public static String HIDEOUT_DOES_NOT_EXIST = "&7ᴋʀʏᴊóᴡᴋᴀ ɴɪᴇ ɪꜱᴛɴɪᴇᴊᴇ";
 
     public static void sendMessageFormated(Player player, String message, MessageType type) {
         message = ColorFixer.addColors(message);

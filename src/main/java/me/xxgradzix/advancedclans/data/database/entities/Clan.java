@@ -21,11 +21,11 @@ public class Clan {
     private String tag;
 
     @Setter
-    @DatabaseField(foreign = true)
-    private User owner;
+    @DatabaseField
+    private UUID ownerUUID;
 
-    @DatabaseField(foreign = true)
-    private User ownerDeputy;
+    @DatabaseField
+    private UUID ownerDeputyUUID;
 
     @Getter
     @DatabaseField(persisterClass = UUIDListPersister.class)
@@ -40,31 +40,23 @@ public class Clan {
     @DatabaseField
     private boolean pvpEnable;
 
-    @Getter
-    @Setter
-    @DatabaseField(foreign = true)
-    private GuildHideout hideout;
-
-    private List<User> invitedPlayers = new ArrayList<>();
-
-    private List<Clan> inviteAlliances = new ArrayList<>();
+    @DatabaseField
+    private String hideout;
 
 
-    public Clan(String tag, User owner, User deputyOwner, boolean pvpEnable) {
-        this(tag, owner, pvpEnable);
-        this.ownerDeputy = deputyOwner;
-        this.hideout = null;
+    private final List<User> invitedPlayers = new ArrayList<>();
 
-    }
+    private final List<Clan> inviteAlliances = new ArrayList<>();
+
+
 
     public Clan(String tag, User owner, boolean pvpEnable) {
         this.tag = tag;
-        this.owner = owner;
+        this.ownerUUID = owner.getUuid();
         this.members = new ArrayList<>();
 
-        this.members.add(owner.getUuid());
+        this.members.add(ownerUUID);
         this.pvpEnable = pvpEnable;
-//        members = new F<>();
         alliances = new ArrayList<>();
 
         this.hideout = null;
@@ -78,34 +70,27 @@ public class Clan {
         return alliances.contains(tag.toUpperCase());
     }
 
-    public boolean isMember(User user)
-    {
+    public boolean isMember(User user) {
         return members.contains(user.getUuid());
     }
-    public boolean isMember(UUID uuid)
-    {
-//        return members.stream().map(User::getUuid).anyMatch(uuid1 -> {
-//            return uuid1.equals(uuid);
-//        });
+
+    public boolean isMember(UUID uuid) {
         return members.contains(uuid);
     }
-    public boolean removeAlliance(Clan clan)
-    {
-        return alliances.remove(clan.getTag());
+
+    public void removeAlliance(Clan clan) {
+        alliances.remove(clan.getTag());
     }
 
-    public boolean removeAlliance(String clan)
-    {
+    public boolean removeAlliance(String clan) {
         return alliances.remove(clan);
     }
 
-    public void addAlliance(Clan clan)
-    {
+    public void addAlliance(Clan clan) {
         alliances.add(clan.getTag());
     }
 
-    public boolean hasInvite(User user)
-    {
+    public boolean hasInvite(User user) {
         return invitedPlayers.contains(user);
     }
 
@@ -114,81 +99,86 @@ public class Clan {
         members.add(user.getUuid());
     }
 
-    public void resetInvite()
-    {
+    public void resetInvite() {
         inviteAlliances.clear();
         invitedPlayers.clear();
     }
+
     public void removeMember(User user) {
         if(user == null)
             return;
-        if(ownerDeputy.equals(user))
-            ownerDeputy = null;
+        if(ownerDeputyUUID.equals(user.getUuid()))
+            ownerDeputyUUID = null;
 
-        members.remove(user);
+        members.remove(user.getUuid());
     }
+
     public void invite(User user) {
         invitedPlayers.add(user);
     }
+
     public void cancelInvite(User user) {
         invitedPlayers.remove(user);
     }
 
-    public User getOwnerUUID() {
-        return owner;
+    public UUID getOwnerUUID() {
+        return ownerUUID;
     }
 
-    public User getDeputyOwnerUUID() {
-        return ownerDeputy;
+    public UUID getDeputyOwnerUUID() {
+        return ownerDeputyUUID;
     }
 
 
     public void setDeputyOwnerUUID(User newDeputyOwner) {
-        this.ownerDeputy = newDeputyOwner;
+        this.ownerDeputyUUID = newDeputyOwner.getUuid();
     }
 
-
-    public boolean isSuggestAlliance(Clan clan)
-    {
+    public boolean isSuggestAlliance(Clan clan) {
         return inviteAlliances.contains(clan);
     }
-    public boolean inviteAlliance(Clan clan)
-    {
-        return inviteAlliances.add(clan);
+
+    public void inviteAlliance(Clan clan) {
+        inviteAlliances.add(clan);
     }
 
     public void removeInviteAlliance(Clan clan) {
         inviteAlliances.remove(clan);
     }
 
-    public void removeSuggestAlliance(Clan clan)
-    {
+    public void removeSuggestAlliance(Clan clan) {
         inviteAlliances.remove(clan);
     }
+
     public boolean isOwner(User user) {
-        return owner.equals(user);
-    }
-    public boolean isOwner(UUID uuid) {
-        return owner.getUuid().equals(uuid);
+        return ownerUUID.equals(user.getUuid());
     }
 
-//    public void addMember(UUID uuid) {
-//        members.add(uuid);
-//    }
+    public boolean isOwner(UUID uuid) {
+        return ownerUUID.equals(uuid);
+    }
 
     public boolean isDeputy(User user) {
-       return (ownerDeputy != null && ownerDeputy.equals(user));
-    }
-    public boolean isDeputy(UUID uuid) {
-        return (ownerDeputy != null && ownerDeputy.getUuid().equals(uuid));
+       return (ownerDeputyUUID != null && ownerDeputyUUID.equals(user.getUuid()));
     }
 
+    public boolean isDeputy(UUID uuid) {
+        return (ownerDeputyUUID != null && ownerDeputyUUID.equals(uuid));
+    }
 
     public void togglePvp() {
         pvpEnable = !pvpEnable;
     }
 
-    public boolean hasHideOut() {
-        return hideout != null;
+    public String getHideoutId() {
+        return hideout;
+    }
+
+    public boolean hasHideout() {
+        return hideout != null && !hideout.isEmpty() && !hideout.isBlank() && !hideout.equalsIgnoreCase("null");
+    }
+
+    public void setHideoutId(String hideout) {
+        this.hideout = hideout;
     }
 }

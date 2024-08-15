@@ -6,18 +6,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 
-public class BlackSMithUpgrade implements UpgradePattern {
+public class BlackSmithUpgradePattern implements UpgradePattern {
 
     private final File schemFile;
     private final int coolDown;
 
     private final int price;
 
-    public BlackSMithUpgrade(JavaPlugin plugin) {
+    public BlackSmithUpgradePattern(JavaPlugin plugin) {
         this.schemFile = new File(plugin.getDataFolder().getAbsolutePath() + "/blacksmith-upgrade.schem");
         this.price = 1_000;
         this.coolDown = 90;
     }
+
     @Override
     public File getSchemFile() {
         return schemFile;
@@ -30,17 +31,17 @@ public class BlackSMithUpgrade implements UpgradePattern {
 
     @Override
     public double getHologramLocationX() {
-        return -234.0;
+        return 27.0;
     }
 
     @Override
     public double getHologramLocationY() {
-        return 101.5;
+        return 95.5;
     }
 
     @Override
     public double getHologramLocationZ() {
-        return 88.0;
+        return -50.0;
     }
 
     @Override

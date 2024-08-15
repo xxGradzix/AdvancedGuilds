@@ -12,7 +12,10 @@ import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.util.SideEffectSet;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
+import me.xxgradzix.advancedclans.data.database.entities.User;
+import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
 import me.xxgradzix.advancedclans.data.database.services.GuildHideOutDataManager;
+import me.xxgradzix.advancedclans.exceptions.hideOuts.HideOutDoesNotExistException;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -25,6 +28,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileInputStream;
+
+import static me.xxgradzix.advancedclans.controllers.GuildHideOutController.paste;
 
 public class HideOutAdminCommands implements CommandExecutor {
 
@@ -59,18 +64,24 @@ public class HideOutAdminCommands implements CommandExecutor {
 
         switch (temp) {
 
-//            case "1" -> {
-//                File file = new File(plugin.getDataFolder().getAbsolutePath() + "/guild.schem");
-//
-//                player.sendMessage("Paste schem");
-//                paste(loc, file);
-//
-//                guildHideOutDataManager.createNewHideOut(world.getName());
-//            }
-            case "2" -> {
+            case "1" -> {
+                File file = new File(plugin.getDataFolder().getAbsolutePath() + "/guild.schem");
 
+                player.sendMessage("Paste schem");
+                paste(loc, file);
 
                 GuildHideOutDataManager.resetOrCreateHideOut(world.getName());
+            }
+            case "2" -> {
+
+                User cachedUser = ClanAndUserDataManager.getCachedUser(player.getUniqueId());
+
+                try {
+                    GuildHideOutDataManager.occupyHideOut(world.getName(), ClanAndUserDataManager.getCachedClan(cachedUser.getClanTag()));
+                } catch (HideOutDoesNotExistException e) {
+                    player.sendMessage(MessageManager.HIDEOUT_DOES_NOT_EXIST);
+                }
+
             }
             case "3" -> {
 

@@ -126,7 +126,7 @@ public final class AdvancedGuilds extends JavaPlugin {
 
         userController = new UserController();
         clansManager = new ClanController(this, clanAndUserDataManager);
-        guildHideOutController = new GuildHideOutController(guildHideOutDataManager, userController, this);
+        guildHideOutController = new GuildHideOutController(userController, this);
 
 
         topRankScheduler = new TopRankScheduler(userController, clansManager);
@@ -144,9 +144,10 @@ public final class AdvancedGuilds extends JavaPlugin {
             clanPlaceholder = new ClanPlaceholder(this, userController, clansManager, topRankScheduler);
         }
 
+        guildHideOutController.loadHideOuts();
         clansManager.loadAllClans();
         userController.loadAllUsers();
-        guildHideOutController.loadHideOuts();
+
 
         Stream.of(
                 new PlayerConnectionListener(this, cooldownManager, userController),

@@ -23,6 +23,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 import java.io.InvalidObjectException;
 import java.util.List;
@@ -38,6 +39,9 @@ public class HideOutUpgrade implements Listener {
     @EventHandler
     public void onLecternCLick(PlayerInteractEvent event) {
 
+        if(event.getHand() == null) return;
+
+        if(event.getHand().equals(EquipmentSlot.OFF_HAND)) return;
 
         if(event.getAction().equals(Action.RIGHT_CLICK_AIR)) return;
 
@@ -48,8 +52,6 @@ public class HideOutUpgrade implements Listener {
         if(clickedBlock == null) return;
 
         if(!clickedBlock.getType().equals(Material.LECTERN)) return;
-
-        Bukkit.broadcastMessage("4un test");
 
         Player player = event.getPlayer();
 

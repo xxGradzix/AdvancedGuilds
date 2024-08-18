@@ -146,6 +146,9 @@ public class ClanController {
     private boolean isDeputyOwner(Clan clan, Player player) {
         if(clan==null)
             return false;
+
+        if(clan.getDeputyOwnerUUID()==null)
+            return false;
         return clan.getDeputyOwnerUUID().equals(player.getUniqueId());
     }
 
@@ -484,7 +487,7 @@ public class ClanController {
 
     private boolean isOwner(Clan clan, User user) {
         if(clan == null) return false;
-        return clan.getOwnerUUID().equals(user);
+        return clan.getOwnerUUID().equals(user.getUuid());
     }
     private boolean isOwner(Clan clan, UUID user) {
         if(clan == null) return false;

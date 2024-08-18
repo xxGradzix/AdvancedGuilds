@@ -41,6 +41,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InvalidObjectException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -247,18 +248,25 @@ public class GuildHideOutController {
         final String hideoutPanel = guildHideout.getWorldName() + "hideout_panel";
         final String mainStorage = guildHideout.getWorldName() + "hideout_storage";
         final String hideoutTrader = guildHideout.getWorldName() + "hideout_trader";
+        final String stationHall = guildHideout.getWorldName() + "hideout_station_hall";
 
         DHAPI.removeHologram(hideoutPanel);
         DHAPI.removeHologram(mainStorage);
         DHAPI.removeHologram(hideoutTrader);
+        DHAPI.removeHologram(stationHall);
 
         World world = Bukkit.getWorld(guildHideout.getWorldName());
 
         if(world == null) throw new InvalidObjectException("World " + guildHideout.getWorldName() + " does not exist");
 
-        DHAPI.createHologram(hideoutPanel, new Location(world, 0 , 100, 0));
-        DHAPI.createHologram(mainStorage, new Location(world, 0 , 100, 0));
-        DHAPI.createHologram(hideoutTrader, new Location(world, 0 , 100, 0));
+        DHAPI.createHologram(hideoutPanel, new Location(world, -8.5 , 100.5, -24.5), Arrays.asList("ᴘᴀɴᴇʟ ɢɪʟᴅʏᴊɴʏ", "Kliknij, aby zobaczyć ulepszenia"));
+        DHAPI.createHologram(mainStorage, new Location(world, 0.5 , 100, -43.5), Arrays.asList("ᴍᴀɢᴀᴢʏɴ ɢɪʟᴅʏᴊɴʏ", "Kliknij, aby otworzyć magazyn"));
+        DHAPI.createHologram(hideoutTrader, new Location(world, -5 , 100.5, -47), Arrays.asList("ʜᴀɴᴅʟᴀʀᴢ ɢɪʟᴅʏᴊɴʏ", "Klinij, aby otworzyć sklep gildyjny"));
+
+        if(!guildHideout.hasBoughtUpgrade(GuildHideout.Upgrade.STATION_HALL)) {
+            DHAPI.createHologram(guildHideout.getWorldName() + stationHall, new Location(world, 12.5 , 99.5, -43.5), Arrays.asList("ꜱᴛʀᴇꜰᴀ ᴜʟᴇᴘꜱᴢᴇɴ́", "Aby tam przejść kup ulepszenie w panelu"));
+        }
+
 
 
 

@@ -5,6 +5,7 @@ import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 public class HideoutTeleportBlockClick implements Listener {
 
@@ -16,6 +17,10 @@ public class HideoutTeleportBlockClick implements Listener {
 
     @EventHandler
     public void onBlockClick(PlayerInteractEvent event) {
+
+        if(event.getHand() == null) return;
+
+        if(event.getHand().equals(EquipmentSlot.OFF_HAND)) return;
 
         Block clickedBlock = event.getClickedBlock();
 

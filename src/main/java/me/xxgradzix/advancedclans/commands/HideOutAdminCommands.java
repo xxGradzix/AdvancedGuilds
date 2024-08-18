@@ -57,10 +57,10 @@ public class HideOutAdminCommands implements CommandExecutor {
 
         World world = player.getWorld();
 
-        if(!world.getName().startsWith("guild")){
-            player.sendMessage(MessageManager.NOT_IN_GUILD_WORLD);
-            return false;
-        }
+//        if(!world.getName().startsWith("guild")){
+//            player.sendMessage(MessageManager.NOT_IN_GUILD_WORLD);
+//            return false;
+//        }
 
 
         String temp;

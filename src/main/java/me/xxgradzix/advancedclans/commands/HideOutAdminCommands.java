@@ -12,31 +12,40 @@ import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.util.SideEffectSet;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
+import me.xxgradzix.advancedclans.controllers.GuildHideOutController;
 import me.xxgradzix.advancedclans.data.database.entities.User;
 import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
 import me.xxgradzix.advancedclans.data.database.services.GuildHideOutDataManager;
 import me.xxgradzix.advancedclans.exceptions.hideOuts.HideOutDoesNotExistException;
+import me.xxgradzix.advancedclans.exceptions.hideOuts.InvalidHideoutWorldNameException;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.LazyMetadataValue;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InvalidObjectException;
 
 import static me.xxgradzix.advancedclans.controllers.GuildHideOutController.paste;
 
 public class HideOutAdminCommands implements CommandExecutor {
 
     private final AdvancedGuilds plugin;
+    private final GuildHideOutController guildHideOutController;
 
-    public HideOutAdminCommands(AdvancedGuilds plugin) {
+    public HideOutAdminCommands(AdvancedGuilds plugin, GuildHideOutController guildHideOutController) {
         this.plugin = plugin;
+        this.guildHideOutController = guildHideOutController;
     }
 
     @Override
@@ -53,7 +62,6 @@ public class HideOutAdminCommands implements CommandExecutor {
             return false;
         }
 
-        Location loc = new Location(world, 0, 100, 0);
 
         String temp;
         try {
@@ -65,12 +73,16 @@ public class HideOutAdminCommands implements CommandExecutor {
         switch (temp) {
 
             case "1" -> {
-                File file = new File(plugin.getDataFolder().getAbsolutePath() + "/guild.schem");
 
-                player.sendMessage("Paste schem");
-                paste(loc, file);
-
-                GuildHideOutDataManager.resetOrCreateHideOut(world.getName());
+                try {
+                    guildHideOutController.resetHideOutCompletelyOrCreate(world.getName());
+                } catch (InvalidObjectException e) {
+                    player.sendMessage("Taki świat nie istnieje");
+                    return false;
+                } catch (InvalidHideoutWorldNameException e) {
+                    player.sendMessage("Kryjowke mozna otworzyc tylko w swiecie o nazwie z prefixem 'guild_'");
+                    return false;
+                }
             }
             case "2" -> {
 
@@ -85,11 +97,19 @@ public class HideOutAdminCommands implements CommandExecutor {
             }
             case "3" -> {
 
+                Location location = player.getLocation();
 
+                String worldName = strings[1];
 
+                BlockData blockData = Material.LODESTONE.createBlockData();
 
+                Block block = location.getBlock();
+
+                block.setBlockData(blockData);
+
+                // add metadata to block
+                block.setMetadata("hideout", new LazyMetadataValue(plugin, () -> worldName));
             }
-
         }
 
 

@@ -6,6 +6,8 @@ import lombok.*;
 import me.xxgradzix.advancedclans.data.database.entities.fields.UpgradeInfoHolder;
 import me.xxgradzix.advancedclans.data.database.persister.*;
 import me.xxgradzix.advancedclans.exceptions.hideOuts.UpgradeWasNotBoughtException;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 
 import java.util.*;
 
@@ -23,8 +25,20 @@ public class GuildHideout {
     @DatabaseField(persisterClass = UpgradeInfoHolderPersisterMap.class)
     private HashMap<Upgrade, UpgradeInfoHolder> hideoutUpgrades;
 
+//    @Getter
+//    @Setter
+//    @DatabaseField
+//    private Location entryBlockLocation;
+
     @DatabaseField
     private String clanTag;
+
+    public GuildHideout(String hideOutWorldName) {
+        this.worldName = hideOutWorldName;
+        this.hideoutUpgrades = new HashMap<>();
+        clanTag = null;
+//        entryBlockLocation = null;
+    }
 
     public void setClanTag(Clan clan) {
         this.clanTag = clan.getTag();
@@ -63,8 +77,12 @@ public class GuildHideout {
         clanTag = null;
     }
 
+    public Location getTeleportLocation() {
+        return new Location(Bukkit.getWorld(worldName), 0, 100, 0);
+    }
+
     public enum Upgrade {
-        STATION_HALL, BLACKSMITH, WHICH, SORCERER
+        STATION_HALL, BLACKSMITH, WHICH, RESET, SORCERER
     }
 
 }

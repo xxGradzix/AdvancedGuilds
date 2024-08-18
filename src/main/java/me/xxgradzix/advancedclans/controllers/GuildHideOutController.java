@@ -11,21 +11,30 @@ import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.util.SideEffectSet;
+import eu.decentsoftware.holograms.api.DHAPI;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
 import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
 import me.xxgradzix.advancedclans.data.database.services.GuildHideOutDataManager;
 import me.xxgradzix.advancedclans.data.database.entities.GuildHideout;
 import me.xxgradzix.advancedclans.data.database.entities.fields.UpgradeInfoHolder;
 import me.xxgradzix.advancedclans.data.database.entities.User;
+import me.xxgradzix.advancedclans.exceptions.ClanDoesNotExistException;
+import me.xxgradzix.advancedclans.exceptions.PlayerDoesNotBelongToClanException;
+import me.xxgradzix.advancedclans.exceptions.hideOuts.HideOutDoesNotExistException;
 import me.xxgradzix.advancedclans.exceptions.hideOuts.HideOutUpgradeAlreadyBoughtException;
+import me.xxgradzix.advancedclans.exceptions.hideOuts.InvalidHideoutWorldNameException;
 import me.xxgradzix.advancedclans.exceptions.hideOuts.UpgradeWasNotBoughtException;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.Countdown;
 import me.xxgradzix.advancedclans.guildshideoutsystem.upgrades.BlackSmithUpgradePattern;
+import me.xxgradzix.advancedclans.guildshideoutsystem.upgrades.ResetHideoutPattern;
 import me.xxgradzix.advancedclans.guildshideoutsystem.upgrades.StationHallUpgradePattern;
 import me.xxgradzix.advancedclans.guildshideoutsystem.upgrades.UpgradePattern;
+import me.xxgradzix.advancedclans.messages.MessageManager;
+import me.xxgradzix.advancedclans.messages.MessageType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,7 +70,62 @@ public class GuildHideOutController {
             UpgradePattern blacksmithUpgrade = new BlackSmithUpgradePattern(plugin);
             upgradePatterns.put(GuildHideout.Upgrade.BLACKSMITH, blacksmithUpgrade);
 
+            UpgradePattern resetPattern = new ResetHideoutPattern();
+            upgradePatterns.put(GuildHideout.Upgrade.RESET, resetPattern);
+
         }
+    }
+
+    public void attemptTeleportByClickedBlock(Player player, Block block) {
+        if(block == null) return;
+
+        if(!block.hasMetadata("hideout")) return;
+
+        String hideoutWorldName = block.getMetadata("hideout").get(0).asString();
+
+        try {
+            GuildHideOutDataManager.attemptTeleportToHideOut(player, hideoutWorldName);
+        } catch (HideOutDoesNotExistException e) {
+
+            MessageManager.sendMessageFormated(player, MessageManager.HIDEOUT_DOES_NOT_EXIST, MessageType.CHAT);
+            return;
+
+        } catch (ClanDoesNotExistException | PlayerDoesNotBelongToClanException e) {
+            MessageManager.sendMessageFormated(player, MessageManager.YOU_DONT_BELONG_TO_THIS_HIDEOUT, MessageType.CHAT);
+            return;
+        }
+    }
+
+    public GuildHideout getPlayerHideOut(Player player) throws InvalidObjectException {
+        Optional<User> optionalUser = userController.findUserByPlayer(player);
+
+        if(optionalUser.isEmpty()) {
+            throw new InvalidObjectException("Dla gracza " + player.getName() + " nie ma usera");
+        }
+
+        User user = optionalUser.get();
+
+        if(!user.hasClan()) return null;
+
+        if(!ClanAndUserDataManager.getCachedClan(user.getClanTag()).hasHideout()) return null;
+
+        return GuildHideOutDataManager.getHideOut(ClanAndUserDataManager.getCachedClan(user.getClanTag()).getHideoutId());
+
+    }
+
+    public void resetHideOutCompletelyOrCreate(String worldName) throws InvalidObjectException, InvalidHideoutWorldNameException {
+        World world = Bukkit.getWorld(worldName);
+
+        if(world == null) throw new InvalidObjectException("World " + worldName + " does not exist");
+        if(!world.getName().startsWith("guild_")) throw new InvalidHideoutWorldNameException();
+
+        GuildHideout guildHideout = GuildHideOutDataManager.resetOrCreateHideOut(worldName);
+
+        Location loc = new Location(world, 0, 100, 0);
+
+        UpgradePattern pattern = upgradePatterns.get(GuildHideout.Upgrade.RESET);
+        paste(loc, pattern.getSchemFile());
+        prepareHideOutHolograms(guildHideout);
     }
 
     public void upgradeHideOut(@NotNull GuildHideout hideout, GuildHideout.Upgrade upgrade) {
@@ -160,23 +224,6 @@ public class GuildHideOutController {
         return session;
     }
 
-    public GuildHideout getPlayerHideOut(Player player) throws InvalidObjectException {
-        Optional<User> optionalUser = userController.findUserByPlayer(player);
-
-        if(optionalUser.isEmpty()) {
-            throw new InvalidObjectException("Dla gracza " + player.getName() + " nie ma usera");
-        }
-
-        User user = optionalUser.get();
-
-        if(!user.hasClan()) return null;
-
-        if(!ClanAndUserDataManager.getCachedClan(user.getClanTag()).hasHideout()) return null;
-
-        return GuildHideOutDataManager.getHideOut(ClanAndUserDataManager.getCachedClan(user.getClanTag()).getHideoutId());
-
-    }
-
     public void loadHideOuts() {
         List<GuildHideout> guildHideouts = GuildHideOutDataManager.loadAllHideOuts();
 
@@ -186,7 +233,34 @@ public class GuildHideOutController {
                     scheduleUpgrade(guildHideout, upgrade);
                 }
             });
+            try {
+                prepareHideOutHolograms(guildHideout);
+            } catch (InvalidObjectException e) {
+                throw new RuntimeException(e);
+            }
         }
+
+    }
+
+    private void prepareHideOutHolograms(@NotNull GuildHideout guildHideout) throws InvalidObjectException {
+
+        final String hideoutPanel = guildHideout.getWorldName() + "hideout_panel";
+        final String mainStorage = guildHideout.getWorldName() + "hideout_storage";
+        final String hideoutTrader = guildHideout.getWorldName() + "hideout_trader";
+
+        DHAPI.removeHologram(hideoutPanel);
+        DHAPI.removeHologram(mainStorage);
+        DHAPI.removeHologram(hideoutTrader);
+
+        World world = Bukkit.getWorld(guildHideout.getWorldName());
+
+        if(world == null) throw new InvalidObjectException("World " + guildHideout.getWorldName() + " does not exist");
+
+        DHAPI.createHologram(hideoutPanel, new Location(world, 0 , 100, 0));
+        DHAPI.createHologram(mainStorage, new Location(world, 0 , 100, 0));
+        DHAPI.createHologram(hideoutTrader, new Location(world, 0 , 100, 0));
+
+
 
     }
 }

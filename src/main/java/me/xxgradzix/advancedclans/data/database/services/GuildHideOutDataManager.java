@@ -1,13 +1,12 @@
 package me.xxgradzix.advancedclans.data.database.services;
 
+import me.xxgradzix.advancedclans.AdvancedGuilds;
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.GuildHideout;
 import me.xxgradzix.advancedclans.data.database.repositories.GuildHideoutEntityRepository;
 import me.xxgradzix.advancedclans.exceptions.ClanDoesNotExistException;
 import me.xxgradzix.advancedclans.exceptions.PlayerDoesNotBelongToClanException;
 import me.xxgradzix.advancedclans.exceptions.hideOuts.HideOutDoesNotExistException;
-import me.xxgradzix.advancedclans.messages.MessageManager;
-import me.xxgradzix.advancedclans.messages.MessageType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -21,7 +20,7 @@ import java.util.Map;
 public class GuildHideOutDataManager {
 
     private static final HashMap<String, GuildHideout> guildHideouts = new HashMap<>();
-//    private static final HashMap<GuildHideout, Location> guildHideoutEntries = new HashMap<>();
+    private static final HashMap<GuildHideout, Location> guildHideoutEntries = new HashMap<>();
 
     private static GuildHideoutEntityRepository guildHideoutEntityRepository;
 
@@ -49,7 +48,7 @@ public class GuildHideOutDataManager {
 
         guildHideout.reset();
 
-//        guildHideoutEntries.put(guildHideout, guildHideout.getEntryBlockLocation());
+        guildHideoutEntries.remove(guildHideout);
 
         try {
 
@@ -63,18 +62,35 @@ public class GuildHideOutDataManager {
         }
     }
 
-    /** PLAYER METHODS **/
+    public static void setHideOutOperatingLocation(String guildHideoutName, Location location) {
 
-//    public static GuildHideout getHideoutByClickedBlock(Location clickedBlockLocation) {
-//        for (Map.Entry<GuildHideout, Location> entry : guildHideoutEntries.entrySet()) {
-//            if (entry.getValue().equals(clickedBlockLocation)) {
-//                return entry.getKey();
-//            }
-//        }
-//        return null;
-//    }
+        GuildHideout guildHideout = guildHideouts.get(guildHideoutName);
+        guildHideout.setEntryBlockLocation(location);
 
-    public static boolean attemptTeleportToHideOut(Player player, GuildHideout guildHideout) throws HideOutDoesNotExistException, ClanDoesNotExistException, PlayerDoesNotBelongToClanException {
+        updateHideOut(guildHideout);
+
+        guildHideoutEntries.put(guildHideout, location.getBlock().getLocation());
+    }
+    /**
+     * PLAYER METHODS
+     **/
+
+
+
+
+    public static GuildHideout getHideOutByLocation(Location location) {
+        if(guildHideoutEntries.containsValue(location)) {
+            for (Map.Entry<GuildHideout, Location> entry: guildHideoutEntries.entrySet()) {
+                // TODO TO Remove
+                Bukkit.broadcastMessage("Location " + entry.getKey().getClanTag() + " " + location.getBlockX() + " " + location.getBlockY() + " " + location.getBlockZ());
+                if(entry.getValue().equals(location)) {
+                    return entry.getKey();
+                }
+            }
+        }
+        return null;
+    }
+    public static void attemptTeleportToHideOut(Player player, GuildHideout guildHideout) throws HideOutDoesNotExistException, ClanDoesNotExistException, PlayerDoesNotBelongToClanException {
 
         if (guildHideout == null) throw new HideOutDoesNotExistException("Hideout does not exist");
 
@@ -87,13 +103,12 @@ public class GuildHideOutDataManager {
         if(clan.getMembers().contains(player.getUniqueId()) && !player.isOp()) throw new PlayerDoesNotBelongToClanException();
 
         Location teleportLocation = guildHideout.getTeleportLocation();
-        player.teleport(teleportLocation);
+        Bukkit.getScheduler().runTask(AdvancedGuilds.instance, () -> player.teleport(teleportLocation));
 
-        return true;
     }
-    public static boolean attemptTeleportToHideOut(Player player, String guildHideoutName) throws HideOutDoesNotExistException, ClanDoesNotExistException, PlayerDoesNotBelongToClanException {
+    public static void attemptTeleportToHideOut(Player player, String guildHideoutName) throws HideOutDoesNotExistException, ClanDoesNotExistException, PlayerDoesNotBelongToClanException {
         GuildHideout guildHideout = guildHideouts.get(guildHideoutName);
-        return attemptTeleportToHideOut(player, guildHideout);
+        attemptTeleportToHideOut(player, guildHideout);
     }
 
     public static void occupyHideOut(String hideOutWorldName, Clan clan) throws HideOutDoesNotExistException {
@@ -111,13 +126,28 @@ public class GuildHideOutDataManager {
         updateHideOut(guildHideout);
     }
 
+    public static void occupyHideOut(GuildHideout hideout, Clan clan) {
+
+//        GuildHideout guildHideout = guildHideouts.get(hideOutWorldName);
+//
+//        if (guildHideout == null) throw new HideOutDoesNotExistException("Hideout does not exist");
+//
+        hideout = resetOrCreateHideOut(hideout.getWorldName());
+        hideout.setClanTag(clan);
+
+        clan.setHideoutId(hideout.getWorldName());
+        ClanAndUserDataManager.updateClan(clan);
+
+        updateHideOut(hideout);
+    }
+
 
     public static void updateHideOut(GuildHideout hideout) {
         try {
             guildHideoutEntityRepository.createOrUpdateEntity(hideout);
             guildHideouts.put(hideout.getWorldName(), hideout);
         } catch (SQLException e) {
-            // todo MESSAGE send message to player that sql exception occurred
+            throw new RuntimeException(e);
         }
     }
 
@@ -135,5 +165,17 @@ public class GuildHideOutDataManager {
 
     public static GuildHideout getHideOut(@NotNull String name) {
         return guildHideouts.get(name);
+    }
+
+    public static boolean isHideoutOccupied(String worldName) {
+
+        GuildHideout guildHideout = guildHideouts.get(worldName);
+
+        if(guildHideout == null) return false;
+        if(guildHideout.getClanTag() == null) return false;
+
+        Clan clan = ClanAndUserDataManager.getCachedClan(guildHideout.getClanTag());
+
+        return clan != null;
     }
 }

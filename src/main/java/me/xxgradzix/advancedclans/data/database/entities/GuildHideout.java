@@ -22,13 +22,13 @@ public class GuildHideout {
     @DatabaseField(id = true, unique = true)
     private String worldName;
 
-    @DatabaseField(persisterClass = UpgradeInfoHolderPersisterMap.class)
+    @DatabaseField(persisterClass = UpgradeInfoHolderPersisterMap.class, columnDefinition = "LONGBLOB")
     private HashMap<Upgrade, UpgradeInfoHolder> hideoutUpgrades;
 
-//    @Getter
-//    @Setter
-//    @DatabaseField
-//    private Location entryBlockLocation;
+    @Getter
+    @Setter
+    @DatabaseField(persisterClass = LocationPersister.class, columnDefinition = "LONGBLOB")
+    private Location entryBlockLocation;
 
     @DatabaseField
     private String clanTag;
@@ -37,7 +37,7 @@ public class GuildHideout {
         this.worldName = hideOutWorldName;
         this.hideoutUpgrades = new HashMap<>();
         clanTag = null;
-//        entryBlockLocation = null;
+        entryBlockLocation = null;
     }
 
     public void setClanTag(Clan clan) {
@@ -78,11 +78,11 @@ public class GuildHideout {
     }
 
     public Location getTeleportLocation() {
-        return new Location(Bukkit.getWorld(worldName), 0, 100, 0);
+        return new Location(Bukkit.getWorld(worldName), 0.5, 100, 0.5);
     }
 
     public enum Upgrade {
-        STATION_HALL, BLACKSMITH, WHICH, RESET, SORCERER
+        STATION_HALL, BLACKSMITH, WHICH, RESET, SORCERER, VENTURE
     }
 
 }

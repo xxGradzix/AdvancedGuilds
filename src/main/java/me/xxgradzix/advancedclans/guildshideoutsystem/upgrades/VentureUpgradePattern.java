@@ -6,17 +6,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 
-public class StationHallUpgradePattern implements UpgradePattern {
+public class VentureUpgradePattern implements UpgradePattern {
 
     private final File schemFile;
     private final int coolDown;
 
     private final int price;
 
-    public StationHallUpgradePattern(JavaPlugin plugin) {
-        this.schemFile = new File(plugin.getDataFolder().getAbsolutePath() + "/upgrade-station-hall.schem");
-        this.price = 10_000;
-        this.coolDown = 25;
+    public VentureUpgradePattern(JavaPlugin plugin) {
+        this.schemFile = new File(plugin.getDataFolder().getAbsolutePath() + "/venture_station.schem");
+        this.price = 1_000;
+        this.coolDown = 20;
     }
 
     @Override
@@ -31,17 +31,17 @@ public class StationHallUpgradePattern implements UpgradePattern {
 
     @Override
     public double getHologramLocationX() {
-        return 13.5;
+        return 35.0;
     }
 
     @Override
     public double getHologramLocationY() {
-        return 99.5;
+        return 95.5;
     }
 
     @Override
     public double getHologramLocationZ() {
-        return -43.5;
+        return -38.0;
     }
 
     @Override
@@ -51,6 +51,6 @@ public class StationHallUpgradePattern implements UpgradePattern {
 
     @Override
     public Location getHologramLocation(World world) {
-        return new org.bukkit.Location(world, getHologramLocationX(), getHologramLocationY(), getHologramLocationZ());
+        return new Location(world, getHologramLocationX(), getHologramLocationY(), getHologramLocationZ());
     }
 }

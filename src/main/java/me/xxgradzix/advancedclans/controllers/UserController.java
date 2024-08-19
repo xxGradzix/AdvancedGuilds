@@ -16,9 +16,9 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.UUID;
 
+@Setter
 public class UserController {
 
-    @Setter
     private TopRankScheduler topRankScheduler;
 
     public void loadUser(Player player)

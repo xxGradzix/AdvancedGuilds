@@ -19,6 +19,7 @@ import me.xxgradzix.advancedclans.data.database.repositories.UserEntityRepositor
 import me.xxgradzix.advancedclans.listener.*;
 import me.xxgradzix.advancedclans.listener.guildHideOut.HideOutUpgrade;
 import me.xxgradzix.advancedclans.controllers.ClanController;
+import me.xxgradzix.advancedclans.listener.guildHideOut.HideoutOccupyBlockPlace;
 import me.xxgradzix.advancedclans.listener.guildHideOut.HideoutTeleportBlockClick;
 import me.xxgradzix.advancedclans.manager.CooldownManager;
 import me.xxgradzix.advancedclans.controllers.GuildHideOutController;
@@ -157,7 +158,8 @@ public final class AdvancedGuilds extends JavaPlugin {
                 new AsyncPlayerChatListener(this, userController),
                 new PlayerInteractionEntityListener(userController, cooldownManager),
                 new HideOutUpgrade(guildHideOutController),
-                new HideoutTeleportBlockClick(guildHideOutController)
+                new HideoutTeleportBlockClick(guildHideOutController),
+                new HideoutOccupyBlockPlace(guildHideOutController)
         ).forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
 
         getCommand("klan").setExecutor(new ClanCommand(clansManager));

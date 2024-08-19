@@ -122,18 +122,47 @@ public class ItemManager {
 
         return item;
     }
+    public static ItemStack getVentureUpgradeButton(int price, boolean isUnlocked, boolean isFinished, int secondsTillReady) {
+        ItemStack item = new ItemStack(Material.CHEST_MINECART);
+
+        ItemMeta itemMeta = item.getItemMeta();
+
+        itemMeta.setDisplayName(ColorFixer.addColors("&7ᴇᴋꜱᴘᴇᴅʏᴄᴊᴇ ɢɪʟᴅʏᴊɴᴇ"));
+
+        ArrayList<String> lore = new ArrayList<>();
+        lore.add(" ");
+
+        if(isUnlocked && isFinished) {
+            itemMeta.addEnchant(Enchantment.LUCK, 1, true);
+            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+
+            lore.add(ColorFixer.addColors("&aᴜʟᴇᴘꜱᴢᴇɴɪᴇ ᴊᴇꜱᴛ ᴊᴜż ᴏᴅʙʟᴏᴋᴏᴡᴀɴᴇ"));
+        } else if (isUnlocked) {
+
+            lore.add(ColorFixer.addColors("&eᴜʟᴇᴘꜱᴢᴇɴɪᴇ ᴢᴏꜱᴛᴀᴌᴏ ᴋᴜᴘɪᴏɴᴇ ɪ ᴢᴏꜱᴛᴀɴɪᴇ ᴜᴋᴏńᴄᴢᴏɴᴇ ᴢа&7: &6" + MessageManager.secondsToTimeFormat(secondsTillReady)));
+        } else {
+
+            lore.add(ColorFixer.addColors("&7ᴅᴀᴊᴇ ᴍᴏżʟɪᴡᴏść ᴡʏꜱʏᴌᴀɴɪᴀ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ ɢɪʟᴅʏᴊɴʏᴄʜ"));
+            lore.add(ColorFixer.addColors(" "));
+            lore.add(ColorFixer.addColors("&7ᴄᴇɴᴀ ᴏᴅʙʟᴏᴋᴏᴡᴀɴɪᴀ: &e" + price + " ᴍᴏɴᴇᴛ"));
+            lore.add(ColorFixer.addColors(" "));
+            lore.add(ColorFixer.addColors("&a%lᴋʟɪᴋɴɪᴊ ᴀʙʏ ᴋᴜᴘɪć ᴜʟᴇᴘꜱᴢᴇɴɪᴇ"));
+        }
+
+        itemMeta.setLore(lore);
+
+        item.setItemMeta(itemMeta);
+
+        return item;
+    }
 
 
     public static ItemStack getUpgradeButton(GuildHideout.Upgrade upgrade, int price, boolean bought, boolean finished, Long timeTOCompletionSeconds) {
-        switch (upgrade) {
-            case STATION_HALL:
-                return getMainHallUpgradeButton(price, bought, finished, timeTOCompletionSeconds);
-            case BLACKSMITH:
-                return getBlacksmithUpgradeButton(price, bought, finished, timeTOCompletionSeconds);
-            case SORCERER:
-                return getSorcererUpgradeButton(price, bought, finished, Math.toIntExact(timeTOCompletionSeconds));
-            default:
-                return null;
-        }
+        return switch (upgrade) {
+            case STATION_HALL -> getMainHallUpgradeButton(price, bought, finished, timeTOCompletionSeconds);
+            case BLACKSMITH -> getBlacksmithUpgradeButton(price, bought, finished, timeTOCompletionSeconds);
+            case VENTURE -> getVentureUpgradeButton(price, bought, finished, Math.toIntExact(timeTOCompletionSeconds));
+            default -> null;
+        };
     }
 }

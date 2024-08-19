@@ -2,12 +2,8 @@ package me.xxgradzix.advancedclans.listener.guildHideOut;
 
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
+import eu.decentsoftware.holograms.api.DHAPI;
 import me.xxgradzix.advancedclans.data.database.entities.GuildHideout;
-import me.xxgradzix.advancedclans.data.database.entities.fields.UpgradeInfoHolder;
-import me.xxgradzix.advancedclans.data.database.entities.User;
-import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
-import me.xxgradzix.advancedclans.data.database.services.GuildHideOutDataManager;
-import me.xxgradzix.advancedclans.exceptions.hideOuts.HideOutUpgradeAlreadyBoughtException;
 import me.xxgradzix.advancedclans.exceptions.hideOuts.UpgradeWasNotBoughtException;
 import me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager;
 import me.xxgradzix.advancedclans.guildshideoutsystem.upgrades.UpgradePattern;
@@ -39,23 +35,19 @@ public class HideOutUpgrade implements Listener {
     @EventHandler
     public void onLecternCLick(PlayerInteractEvent event) {
 
-        if(event.getHand() == null) return;
-
-        if(event.getHand().equals(EquipmentSlot.OFF_HAND)) return;
-
-        if(event.getAction().equals(Action.RIGHT_CLICK_AIR)) return;
-
-        if(!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
-
         Block clickedBlock = event.getClickedBlock();
 
         if(clickedBlock == null) return;
-
         if(!clickedBlock.getType().equals(Material.LECTERN)) return;
+        if(event.getHand() == null) return;
+        if(event.getHand().equals(EquipmentSlot.OFF_HAND)) return;
+        if(!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
+        if(clickedBlock.getLocation().getBlockX() != -9 || clickedBlock.getLocation().getBlockZ() != -25) return;
 
         Player player = event.getPlayer();
 
         GuildHideout playerHideOut;
+
         try {
             playerHideOut = guildHideOutController.getPlayerHideOut(player);
         } catch (InvalidObjectException e) {
@@ -90,24 +82,17 @@ public class HideOutUpgrade implements Listener {
         }
 
         GuiItem hallItem = new GuiItem(ItemManager.getMainHallUpgradeButton(upgradePattern.getPrice(), playerHideOut.hasBoughtUpgrade(stationHallUpgrade), playerHideOut.hasBoughtUpgrade(stationHallUpgrade), timeToCompletionSeconds));
-
         hallItem.setAction(inventoryClickEvent -> {
 
             if(playerHideOut.hasBoughtUpgrade(stationHallUpgrade) && playerHideOut.hasFinishedUpgrade(stationHallUpgrade)) {
-
                 openMainHallUpgrades(player, playerHideOut);
                 return;
-
             } else if(playerHideOut.hasBoughtUpgrade(stationHallUpgrade) && !playerHideOut.hasFinishedUpgrade(stationHallUpgrade)) {
-
                 MessageManager.sendMessageFormated(player, MessageManager.UPGRADE_IS_NOT_FINISHED_YET, MessageType.CHAT);
-
             } else if(!playerHideOut.hasBoughtUpgrade(stationHallUpgrade)) {
-
                 // TODO buy logic
-
                 guildHideOutController.upgradeHideOut(playerHideOut, stationHallUpgrade);
-
+                DHAPI.removeHologram(playerHideOut.getWorldName() + GuildHideOutController.STATION_HALL);
             }
 
             openUpgradeGui(player, playerHideOut);
@@ -126,7 +111,7 @@ public class HideOutUpgrade implements Listener {
                 .title(Component.text("Ulepszenia stacji rzemieślniczych")) //TODO Gui name
                 .create();
 
-        for(GuildHideout.Upgrade upgrade : List.of(GuildHideout.Upgrade.BLACKSMITH, GuildHideout.Upgrade.SORCERER)) {
+        for(GuildHideout.Upgrade upgrade : List.of(GuildHideout.Upgrade.BLACKSMITH, GuildHideout.Upgrade.VENTURE)) {
 
             UpgradePattern upgradePattern = guildHideOutController.getUpgradePattern(upgrade);
 
@@ -145,6 +130,7 @@ public class HideOutUpgrade implements Listener {
             GuiItem upgradeButton = new GuiItem(ItemManager.getUpgradeButton(upgrade, upgradePattern.getPrice(), playerHideOut.hasBoughtUpgrade(upgrade), playerHideOut.hasFinishedUpgrade(upgrade), timeToCompletionSeconds));
 
             upgradeButton.setAction(inventoryClickEvent -> {
+
                 if (playerHideOut.hasBoughtUpgrade(upgrade) && playerHideOut.hasFinishedUpgrade(upgrade)) {
                     MessageManager.sendMessageFormated(player, MessageManager.UPGRADE_IS_BOUGHT, MessageType.CHAT);
                 } else if (playerHideOut.hasBoughtUpgrade(upgrade) && !playerHideOut.hasFinishedUpgrade(upgrade)) {
@@ -167,6 +153,8 @@ public class HideOutUpgrade implements Listener {
                 return 4;
             case SORCERER:
                 return 2;
+            case VENTURE:
+                return 6;
             default:
                 throw new IllegalArgumentException("Unknown upgrade: " + upgrade.name());
         }

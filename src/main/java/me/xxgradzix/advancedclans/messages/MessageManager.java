@@ -239,6 +239,9 @@ public class MessageManager extends OkaeriConfig {
     @Comment("Hideout does not exist")
     public static String HIDEOUT_DOES_NOT_EXIST = "&7ᴋʀʏᴊóᴡᴋᴀ ɴɪᴇ ɪꜱᴛɴɪᴇᴊᴇ";
 
+    @Comment("Hideout already occupied")
+    public static String HIDEOUT_ALREADY_OCCUPIED = "&7ᴋʀʏᴊóᴡᴋᴀ ᴊᴜż ᴢᴀᴊęᴛᴀ";
+
     public static void sendMessageFormated(Player player, String message, MessageType type) {
         message = ColorFixer.addColors(message);
         switch (type) {

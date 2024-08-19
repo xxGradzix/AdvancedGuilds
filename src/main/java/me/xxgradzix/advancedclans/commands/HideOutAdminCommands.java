@@ -1,16 +1,5 @@
 package me.xxgradzix.advancedclans.commands;
 
-import com.fastasyncworldedit.core.Fawe;
-import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.extent.clipboard.Clipboard;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
-import com.sk89q.worldedit.function.operation.Operation;
-import com.sk89q.worldedit.function.operation.Operations;
-import com.sk89q.worldedit.session.ClipboardHolder;
-import com.sk89q.worldedit.util.SideEffectSet;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
 import me.xxgradzix.advancedclans.controllers.GuildHideOutController;
 import me.xxgradzix.advancedclans.data.database.entities.User;
@@ -19,24 +8,16 @@ import me.xxgradzix.advancedclans.data.database.services.GuildHideOutDataManager
 import me.xxgradzix.advancedclans.exceptions.hideOuts.HideOutDoesNotExistException;
 import me.xxgradzix.advancedclans.exceptions.hideOuts.InvalidHideoutWorldNameException;
 import me.xxgradzix.advancedclans.messages.MessageManager;
-import org.bukkit.Bukkit;
+import me.xxgradzix.advancedclans.messages.MessageType;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.metadata.LazyMetadataValue;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InvalidObjectException;
-
-import static me.xxgradzix.advancedclans.controllers.GuildHideOutController.paste;
 
 public class HideOutAdminCommands implements CommandExecutor {
 
@@ -56,11 +37,6 @@ public class HideOutAdminCommands implements CommandExecutor {
         }
 
         World world = player.getWorld();
-
-//        if(!world.getName().startsWith("guild")){
-//            player.sendMessage(MessageManager.NOT_IN_GUILD_WORLD);
-//            return false;
-//        }
 
 
         String temp;
@@ -101,14 +77,19 @@ public class HideOutAdminCommands implements CommandExecutor {
 
                 String worldName = strings[1];
 
-                BlockData blockData = Material.LODESTONE.createBlockData();
+                try {
+                    guildHideOutController.setOperatingLocationForHideout(worldName, location);
+                } catch (HideOutDoesNotExistException e) {
+                    MessageManager.sendMessageFormated(player, MessageManager.HIDEOUT_DOES_NOT_EXIST, MessageType.CHAT);
+                }
 
-                Block block = location.getBlock();
-
-                block.setBlockData(blockData);
-
-                // add metadata to block
-                block.setMetadata("hideout", new LazyMetadataValue(plugin, () -> worldName));
+//                BlockData blockData = Material.LODESTONE.createBlockData();
+//
+//                Block block = location.getBlock();
+//
+//                block.setBlockData(blockData);
+//
+//                block.setMetadata("hideout", new LazyMetadataValue(plugin, () -> worldName));
             }
         }
 

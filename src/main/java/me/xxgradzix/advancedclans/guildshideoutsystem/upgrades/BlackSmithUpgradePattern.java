@@ -16,7 +16,7 @@ public class BlackSmithUpgradePattern implements UpgradePattern {
     public BlackSmithUpgradePattern(JavaPlugin plugin) {
         this.schemFile = new File(plugin.getDataFolder().getAbsolutePath() + "/blacksmith-upgrade.schem");
         this.price = 1_000;
-        this.coolDown = 90;
+        this.coolDown = 20;
     }
 
     @Override

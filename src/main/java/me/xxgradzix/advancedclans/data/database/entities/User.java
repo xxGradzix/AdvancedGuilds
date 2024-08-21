@@ -64,6 +64,10 @@ public class User {
     }
 
     public void setClan(Clan clan) {
+        if(clan == null) {
+            this.clanTag = null;
+            return;
+        }
         this.clanTag = clan.getTag();
     }
 

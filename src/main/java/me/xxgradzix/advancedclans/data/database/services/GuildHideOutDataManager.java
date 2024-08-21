@@ -1,5 +1,6 @@
 package me.xxgradzix.advancedclans.data.database.services;
 
+import eu.decentsoftware.holograms.api.DHAPI;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.GuildHideout;
@@ -7,15 +8,20 @@ import me.xxgradzix.advancedclans.data.database.repositories.GuildHideoutEntityR
 import me.xxgradzix.advancedclans.exceptions.ClanDoesNotExistException;
 import me.xxgradzix.advancedclans.exceptions.PlayerDoesNotBelongToClanException;
 import me.xxgradzix.advancedclans.exceptions.hideOuts.HideOutDoesNotExistException;
+import me.xxgradzix.advancedclans.guildshideoutsystem.upgrades.UpgradePattern;
+import me.xxgradzix.advancedclans.utils.ColorFixer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static me.xxgradzix.advancedclans.controllers.GuildHideOutController.*;
 
 public class GuildHideOutDataManager {
 
@@ -49,40 +55,58 @@ public class GuildHideOutDataManager {
         guildHideout.reset();
 
         guildHideoutEntries.remove(guildHideout);
-
+        refreshHideoutOutpostHolograms(guildHideout, guildHideout.getEntryBlockLocation());
         try {
-
             guildHideouts.put(hideOutWorldName, guildHideout);
             guildHideoutEntityRepository.createOrUpdateEntity(guildHideout);
-
             return guildHideout;
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static void setHideOutOperatingLocation(String guildHideoutName, Location location) {
+    public static void setHideOutOperatingLocation(GuildHideout guildHideout, Location location) {
+        if(location == null) return;
 
-        GuildHideout guildHideout = guildHideouts.get(guildHideoutName);
+        location = location.getBlock().getLocation();
+
         guildHideout.setEntryBlockLocation(location);
 
         updateHideOut(guildHideout);
+        guildHideoutEntries.put(guildHideout, location);
 
-        guildHideoutEntries.put(guildHideout, location.getBlock().getLocation());
+        refreshHideoutOutpostHolograms(guildHideout, location);
     }
+
+    public static void refreshHideoutOutpostHolograms(GuildHideout guildHideout, Location location) {
+        if(location == null) return;
+        location = location.getBlock().getLocation();
+
+
+        final String defaultHideoutHologram = guildHideout.getWorldName() + DEFAULT_HIDEOUT_HOLOGRAM_SUFFIX;
+        final String occupiedHideoutHologram = guildHideout.getWorldName() + OCCUPIED_HIDEOUT_HOLOGRAM_SUFFIX;
+
+        DHAPI.removeHologram(defaultHideoutHologram);
+        DHAPI.removeHologram(occupiedHideoutHologram);
+
+        if(guildHideout.getClanTag() == null || guildHideout.getClanTag().isEmpty()) {
+            DHAPI.createHologram(defaultHideoutHologram, location.clone().add(0.5, 2, 0.5), Arrays.asList(ColorFixer.addColors("#b59651&lᴋʀʏᴊóᴡᴋᴀ ɢɪʟᴅʏᴊɴᴀ"), ColorFixer.addColors("&7ᴘᴏᴌóż"), ColorFixer.addColors("#55875fᴢᴇꜱᴛᴀᴡ ᴅᴏ ᴛᴡᴏʀᴢᴇɴɪᴀ ɢɪʟᴅɪɪ"), ColorFixer.addColors("&7ᴀʙʏ ᴢᴀᴊąć ᴛą ᴋʀʏᴊóᴡᴋę")));
+            UpgradePattern pattern = upgradePatterns.get(GuildHideout.Upgrade.OUTPOST_PODEST);
+            paste(location, pattern.getSchemFile());
+        } else {
+            DHAPI.createHologram(occupiedHideoutHologram, location.clone().add(0.5, 2, 0.5), Arrays.asList(ColorFixer.addColors("&7&lᴋʀʏᴊóᴡᴋᴀ ɢɪʟᴅɪɪ #b59651&l" + guildHideout.getClanTag()), ColorFixer.addColors("&7ᴋʟɪᴋɴɪᴊ ᴀʙʏ ᴢᴇᴊść ᴅᴏ ᴋʀʏᴊóᴡᴋɪ")));
+            UpgradePattern pattern = upgradePatterns.get(GuildHideout.Upgrade.OUTPOST_HUT);
+            paste(location, pattern.getSchemFile());
+        }
+    }
+
     /**
      * PLAYER METHODS
      **/
 
-
-
-
     public static GuildHideout getHideOutByLocation(Location location) {
         if(guildHideoutEntries.containsValue(location)) {
             for (Map.Entry<GuildHideout, Location> entry: guildHideoutEntries.entrySet()) {
-                // TODO TO Remove
-                Bukkit.broadcastMessage("Location " + entry.getKey().getClanTag() + " " + location.getBlockX() + " " + location.getBlockY() + " " + location.getBlockZ());
                 if(entry.getValue().equals(location)) {
                     return entry.getKey();
                 }
@@ -90,6 +114,7 @@ public class GuildHideOutDataManager {
         }
         return null;
     }
+
     public static void attemptTeleportToHideOut(Player player, GuildHideout guildHideout) throws HideOutDoesNotExistException, ClanDoesNotExistException, PlayerDoesNotBelongToClanException {
 
         if (guildHideout == null) throw new HideOutDoesNotExistException("Hideout does not exist");
@@ -106,6 +131,7 @@ public class GuildHideOutDataManager {
         Bukkit.getScheduler().runTask(AdvancedGuilds.instance, () -> player.teleport(teleportLocation));
 
     }
+
     public static void attemptTeleportToHideOut(Player player, String guildHideoutName) throws HideOutDoesNotExistException, ClanDoesNotExistException, PlayerDoesNotBelongToClanException {
         GuildHideout guildHideout = guildHideouts.get(guildHideoutName);
         attemptTeleportToHideOut(player, guildHideout);
@@ -128,10 +154,6 @@ public class GuildHideOutDataManager {
 
     public static void occupyHideOut(GuildHideout hideout, Clan clan) {
 
-//        GuildHideout guildHideout = guildHideouts.get(hideOutWorldName);
-//
-//        if (guildHideout == null) throw new HideOutDoesNotExistException("Hideout does not exist");
-//
         hideout = resetOrCreateHideOut(hideout.getWorldName());
         hideout.setClanTag(clan);
 
@@ -139,6 +161,7 @@ public class GuildHideOutDataManager {
         ClanAndUserDataManager.updateClan(clan);
 
         updateHideOut(hideout);
+        refreshHideoutOutpostHolograms(hideout, hideout.getEntryBlockLocation());
     }
 
 
@@ -156,6 +179,10 @@ public class GuildHideOutDataManager {
             List<GuildHideout> allEntities = guildHideoutEntityRepository.getAllEntities();
             for(GuildHideout hideout : allEntities) {
                 guildHideouts.put(hideout.getWorldName(), hideout);
+                if(hideout.getEntryBlockLocation() != null) {
+                    guildHideoutEntries.put(hideout, hideout.getEntryBlockLocation());
+                    refreshHideoutOutpostHolograms(hideout, hideout.getEntryBlockLocation());
+                }
             }
             return allEntities;
         } catch (SQLException e) {
@@ -170,10 +197,8 @@ public class GuildHideOutDataManager {
     public static boolean isHideoutOccupied(String worldName) {
 
         GuildHideout guildHideout = guildHideouts.get(worldName);
-
         if(guildHideout == null) return false;
         if(guildHideout.getClanTag() == null) return false;
-
         Clan clan = ClanAndUserDataManager.getCachedClan(guildHideout.getClanTag());
 
         return clan != null;

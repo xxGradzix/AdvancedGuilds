@@ -16,6 +16,7 @@ import me.xxgradzix.advancedclans.data.database.repositories.ClanEntityRepositor
 import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
 import me.xxgradzix.advancedclans.data.database.repositories.GuildHideoutEntityRepository;
 import me.xxgradzix.advancedclans.data.database.repositories.UserEntityRepository;
+import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.ExpeditionGui;
 import me.xxgradzix.advancedclans.listener.*;
 import me.xxgradzix.advancedclans.listener.guildHideOut.HideOutUpgrade;
 import me.xxgradzix.advancedclans.controllers.ClanController;
@@ -43,7 +44,7 @@ public final class AdvancedGuilds extends JavaPlugin {
 
     // manager
     private UserController userController;
-    private ClanController clansManager;
+    private ClanController clansController;
     private CooldownManager cooldownManager;
 
     private TopRankScheduler topRankScheduler;
@@ -125,17 +126,18 @@ public final class AdvancedGuilds extends JavaPlugin {
 
         clanAndUserDataManager = new ClanAndUserDataManager(clanEntityRepository, userEntityRepository);
         guildHideOutDataManager = new GuildHideOutDataManager(guildHideoutEntityRepository);
+        clansController = new ClanController(this, clanAndUserDataManager);
 
         userController = new UserController();
-        clansManager = new ClanController(this, clanAndUserDataManager);
         guildHideOutController = new GuildHideOutController(userController, this);
 
+        new ExpeditionGui(guildHideOutController, clansController);
 
-        topRankScheduler = new TopRankScheduler(userController, clansManager);
+        topRankScheduler = new TopRankScheduler(userController, clansController);
 
         topRankScheduler.runTaskTimerAsynchronously(this, 0, 20 * 60 * 2);
 
-        clansManager.setTopRankScheduler(topRankScheduler);
+        clansController.setTopRankScheduler(topRankScheduler);
         userController.setTopRankScheduler(topRankScheduler);
 
         // manager
@@ -143,11 +145,11 @@ public final class AdvancedGuilds extends JavaPlugin {
         cooldownManager = new CooldownManager();
 
         if(getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            clanPlaceholder = new ClanPlaceholder(this, userController, clansManager, topRankScheduler);
+            clanPlaceholder = new ClanPlaceholder(this, userController, clansController, topRankScheduler);
         }
 
         guildHideOutController.loadHideOuts();
-        clansManager.loadAllClans();
+        clansController.loadAllClans();
         userController.loadAllUsers();
 
 
@@ -162,9 +164,9 @@ public final class AdvancedGuilds extends JavaPlugin {
                 new HideoutOccupyBlockPlace(guildHideOutController)
         ).forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
 
-        getCommand("klan").setExecutor(new ClanCommand(clansManager));
+        getCommand("klan").setExecutor(new ClanCommand(clansController));
         getCommand("gracz").setExecutor(new PlayerCommand(userController));
-        getCommand("stworzkryjowke").setExecutor(new HideOutAdminCommands(instance, guildHideOutController));
+        getCommand("stworzkryjowke").setExecutor(new HideOutAdminCommands(guildHideOutController));
 
     }
 

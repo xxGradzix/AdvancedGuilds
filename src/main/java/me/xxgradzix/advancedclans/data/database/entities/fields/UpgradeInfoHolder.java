@@ -6,13 +6,12 @@ import me.xxgradzix.advancedclans.exceptions.hideOuts.UpgradeWasNotBoughtExcepti
 
 import java.io.Serializable;
 
+@Setter
 @Getter
 public class UpgradeInfoHolder implements Serializable {
 
-    @Setter
     private boolean bought;
 
-    @Setter
     private Long timeOfCompletion;
 
     public UpgradeInfoHolder(Long timeOfCompletion, boolean bought) {

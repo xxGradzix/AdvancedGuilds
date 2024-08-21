@@ -5,6 +5,7 @@ import me.xxgradzix.advancedclans.AdvancedGuilds;
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.User;
 import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
+import me.xxgradzix.advancedclans.data.database.services.GuildHideOutDataManager;
 import me.xxgradzix.advancedclans.events.*;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.messages.MessageType;
@@ -132,7 +133,7 @@ public class ClanController {
         Bukkit.getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
             clan.invite(targetUser);
-
+            ClanAndUserDataManager.updateClan(clan);
             MessageManager.sendMessageFormated(deputyOwner, MessageManager.CLAN_INVITED_SENDER.replace("{player}", target.getName()), MessageType.CHAT);
             MessageManager.sendMessageFormated(target, MessageManager.CLAN_INVITE_RECEIVED.replace("{clan}", clan.getTag()), MessageType.CHAT);
         }
@@ -254,8 +255,9 @@ public class ClanController {
             return;
         }
         if(!clan.hasInvite(user)) {
-            MessageManager.sendMessageFormated(player, MessageManager.NOT_RECEIVED_INVITE, MessageType.CHAT);
-            return;}
+            MessageManager.sendMessageFormated(player, MessageManager.NOT_RECEIVED_INVITE.replace("{clan}", clan.getTag()), MessageType.CHAT);
+            return;
+        }
         if(isLimitMember(clan)) {
             MessageManager.sendMessageFormated(player, MessageManager.LIMIT_MEMBERS_REACHED, MessageType.CHAT);
             return;
@@ -307,7 +309,13 @@ public class ClanController {
         if(player==null) return deleteClan(clan, null);
         DeleteClanEvent event = new DeleteClanEvent(player, clan);
         Bukkit.getPluginManager().callEvent(event);
-        if (!event.isCancelled()) return deleteClan(clan, player);
+
+        if (!event.isCancelled()) {
+            if(clan.getHideoutId() != null) {
+                GuildHideOutDataManager.resetOrCreateHideOut(clan.getHideoutId());
+            }
+            return deleteClan(clan, player);
+        }
         return false;
     }
 

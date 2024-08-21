@@ -78,11 +78,11 @@ public class GuildHideout {
     }
 
     public Location getTeleportLocation() {
-        return new Location(Bukkit.getWorld(worldName), 0.5, 100, 0.5);
+        return new Location(Bukkit.getWorld(worldName), 0.5, 100, 0.5, 180, 0);
     }
 
     public enum Upgrade {
-        STATION_HALL, BLACKSMITH, WHICH, RESET, SORCERER, VENTURE
+        STATION_HALL, BLACKSMITH, WHICH, RESET, SORCERER, VENTURE, OUTPOST_PODEST, OUTPOST_HUT
     }
 
 }

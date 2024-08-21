@@ -1,14 +1,15 @@
 package me.xxgradzix.advancedclans.commands;
 
-import me.xxgradzix.advancedclans.AdvancedGuilds;
 import me.xxgradzix.advancedclans.controllers.GuildHideOutController;
 import me.xxgradzix.advancedclans.data.database.entities.User;
 import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
 import me.xxgradzix.advancedclans.data.database.services.GuildHideOutDataManager;
 import me.xxgradzix.advancedclans.exceptions.hideOuts.HideOutDoesNotExistException;
 import me.xxgradzix.advancedclans.exceptions.hideOuts.InvalidHideoutWorldNameException;
+import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.ExpeditionGui;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.messages.MessageType;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -21,23 +22,26 @@ import java.io.InvalidObjectException;
 
 public class HideOutAdminCommands implements CommandExecutor {
 
-    private final AdvancedGuilds plugin;
-    private final GuildHideOutController guildHideOutController;
+     private final GuildHideOutController guildHideOutController;
 
-    public HideOutAdminCommands(AdvancedGuilds plugin, GuildHideOutController guildHideOutController) {
-        this.plugin = plugin;
+    public HideOutAdminCommands(GuildHideOutController guildHideOutController) {
         this.guildHideOutController = guildHideOutController;
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        if(!(commandSender instanceof Player player)) {
-            commandSender.sendMessage(MessageManager.ONLY_FOR_PLAYERS);
-            return false;
+//        if(!(commandSender instanceof Player player)) {
+//            commandSender.sendMessage(MessageManager.ONLY_FOR_PLAYERS);
+//            return false;
+//        }
+
+        Player player = (Player) commandSender;
+
+        World world = null;
+
+        if(player != null) {
+            world = player.getWorld();
         }
-
-        World world = player.getWorld();
-
 
         String temp;
         try {
@@ -47,9 +51,7 @@ public class HideOutAdminCommands implements CommandExecutor {
         }
 
         switch (temp) {
-
             case "1" -> {
-
                 try {
                     guildHideOutController.resetHideOutCompletelyOrCreate(world.getName());
                 } catch (InvalidObjectException e) {
@@ -61,41 +63,29 @@ public class HideOutAdminCommands implements CommandExecutor {
                 }
             }
             case "2" -> {
-
                 User cachedUser = ClanAndUserDataManager.getCachedUser(player.getUniqueId());
-
                 try {
                     GuildHideOutDataManager.occupyHideOut(world.getName(), ClanAndUserDataManager.getCachedClan(cachedUser.getClanTag()));
                 } catch (HideOutDoesNotExistException e) {
                     player.sendMessage(MessageManager.HIDEOUT_DOES_NOT_EXIST);
                 }
-
             }
             case "3" -> {
-
                 Location location = player.getLocation();
-
                 String worldName = strings[1];
-
                 try {
                     guildHideOutController.setOperatingLocationForHideout(worldName, location);
                 } catch (HideOutDoesNotExistException e) {
                     MessageManager.sendMessageFormated(player, MessageManager.HIDEOUT_DOES_NOT_EXIST, MessageType.CHAT);
                 }
+            }
+            case "4" -> {
+                String playername = strings[1];
 
-//                BlockData blockData = Material.LODESTONE.createBlockData();
-//
-//                Block block = location.getBlock();
-//
-//                block.setBlockData(blockData);
-//
-//                block.setMetadata("hideout", new LazyMetadataValue(plugin, () -> worldName));
+                Player player1 = Bukkit.getPlayer(playername);
+                ExpeditionGui.openExpeditionGui(player1);
             }
         }
-
-
-
         return false;
     }
-
 }

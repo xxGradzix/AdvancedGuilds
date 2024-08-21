@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.xxgradzix.advancedclans.data.database.persister.StringListPersister;
 import me.xxgradzix.advancedclans.data.database.persister.UUIDListPersister;
+import org.stringtemplate.v4.ST;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ public class Clan {
     @DatabaseField(id = true, unique = true)
     private String tag;
 
+    @Getter
     @Setter
     @DatabaseField
     private UUID ownerUUID;
@@ -28,12 +30,12 @@ public class Clan {
     private UUID ownerDeputyUUID;
 
     @Getter
-    @DatabaseField(persisterClass = UUIDListPersister.class)
+    @DatabaseField(persisterClass = UUIDListPersister.class, columnDefinition = "LONGBLOB")
     private List<UUID> members;
 
 
     @Getter
-    @DatabaseField(persisterClass = StringListPersister.class)
+    @DatabaseField(persisterClass = StringListPersister.class, columnDefinition = "LONGBLOB")
     private List<String> alliances;
 
     @Getter
@@ -44,9 +46,9 @@ public class Clan {
     private String hideout;
 
 
-    private final List<User> invitedPlayers = new ArrayList<>();
+    private final List<UUID> invitedPlayers = new ArrayList<>();
 
-    private final List<Clan> inviteAlliances = new ArrayList<>();
+    private final List<String> inviteAlliances = new ArrayList<>();
 
 
 
@@ -91,11 +93,11 @@ public class Clan {
     }
 
     public boolean hasInvite(User user) {
-        return invitedPlayers.contains(user);
+        return invitedPlayers.contains(user.getUuid());
     }
 
     public void joinUser(User user) {
-        invitedPlayers.remove(user);
+        invitedPlayers.remove(user.getUuid());
         members.add(user.getUuid());
     }
 
@@ -114,15 +116,11 @@ public class Clan {
     }
 
     public void invite(User user) {
-        invitedPlayers.add(user);
+        invitedPlayers.add(user.getUuid());
     }
 
     public void cancelInvite(User user) {
-        invitedPlayers.remove(user);
-    }
-
-    public UUID getOwnerUUID() {
-        return ownerUUID;
+        invitedPlayers.remove(user.getUuid());
     }
 
     public UUID getDeputyOwnerUUID() {
@@ -135,19 +133,19 @@ public class Clan {
     }
 
     public boolean isSuggestAlliance(Clan clan) {
-        return inviteAlliances.contains(clan);
+        return inviteAlliances.contains(clan.getTag());
     }
 
     public void inviteAlliance(Clan clan) {
-        inviteAlliances.add(clan);
+        inviteAlliances.add(clan.getTag());
     }
 
     public void removeInviteAlliance(Clan clan) {
-        inviteAlliances.remove(clan);
+        inviteAlliances.remove(clan.getTag());
     }
 
     public void removeSuggestAlliance(Clan clan) {
-        inviteAlliances.remove(clan);
+        inviteAlliances.remove(clan.getTag());
     }
 
     public boolean isOwner(User user) {

@@ -241,6 +241,15 @@ public class MessageManager extends OkaeriConfig {
 
     @Comment("Hideout already occupied")
     public static String HIDEOUT_ALREADY_OCCUPIED = "&7ᴋʀʏᴊóᴡᴋᴀ ᴊᴜż ᴢᴀᴊęᴛᴀ";
+    @Comment("Expedition failed")
+    public static String EXPEDITION_FAILED = "&7ᴇᴋꜱᴘᴇᴅʏᴄᴊᴀ ᴢᴀᴋᴏćᴄᴢʏᴌᴀ ꜱɪę̨ ᴘᴏʀᴀżᴋą";
+
+    @Comment("Expedition success")
+    public static String EXPEDITION_SUCCESS = "&7ᴇᴋꜱᴘᴇᴅʏᴄᴊᴀ ᴢᴀᴋᴏńᴄᴢʏʟᴀ ꜱɪę̨ ꜱᴜᴋᴄᴇꜱᴇᴍ";
+    @Comment("Expedition pending")
+    public static String EXPEDITION_PENDING = "&7ᴇᴋꜱᴘᴇᴅʏᴄᴊᴀ ᴊᴇꜱᴢᴄᴢᴇ ꜱɪę ɴɪᴇ ᴢᴀᴋᴏńᴄᴢʏʟᴀ";
+    @Comment("Hideout does not have access to this")
+    public static String YOUR_HIDEOUT_DOES_NOT_HAVE_ACCESS_TO_THIS = "&7ᴛᴡᴏᴊᴀ ᴋʀʏᴊóᴡᴋᴀ ɴɪᴇ ᴍᴀ ᴅᴏꜱᴛᴇᴘᴜ ᴅᴏ ᴛᴇɢᴏ";
 
     public static void sendMessageFormated(Player player, String message, MessageType type) {
         message = ColorFixer.addColors(message);

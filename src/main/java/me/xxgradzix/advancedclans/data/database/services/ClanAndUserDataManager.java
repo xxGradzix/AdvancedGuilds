@@ -4,7 +4,6 @@ import me.xxgradzix.advancedclans.data.database.entities.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.User;
 import me.xxgradzix.advancedclans.data.database.repositories.ClanEntityRepository;
 import me.xxgradzix.advancedclans.data.database.repositories.UserEntityRepository;
-import org.bukkit.Bukkit;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -24,32 +23,31 @@ public class ClanAndUserDataManager {
         ClanAndUserDataManager.userEntityRepository = userEntityRepository;
     }
 
-
     public static User getCachedUser(UUID uuid) {
-//        return userData.get(uuid);
-        try {
-            return userEntityRepository.getEntityById(uuid);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+            if(uuid == null) return null;
+//            return userEntityRepository.getEntityById(uuid);
+            return userData.get(uuid);
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     public static Clan getCachedClan(String tag) {
-//        return clansData.get(tag.toUpperCase());
-        try {
-            return clanEntityRepository.getEntityById(tag);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+            if(tag == null) return null;
+//            return clanEntityRepository.getEntityById(tag);
+            return clansData.get(tag.toUpperCase());
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     public static void updateClan(Clan clan) {
         try {
-            clanEntityRepository.createOrUpdateEntity(clan);
             clansData.put(clan.getTag().toUpperCase(), clan);
 
-            Bukkit.broadcastMessage("Clan " + clan.getTag() + " updated " + clan.getHideoutId());
-
+            clanEntityRepository.createOrUpdateEntity(clan);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

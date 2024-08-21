@@ -27,7 +27,7 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if(strings.length == 1) {
-            return Arrays.stream(SubCommands.values()).map(SubCommands::name).toList();
+            return Arrays.stream(SubCommands.values()).map(SubCommands::name).map(String::toLowerCase).toList();
         }
         if(strings.length == 2) {
             if(strings[0].equalsIgnoreCase(SubCommands.INFO.name().toLowerCase()) || strings[0].equalsIgnoreCase(SubCommands.USUN.name().toLowerCase())) {
@@ -46,6 +46,7 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
         USTAWZASTEPCE,
         ZAPROS,
         WYRZUC,
+        DOLACZ,
         PVP
     }
 
@@ -161,6 +162,19 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
                         return false;
                     }
                     clanController.changePvpStatus(player);
+                }
+                break;
+            case DOLACZ: {
+                if (args.length != 2) {
+                    sendHelpMessage(player);
+                    return false;
+                }
+                Clan clan = clanController.getClan(args[1]);
+                if (clan == null) {
+                    MessageManager.sendMessageFormated(player, MessageManager.CLAN_NOT_FOUND.replace("{clan}", args[1]), MessageType.CHAT);
+                    return false;
+                }
+                clanController.joinClan(player, clan);
                 }
                 break;
         }

@@ -1,6 +1,7 @@
 package me.xxgradzix.advancedclans.guildshideoutsystem;
 
 import me.xxgradzix.advancedclans.data.database.entities.GuildHideout;
+import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.ExpeditionDto;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.utils.ColorFixer;
 import org.bukkit.Material;
@@ -8,7 +9,11 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class ItemManager {
@@ -161,8 +166,55 @@ public class ItemManager {
         return switch (upgrade) {
             case STATION_HALL -> getMainHallUpgradeButton(price, bought, finished, timeTOCompletionSeconds);
             case BLACKSMITH -> getBlacksmithUpgradeButton(price, bought, finished, timeTOCompletionSeconds);
+            case SORCERER -> getSorcererUpgradeButton(price, bought, finished, Math.toIntExact(timeTOCompletionSeconds));
             case VENTURE -> getVentureUpgradeButton(price, bought, finished, Math.toIntExact(timeTOCompletionSeconds));
             default -> null;
         };
+    }
+
+    public static @NotNull ItemStack getStartExpeditionItem(double chance, int expeditionLevel, ExpeditionDto.ExpeditionObjective objective, long completionTime) {
+
+        ItemStack item = new ItemStack(Material.CREEPER_BANNER_PATTERN);
+
+        ItemMeta itemMeta = item.getItemMeta();
+
+        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.addItemFlags(ItemFlag.HIDE_DYE);
+        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+        itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+
+        itemMeta.setDisplayName(ColorFixer.addColors("&7ᴇᴋꜱᴘᴇᴅʏᴄᴊᴇ"));
+
+        ArrayList<String> lore = new ArrayList<>();
+
+        lore.add(" ");
+
+        switch (objective) {
+            case STONE -> lore.add(ColorFixer.addColors("&7ᴄᴇʟ: &fᴋᴀᴍɪᴇń"));
+            case WOOD -> lore.add(ColorFixer.addColors("&7ᴄᴇʟ: &fᴅʀᴇᴡɴᴏ"));
+            case CRYSTALS -> lore.add(ColorFixer.addColors("&7ᴄᴇʟ: &fᴋʀʏꜱᴛᴀłʏ"));
+        }
+        switch (expeditionLevel) {
+            case 1 -> lore.add(ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: &fłᴀᴛᴡᴀ"));
+            case 2 -> lore.add(ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: &fᴛʀᴜᴅɴᴀ"));
+            case 3 -> lore.add(ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: &fʙᴀʀᴅᴢᴏ ᴛʀᴜᴅɴᴀ"));
+        }
+        LocalDateTime dateTime = LocalDateTime.ofEpochSecond(completionTime, 0, ZoneOffset.UTC);
+        lore.add(" ");
+        lore.add(ColorFixer.addColors("&7ꜱᴢᴀɴꜱᴀ ɴᴀ ᴘᴏᴡᴏᴅᴢᴇɴɪᴇ: &f" + chance * 100 + "%"));
+        lore.add(" ");
+        lore.add("ɢᴏᴅᴢɪɴᴀ ᴜᴋᴏńᴄᴢᴇɴɪ: " + dateTime.getHour() + ":" + dateTime.getMinute() + ":" + dateTime.getSecond());
+        lore.add(" ");
+        lore.add("ᴋʟɪᴋɴɪᴊ ᴀʙʏ ʀᴏᴢᴘᴏᴄᴢąć");
+
+
+        itemMeta.setLore(lore);
+
+        item.setItemMeta(itemMeta);
+
+        return item;
     }
 }

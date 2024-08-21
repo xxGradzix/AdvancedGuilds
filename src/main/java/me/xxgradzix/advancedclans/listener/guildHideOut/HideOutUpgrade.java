@@ -3,6 +3,7 @@ package me.xxgradzix.advancedclans.listener.guildHideOut;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
 import eu.decentsoftware.holograms.api.DHAPI;
+import io.papermc.paper.event.player.PlayerLecternPageChangeEvent;
 import me.xxgradzix.advancedclans.data.database.entities.GuildHideout;
 import me.xxgradzix.advancedclans.exceptions.hideOuts.UpgradeWasNotBoughtException;
 import me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager;
@@ -18,6 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
@@ -43,6 +45,8 @@ public class HideOutUpgrade implements Listener {
         if(event.getHand().equals(EquipmentSlot.OFF_HAND)) return;
         if(!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
         if(clickedBlock.getLocation().getBlockX() != -9 || clickedBlock.getLocation().getBlockZ() != -25) return;
+
+        event.setCancelled(true);
 
         Player player = event.getPlayer();
 
@@ -111,7 +115,7 @@ public class HideOutUpgrade implements Listener {
                 .title(Component.text("Ulepszenia stacji rzemieślniczych")) //TODO Gui name
                 .create();
 
-        for(GuildHideout.Upgrade upgrade : List.of(GuildHideout.Upgrade.BLACKSMITH, GuildHideout.Upgrade.VENTURE)) {
+        for(GuildHideout.Upgrade upgrade : List.of(GuildHideout.Upgrade.BLACKSMITH, GuildHideout.Upgrade.VENTURE, GuildHideout.Upgrade.SORCERER)) {
 
             UpgradePattern upgradePattern = guildHideOutController.getUpgradePattern(upgrade);
 

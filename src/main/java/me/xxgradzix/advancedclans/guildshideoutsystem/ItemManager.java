@@ -2,6 +2,7 @@ package me.xxgradzix.advancedclans.guildshideoutsystem;
 
 import me.xxgradzix.advancedclans.data.database.entities.GuildHideout;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.ExpeditionDto;
+import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.ExpeditionGui;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.utils.ColorFixer;
 import org.bukkit.Material;
@@ -15,6 +16,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.ExpeditionDto.ExpeditionObjective.WOOD;
 
 public class ItemManager {
 
@@ -175,6 +179,74 @@ public class ItemManager {
     public static @NotNull ItemStack getStartExpeditionItem(double chance, int expeditionLevel, ExpeditionDto.ExpeditionObjective objective, long completionTime) {
 
         ItemStack item = new ItemStack(Material.CREEPER_BANNER_PATTERN);
+
+        ItemMeta itemMeta = item.getItemMeta();
+
+        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.addItemFlags(ItemFlag.HIDE_DYE);
+        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+        itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+
+        itemMeta.setDisplayName(ColorFixer.addColors("&7ᴇᴋꜱᴘᴇᴅʏᴄᴊᴇ"));
+
+        ArrayList<String> lore = new ArrayList<>();
+
+        lore.add(" ");
+
+        switch (objective) {
+            case STONE -> lore.add(ColorFixer.addColors("&7ᴄᴇʟ: &fᴋᴀᴍɪᴇń"));
+            case WOOD -> lore.add(ColorFixer.addColors("&7ᴄᴇʟ: &fᴅʀᴇᴡɴᴏ"));
+            case CRYSTALS -> lore.add(ColorFixer.addColors("&7ᴄᴇʟ: &fᴋʀʏꜱᴛᴀłʏ"));
+        }
+        switch (expeditionLevel) {
+            case 1 -> lore.add(ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: &fłᴀᴛᴡᴀ"));
+            case 2 -> lore.add(ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: &fᴛʀᴜᴅɴᴀ"));
+            case 3 -> lore.add(ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: &fʙᴀʀᴅᴢᴏ ᴛʀᴜᴅɴᴀ"));
+        }
+        LocalDateTime dateTime = LocalDateTime.ofEpochSecond(completionTime, 0, ZoneOffset.UTC);
+        lore.add(" ");
+        lore.add(ColorFixer.addColors("&7ꜱᴢᴀɴꜱᴀ ɴᴀ ᴘᴏᴡᴏᴅᴢᴇɴɪᴇ: &f" + chance * 100 + "%"));
+        lore.add(" ");
+        lore.add("ɢᴏᴅᴢɪɴᴀ ᴜᴋᴏńᴄᴢᴇɴɪ: " + dateTime.getHour() + ":" + dateTime.getMinute() + ":" + dateTime.getSecond());
+        lore.add(" ");
+        lore.add("ᴋʟɪᴋɴɪᴊ ᴀʙʏ ʀᴏᴢᴘᴏᴄᴢąć");
+
+
+        itemMeta.setLore(lore);
+
+        item.setItemMeta(itemMeta);
+
+        return item;
+    }
+
+    public static @NotNull ItemStack createObjectiveGuiItem(ExpeditionGui.ExpeditionVariant variant) {
+        ItemStack item;
+        String itemName;
+        ArrayList<String> lore = new ArrayList<>();
+        lore.add(" ");
+
+        switch (variant.objective()) {
+            case WOOD -> {
+                item = new ItemStack(Material.OAK_LOG);
+                itemName = "ekspedycja drwali";
+                lore.add("Ta ekspedycja uzupełni zapasy drewna");
+            }
+            case STONE -> {
+                item = new ItemStack(Material.STONE);
+                itemName = "ekspedycja górników";
+                lore.add("ta ekspedycja uzupełni zapasy kamienia");
+            }
+            case CRYSTALS -> {
+                item = new ItemStack(Material.EMERALD);
+                itemName = "ekspedycja poszukiwaczy skarbów";
+                lore.add("Ta ekspedycja uzupełni zapasy drogich kamieni");
+            }
+        }
+        lore.add(" ");
+        lore.add("Kliknij aby zmienić typ wyprawy");
 
         ItemMeta itemMeta = item.getItemMeta();
 

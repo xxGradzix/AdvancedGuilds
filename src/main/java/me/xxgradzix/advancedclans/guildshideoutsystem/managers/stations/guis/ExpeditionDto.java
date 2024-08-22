@@ -15,17 +15,17 @@ public class ExpeditionDto {
         @Getter
         private ExpeditionObjective objective;
 
-        private long completionTime;
+        private long completionTimeSeconds;
 
-        public ExpeditionDto(double chance, int expeditionLevel, ExpeditionObjective objective, long completionTime) {
+        public ExpeditionDto(double chance, int expeditionLevel, ExpeditionObjective objective, long completionTimeSeconds) {
             this.chance = chance;
             this.expeditionLevel = expeditionLevel;
             this.objective = objective;
-            this.completionTime = completionTime;
+            this.completionTimeSeconds = completionTimeSeconds;
         }
 
         public boolean isFinished() {
-            return completionTime <= System.currentTimeMillis();
+            return completionTimeSeconds * 1000 <= System.currentTimeMillis();
         }
 
         public boolean isSuccessful() {
@@ -33,7 +33,7 @@ public class ExpeditionDto {
         }
 
         public int secondsToCompletion() {
-            return (int) ((completionTime - System.currentTimeMillis()) / 1000);
+            return (int) (completionTimeSeconds - (System.currentTimeMillis() / 1000));
         }
 
     }

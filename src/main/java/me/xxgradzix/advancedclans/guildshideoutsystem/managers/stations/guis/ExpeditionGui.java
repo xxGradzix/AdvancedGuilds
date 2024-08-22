@@ -18,16 +18,16 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.InvalidObjectException;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.ibm.icu.impl.ValidIdentifiers.Datatype.variant;
 import static me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager.getStartExpeditionItem;
+import static me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.ExpeditionDto.ExpeditionObjective.*;
 
 public class ExpeditionGui {
 
@@ -35,6 +35,30 @@ public class ExpeditionGui {
 //        FAILED, PENDING, FINISHED_EASY, FINISHED_2, FINISHED_3
 //    }
 
+    public record ExpeditionVariant(ExpeditionDto.ExpeditionObjective objective, int level, long cooldownSeconds){
+
+    }
+
+    private static Set<ExpeditionVariant> variants = new HashSet<>();
+
+    public static void shuffleExpeditions() {
+
+        for (int i = 0; i<6; i++) {
+            int randomObjectiveIndex = new Random().nextInt(0, values().length);
+            ExpeditionDto.ExpeditionObjective randomObjective = values()[randomObjectiveIndex];
+            int randomLevel= new Random().nextInt(0, 5);
+
+            int randomCooldownFluctuation = new Random().nextInt(-5, 5);
+
+            int cooldown = randomLevel * 60 * 60 + randomCooldownFluctuation * 15 * 60;
+
+            int minCooldownValue = 30*60;
+            if(cooldown < minCooldownValue) cooldown = minCooldownValue;
+
+            variants.add(new ExpeditionVariant(randomObjective, randomLevel, cooldown));
+        }
+
+    }
 
     private static final HashMap<Player, ExpeditionDto> expeditionStatus = new HashMap<>();
 
@@ -95,18 +119,35 @@ public class ExpeditionGui {
             }
         }
 
-        venturePreparation(player, 1, ExpeditionDto.ExpeditionObjective.WOOD);
+        ventureChooseGui(player);
+//        venturePreparation(player, variant);
     }
 
 
-    private static void venturePreparation(Player player, int level, ExpeditionDto.ExpeditionObjective objective) {
+
+    private static void ventureChooseGui(Player player) {
+
+        Gui gui = Gui.gui()
+                .type(GuiType.CHEST)
+                .title(Component.text("Wybierz ekspedycje"))
+                .rows(6)
+                .create();
+
+
+        for(ExpeditionVariant variant : variants) {
+            GuiItem item = new GuiItem(ItemManager.createObjectiveGuiItem(variant));
+        }
+        gui.open(player);
+
+    }
+
+
+    private static void venturePreparation(Player player, ExpeditionVariant variant) {
 
         AtomicBoolean foodSupplied = new AtomicBoolean(false);
         AtomicBoolean toolsSupplied = new AtomicBoolean(false);
 
-        AtomicReference<Double> chance = new AtomicReference<>(calculateCurrentChance(level, foodSupplied.get(), toolsSupplied.get()));
-
-        final long completionTime = System.currentTimeMillis() + 1000 * 25;
+        AtomicReference<Double> chance = new AtomicReference<>(calculateCurrentChance(variant.level, foodSupplied.get(), toolsSupplied.get()));
 
         int toolSlot = 29;
         int foodSlot = 33;
@@ -120,88 +161,32 @@ public class ExpeditionGui {
 
         gui.getFiller().fill(new GuiItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE)));
 
-
-
         gui.setDefaultClickAction(event -> {
 
-            ItemStack itemOnCursor = event.getCursor();
-            ItemStack itemInSlot = event.getCurrentItem();
-
             switch (event.getAction()) {
-                case DROP_ALL_SLOT, DROP_ONE_SLOT, DROP_ONE_CURSOR, DROP_ALL_CURSOR -> event.setCancelled(true);
-
                 case PLACE_ALL, PLACE_ONE, PLACE_SOME, SWAP_WITH_CURSOR-> {
-
                     ItemStack item = event.getCursor();
-
                     if(item == null) return;
-
                     if(event.getSlot() == toolSlot) {
-                        if(!item.getType().equals(Material.IRON_PICKAXE)) {
-                            event.setCancelled(true);
-                        }
+                        if(!item.getType().equals(Material.IRON_PICKAXE)) event.setCancelled(true);
                     }
                     if(event.getSlot() == foodSlot) {
-                        if(!item.getType().equals(Material.COOKED_BEEF)) {
-                            event.setCancelled(true);
-                        }
+                        if(!item.getType().equals(Material.COOKED_BEEF)) event.setCancelled(true);
                     }
-
                 }
-//                case PICKUP_ALL, PICKUP_HALF, PICKUP_ONE, PICKUP_SOME -> {
-//                    if(event.getSlot() == toolSlot || event.getSlot() == foodSlot) {
-//                        event.setCancelled(true);
-//                    }
-//                }
+                case PICKUP_ALL, PICKUP_HALF, PICKUP_ONE, PICKUP_SOME -> {
+                    if(event.getSlot() != toolSlot && event.getSlot() != foodSlot) event.setCancelled(true);
+                }
                 default -> event.setCancelled(true);
             }
 
             if(event.getSlot() == toolSlot || event.getSlot() == foodSlot || (event.getClickedInventory() != null && !event.getClickedInventory().equals(gui.getInventory()))) {
 
-                int clickedSlot = event.getSlot();
-//                ItemStack clickedItem = event.getCursor(); // Item being placed
-//
-//                if (clickedItem != null) {
-//
-//                    if(clickedSlot == toolSlot){
-//
-//
-//                        if(!clickedItem.getType().equals(Material.IRON_PICKAXE)) {
-//                            event.setCancelled(true);
-//                        }
-//                    }
-//
-//                    if(clickedSlot == foodSlot){
-//
-//                    }
-//
-//                    Material itemType = clickedItem.getType();
-//                    if (!itemType.equals(Material.DIAMOND)) {
-//                        event.setCancelled(true);
-//                        player.sendMessage("You can only place diamonds in this slot.");
-//                        return;
-//                    }
-//                }
-
-//                if(event.getAction().equals(InventoryAction.MOVE_TO_OTHER_INVENTORY)) {
-//                    if(event.getCurrentItem() != null) {
-//                        Material itemType = event.getCurrentItem().getType();
-//                        if (!itemType.equals(Material.DIAMOND)) {
-//                            event.setCancelled(true);
-//                            player.sendMessage("You can only place diamonds in this slot 2.");
-//                            return;
-//                        }
-//                    }
-//
-//                }
-
                 Bukkit.getScheduler().runTaskLaterAsynchronously(AdvancedGuilds.instance, () -> {
                     toolsSupplied.set(gui.getInventory().getItem(toolSlot) != null && gui.getInventory().getItem(toolSlot).getType().equals(Material.IRON_PICKAXE));
-
                     foodSupplied.set(gui.getInventory().getItem(foodSlot) != null && gui.getInventory().getItem(foodSlot).getType().equals(Material.COOKED_BEEF));
-
-                        chance.set(calculateCurrentChance(level, foodSupplied.get(), toolsSupplied.get()));
-                        gui.updateItem(13, getStartExpeditionItem(chance.get(), level, objective, completionTime));
+                    chance.set(calculateCurrentChance(variant.level, foodSupplied.get(), toolsSupplied.get()));
+                    gui.updateItem(13, getStartExpeditionItem(chance.get(), variant.level, variant.objective, variant.cooldownSeconds));
                     }, 0);
                 return;
             }
@@ -210,7 +195,6 @@ public class ExpeditionGui {
 
         GuiItem expeditionFood = ItemBuilder.from(new ItemStack(Material.COOKED_BEEF)).asGuiItem();
         GuiItem expeditionTool = ItemBuilder.from(new ItemStack(Material.DIAMOND_PICKAXE)).asGuiItem();
-
 
         gui.setCloseGuiAction(event -> {
             ItemStack food = gui.getInventory().getItem(foodSlot);
@@ -232,16 +216,14 @@ public class ExpeditionGui {
             }
         });
 
-        GuiItem startExpedition = ItemBuilder.from(ItemManager.getStartExpeditionItem(chance.get(), level, objective, completionTime)).asGuiItem();
+        GuiItem startExpedition = ItemBuilder.from(ItemManager.getStartExpeditionItem(chance.get(), variant.level, variant.objective, variant.cooldownSeconds)).asGuiItem();
 
         startExpedition.setAction((e) -> {
             gui.setCloseGuiAction(null);
 
+            ExpeditionDto expeditionDto = new ExpeditionDto(chance.get(), variant.level, STONE, variant.cooldownSeconds);
 
-
-            ExpeditionDto expeditionDto = new ExpeditionDto(chance.get(), level, ExpeditionDto.ExpeditionObjective.STONE, completionTime);
-
-            player.sendMessage("Expedition started with chance   " + chance);
+            player.sendMessage("Expedition started with chance  " + chance); // TODO MESSAGE
 
             expeditionStatus.put(player, expeditionDto);
 
@@ -262,23 +244,17 @@ public class ExpeditionGui {
     private static double calculateCurrentChance(int expeditionLevel, boolean toolsSupplied, boolean foodSupplied) {
         double chance = 0;
         switch (expeditionLevel) {
-            case 1 -> chance = 0.7;
+            case 1 -> chance = 0.6;
             case 2 -> chance = 0.4;
-            case 3 -> chance = 0.2;
+            case 3 -> chance = 0.3;
         }
-        Bukkit.broadcastMessage("Chance before: " + chance);
         if(toolsSupplied) {
             chance *= 1.3;
-            Bukkit.broadcastMessage("Tools supplied");
         }
-        Bukkit.broadcastMessage("Chance after tools: " + chance);
         if(foodSupplied) {
             chance *= 1.3;
-            Bukkit.broadcastMessage("Food supplied");
         }
-        Bukkit.broadcastMessage("Chance after food: " + chance);
         if(chance > 1) chance = 1;
-        Bukkit.broadcastMessage("Chance after: " + chance);
         return chance;
     }
 

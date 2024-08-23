@@ -25,28 +25,22 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.ibm.icu.impl.ValidIdentifiers.Datatype.variant;
 import static me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager.getStartExpeditionItem;
 import static me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.ExpeditionDto.ExpeditionObjective.*;
 
 public class ExpeditionGui {
 
-//    private enum ExpeditionStatus {
-//        FAILED, PENDING, FINISHED_EASY, FINISHED_2, FINISHED_3
-//    }
-
-    public record ExpeditionVariant(ExpeditionDto.ExpeditionObjective objective, int level, long cooldownSeconds){
-
-    }
-
-    private static Set<ExpeditionVariant> variants = new HashSet<>();
+    private static List<ExpeditionVariant> variants = new ArrayList<>();
 
     public static void shuffleExpeditions() {
 
-        for (int i = 0; i<6; i++) {
-            int randomObjectiveIndex = new Random().nextInt(0, values().length);
+        variants.clear();
+        while (variants.size() < 6){
+            int randomObjectiveIndex = new Random().nextInt(0, ExpeditionDto.ExpeditionObjective.values().length);
+
             ExpeditionDto.ExpeditionObjective randomObjective = values()[randomObjectiveIndex];
-            int randomLevel= new Random().nextInt(0, 5);
+
+            int randomLevel= new Random().nextInt(1, 4);
 
             int randomCooldownFluctuation = new Random().nextInt(-5, 5);
 
@@ -57,6 +51,7 @@ public class ExpeditionGui {
 
             variants.add(new ExpeditionVariant(randomObjective, randomLevel, cooldown));
         }
+        variants.sort(Comparator.comparingInt(ExpeditionVariant::getLevel));
 
     }
 
@@ -120,7 +115,6 @@ public class ExpeditionGui {
         }
 
         ventureChooseGui(player);
-//        venturePreparation(player, variant);
     }
 
 
@@ -129,13 +123,27 @@ public class ExpeditionGui {
 
         Gui gui = Gui.gui()
                 .type(GuiType.CHEST)
-                .title(Component.text("Wybierz ekspedycje"))
+                .title(Component.text("&f七七七七七七七七ㇺ".replace("&", "§")))
                 .rows(6)
                 .create();
 
+        int rep = 0;
 
+        if(variants.isEmpty()) {
+            shuffleExpeditions();
+        }
         for(ExpeditionVariant variant : variants) {
-            GuiItem item = new GuiItem(ItemManager.createObjectiveGuiItem(variant));
+            for (int i = 0; i<3; i++) {
+                GuiItem item = new GuiItem(ItemManager.createObjectiveGuiItem(variant, i));
+
+                item.setAction((a) -> {
+                    venturePreparation(player, variant);
+                });
+                int slot = 6 + i + rep * 9;
+                if(slot > 53) break;
+                gui.setItem(slot, item);
+            }
+            rep++;
         }
         gui.open(player);
 
@@ -147,7 +155,7 @@ public class ExpeditionGui {
         AtomicBoolean foodSupplied = new AtomicBoolean(false);
         AtomicBoolean toolsSupplied = new AtomicBoolean(false);
 
-        AtomicReference<Double> chance = new AtomicReference<>(calculateCurrentChance(variant.level, foodSupplied.get(), toolsSupplied.get()));
+        AtomicReference<Double> chance = new AtomicReference<>(calculateCurrentChance(variant.getLevel(), foodSupplied.get(), toolsSupplied.get()));
 
         int toolSlot = 29;
         int foodSlot = 33;
@@ -185,8 +193,8 @@ public class ExpeditionGui {
                 Bukkit.getScheduler().runTaskLaterAsynchronously(AdvancedGuilds.instance, () -> {
                     toolsSupplied.set(gui.getInventory().getItem(toolSlot) != null && gui.getInventory().getItem(toolSlot).getType().equals(Material.IRON_PICKAXE));
                     foodSupplied.set(gui.getInventory().getItem(foodSlot) != null && gui.getInventory().getItem(foodSlot).getType().equals(Material.COOKED_BEEF));
-                    chance.set(calculateCurrentChance(variant.level, foodSupplied.get(), toolsSupplied.get()));
-                    gui.updateItem(13, getStartExpeditionItem(chance.get(), variant.level, variant.objective, variant.cooldownSeconds));
+                    chance.set(calculateCurrentChance(variant.getLevel(), foodSupplied.get(), toolsSupplied.get()));
+                    gui.updateItem(13, getStartExpeditionItem(chance.get(), variant.getLevel(), variant.getObjective(), variant.getCooldownSeconds()));
                     }, 0);
                 return;
             }
@@ -216,12 +224,12 @@ public class ExpeditionGui {
             }
         });
 
-        GuiItem startExpedition = ItemBuilder.from(ItemManager.getStartExpeditionItem(chance.get(), variant.level, variant.objective, variant.cooldownSeconds)).asGuiItem();
+        GuiItem startExpedition = ItemBuilder.from(ItemManager.getStartExpeditionItem(chance.get(), variant.getLevel(), variant.getObjective(), variant.getCooldownSeconds())).asGuiItem();
 
         startExpedition.setAction((e) -> {
             gui.setCloseGuiAction(null);
 
-            ExpeditionDto expeditionDto = new ExpeditionDto(chance.get(), variant.level, STONE, variant.cooldownSeconds);
+            ExpeditionDto expeditionDto = new ExpeditionDto(chance.get(), variant.getLevel(), STONE, variant.getCooldownSeconds());
 
             player.sendMessage("Expedition started with chance  " + chance); // TODO MESSAGE
 

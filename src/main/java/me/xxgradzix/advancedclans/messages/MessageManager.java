@@ -297,14 +297,15 @@ public class MessageManager extends OkaeriConfig {
         int hours = minutes / 60;
         minutes %= 60;
         StringBuilder sb = new StringBuilder();
+        sb.append("§8");
         if(hours > 0) {
-            sb.append(hours).append(" godzin ");
+            sb.append(hours).append(" §3ɢᴏᴅᴢɪɴ §b");
         }
         if(minutes > 0) {
-            sb.append(minutes).append(" minut ");
+            sb.append(minutes).append(" §3ᴍɪɴᴜᴛ §b");
         }
         if(sec > 0) {
-            sb.append(sec).append(" sekund");
+            sb.append(sec).append(" §3ꜱᴇᴋᴜɴᴅ §b");
         }
 
         return sb.toString();

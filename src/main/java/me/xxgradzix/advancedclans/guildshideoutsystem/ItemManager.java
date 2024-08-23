@@ -3,6 +3,7 @@ package me.xxgradzix.advancedclans.guildshideoutsystem;
 import me.xxgradzix.advancedclans.data.database.entities.GuildHideout;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.ExpeditionDto;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.ExpeditionGui;
+import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.ExpeditionVariant;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.utils.ColorFixer;
 import org.bukkit.Material;
@@ -18,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.ExpeditionDto.ExpeditionObjective.STONE;
 import static me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.ExpeditionDto.ExpeditionObjective.WOOD;
 
 public class ItemManager {
@@ -222,31 +224,68 @@ public class ItemManager {
         return item;
     }
 
-    public static @NotNull ItemStack createObjectiveGuiItem(ExpeditionGui.ExpeditionVariant variant) {
+    public static @NotNull ItemStack createObjectiveGuiItem(ExpeditionVariant variant, int buttonSlot) {
         ItemStack item;
         String itemName;
+
         ArrayList<String> lore = new ArrayList<>();
         lore.add(" ");
 
-        switch (variant.objective()) {
+
+        switch (variant.getObjective()) {
             case WOOD -> {
-                item = new ItemStack(Material.OAK_LOG);
-                itemName = "ekspedycja drwali";
-                lore.add("Ta ekspedycja uzupełni zapasy drewna");
+                itemName = "&7ᴛᴀ ᴇᴋꜱᴘᴇᴅʏᴄᴊᴀ ᴜᴢᴜᴘᴇᴌɴɪ ᴢᴀᴘᴀꜱʏ ᴅʀᴇᴡɴᴀ".replace("&", "§");
             }
             case STONE -> {
-                item = new ItemStack(Material.STONE);
-                itemName = "ekspedycja górników";
-                lore.add("ta ekspedycja uzupełni zapasy kamienia");
+                itemName = "&7ᴛᴀ ᴇᴋꜱᴘᴇᴅʏᴄᴊᴀ ᴜᴢᴜᴘᴇᴌɴɪ ᴢᴀᴘᴀꜱʏ ᴋᴀᴍɪᴇɴɪ".replace("&", "§");
             }
-            case CRYSTALS -> {
-                item = new ItemStack(Material.EMERALD);
-                itemName = "ekspedycja poszukiwaczy skarbów";
-                lore.add("Ta ekspedycja uzupełni zapasy drogich kamieni");
+            default -> {
+                itemName = "&7ᴛᴀ ᴇᴋꜱᴘᴇᴅʏᴄᴊᴀ ᴜᴢᴜᴘᴇᴌɴɪ ᴢᴀᴘᴀꜱʏ ᴋʀʏꜱᴢᴛᴀᴌóᴡ".replace("&", "§");
             }
         }
-        lore.add(" ");
-        lore.add("Kliknij aby zmienić typ wyprawy");
+
+        int customModelData = 0;
+
+        switch (buttonSlot) {
+            case 0 -> {
+                item = new ItemStack(Material.NAME_TAG);
+                switch (variant.getLevel()) {
+                    default -> {
+                        customModelData = 1;
+                    }
+                    case 2 -> {
+                        customModelData = 3;
+                    }
+                    case 3 -> {
+                        customModelData = 4;
+                    }
+                }
+            }
+            case 2 -> {
+                switch (variant.getObjective()) {
+                    case STONE -> {
+                        item = new ItemStack(Material.STONE);
+                    }
+                    case WOOD -> {
+                        item = new ItemStack(Material.OAK_LOG);
+                    }
+                    default -> {
+                        item = new ItemStack(Material.EMERALD);
+                    }
+                }
+            }
+            default -> {
+                item = new ItemStack(Material.MAP);
+                customModelData = 1010;
+            }
+        }
+
+        switch (variant.getLevel()) {
+            case 1 -> lore.add(ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: &aŁᴀᴛᴡʏ &8&l[&a" + (int)(variant.getChance() * 100) + "%&8&l]"));
+            case 2 -> lore.add(ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: &eśʀᴇᴅɴɪ &8&l[&e" + (int)(variant.getChance() * 100) + "%&8&l]"));
+            case 3 -> lore.add(ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: &4ᴛʀᴜᴅɴʏ &8&l[&4" + (int)(variant.getChance() * 100) + "%&8&l]"));
+        }
+        lore.add("&7ᴄᴢᴀꜱ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: ".replace("&", "§") + MessageManager.secondsToTimeFormat((int) variant.getCooldownSeconds()));
 
         ItemMeta itemMeta = item.getItemMeta();
 
@@ -260,31 +299,14 @@ public class ItemManager {
 
         itemMeta.setDisplayName(ColorFixer.addColors("&7ᴇᴋꜱᴘᴇᴅʏᴄᴊᴇ"));
 
-        ArrayList<String> lore = new ArrayList<>();
+        lore.add(" ");
+        lore.add("§8§lᴋʟɪᴋɴɪᴊ ᴀʙʏ ᴡʏʙʀᴀć");
 
-        lore.add(" ");
-
-        switch (objective) {
-            case STONE -> lore.add(ColorFixer.addColors("&7ᴄᴇʟ: &fᴋᴀᴍɪᴇń"));
-            case WOOD -> lore.add(ColorFixer.addColors("&7ᴄᴇʟ: &fᴅʀᴇᴡɴᴏ"));
-            case CRYSTALS -> lore.add(ColorFixer.addColors("&7ᴄᴇʟ: &fᴋʀʏꜱᴛᴀłʏ"));
-        }
-        switch (expeditionLevel) {
-            case 1 -> lore.add(ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: &fłᴀᴛᴡᴀ"));
-            case 2 -> lore.add(ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: &fᴛʀᴜᴅɴᴀ"));
-            case 3 -> lore.add(ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: &fʙᴀʀᴅᴢᴏ ᴛʀᴜᴅɴᴀ"));
-        }
-        LocalDateTime dateTime = LocalDateTime.ofEpochSecond(completionTime, 0, ZoneOffset.UTC);
-        lore.add(" ");
-        lore.add(ColorFixer.addColors("&7ꜱᴢᴀɴꜱᴀ ɴᴀ ᴘᴏᴡᴏᴅᴢᴇɴɪᴇ: &f" + chance * 100 + "%"));
-        lore.add(" ");
-        lore.add("ɢᴏᴅᴢɪɴᴀ ᴜᴋᴏńᴄᴢᴇɴɪ: " + dateTime.getHour() + ":" + dateTime.getMinute() + ":" + dateTime.getSecond());
-        lore.add(" ");
-        lore.add("ᴋʟɪᴋɴɪᴊ ᴀʙʏ ʀᴏᴢᴘᴏᴄᴢąć");
-
+        itemMeta.setCustomModelData(customModelData);
 
         itemMeta.setLore(lore);
 
+        itemMeta.setDisplayName(itemName);
         item.setItemMeta(itemMeta);
 
         return item;

@@ -85,6 +85,9 @@ public class HideOutAdminCommands implements CommandExecutor {
                 Player player1 = Bukkit.getPlayer(playername);
                 ExpeditionGui.openExpeditionGui(player1);
             }
+            case "5" -> {
+                ExpeditionGui.shuffleExpeditions();
+            }
         }
         return false;
     }

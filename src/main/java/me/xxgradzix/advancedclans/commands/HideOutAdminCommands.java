@@ -96,6 +96,7 @@ public class HideOutAdminCommands implements CommandExecutor {
                 player.getInventory().addItem(ItemManager.toolTier1);
                 player.getInventory().addItem(ItemManager.toolTier2);
                 player.getInventory().addItem(ItemManager.toolTier3);
+                player.getInventory().addItem(ItemManager.guildSword);
             }
         }
         return false;

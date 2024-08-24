@@ -6,7 +6,10 @@ import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.Exp
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.utils.ColorFixer;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -27,6 +30,8 @@ public class ItemManager {
     public static ItemStack toolTier2;
     public static ItemStack toolTier3;
 
+    public static ItemStack guildSword;
+
 
     public static void init() {
         createFoodRation1();
@@ -36,6 +41,33 @@ public class ItemManager {
         createToolPack1();
         createToolPack2();
         createToolPack3();
+
+        createGuildSword();
+    }
+
+
+    public static void createGuildSword() {
+        ItemStack item = new ItemStack(Material.DIAMOND_SWORD);
+
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setCustomModelData(1);
+
+        itemMeta.setDisplayName(ColorFixer.addColors("&7ᴍɪᴇᴄᴢ ᴢɢɪʟᴅɪ"));
+
+        ArrayList<String> lore = new ArrayList<>();
+
+        lore.add(" ");
+        lore.add(ColorFixer.addColors("&7ᴍᴏżɴᴀ ᴜżʏć ᴅᴏ ᴡᴢᴍᴏᴄɴɪᴇɴɪᴀ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ &8(&a+10% &7ᴅᴏ ᴅᴜᴢᴇɢᴏ ɢʟᴏᴡᴀ&8)"));
+
+        itemMeta.setLore(lore);
+
+        itemMeta.removeAttributeModifier(Attribute.GENERIC_ATTACK_SPEED);
+        itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED,  new AttributeModifier("speed", 0.1, AttributeModifier.Operation.ADD_NUMBER));
+
+        item.setItemMeta(itemMeta);
+
+
+        guildSword = item;
     }
 
     public static void createFoodRation3() {

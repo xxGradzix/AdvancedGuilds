@@ -1,6 +1,7 @@
 package me.xxgradzix.advancedclans.listener;
 
 import me.xxgradzix.advancedclans.AdvancedGuilds;
+import me.xxgradzix.advancedclans.config.Config;
 import me.xxgradzix.advancedclans.data.database.entities.User;
 import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
 import me.xxgradzix.advancedclans.entities.AntySystemRank;
@@ -49,7 +50,7 @@ public class PlayerDeathListener implements Listener {
 
         if(killer == null) {
             // message after the death
-            if(!true) // TODO get from config if should send death message
+            if(!Config.shouldSendDeathMessage)
                 return;
 
             // TODO send message to all players about death
@@ -69,7 +70,7 @@ public class PlayerDeathListener implements Listener {
 
         userKiller.increaseKill();
 
-        if (true) { // TODO get from config if systemAntiabuse is enabled
+        if (Config.antiAbuseSystemEnabled) {
             String playerIp = player.getAddress().getAddress().getHostAddress();
             AntySystemRank antySystemRank = antySystem.get(killer.getUniqueId());
 
@@ -80,12 +81,12 @@ public class PlayerDeathListener implements Listener {
                     // TODO SEND message to killer about cooldown to kill
                     return;
                 }
-                antySystemRank.addCooldown(playerIp, 60 * 20 * 30); // todo get cooldown from config
+                antySystemRank.addCooldown(playerIp, Config.antiSystemRankCooldown);
             } else {
                 antySystem.put(killer.getUniqueId(), new AntySystemRank(
                         killer.getAddress().getAddress().getHostAddress(),
                         playerIp,
-                        60 * 20 * 30 // todo get cooldown from config
+                        Config.antiSystemRankCooldown
                 ));
             }
         }
@@ -108,7 +109,7 @@ public class PlayerDeathListener implements Listener {
         }
 
         // message after the death
-        if(!true) // TODO get from config if should send death message
+        if(!Config.shouldSendDeathMessage)
             return;
 
         // TODO send message to all players about death and points change

@@ -8,6 +8,7 @@ import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
 import me.xxgradzix.advancedclans.commands.ClanCommand;
 import me.xxgradzix.advancedclans.commands.HideOutAdminCommands;
 import me.xxgradzix.advancedclans.commands.PlayerCommand;
+import me.xxgradzix.advancedclans.config.Config;
 import me.xxgradzix.advancedclans.data.database.services.GuildHideOutDataManager;
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.GuildHideout;
@@ -52,6 +53,7 @@ public final class AdvancedGuilds extends JavaPlugin {
     private ClanAndUserDataManager clanAndUserDataManager;
     private GuildHideOutController guildHideOutController;
     private MessageManager messages;
+    private Config config;
     private ConnectionSource connectionSource;
 
     private ClanEntityRepository clanEntityRepository;
@@ -120,6 +122,18 @@ public final class AdvancedGuilds extends JavaPlugin {
             });
         } catch (Exception exception) {
             this.getLogger().log(Level.SEVERE, "Error loading messages.yml", exception);
+            this.getPluginLoader().disablePlugin(this);
+            return;
+        }
+        try {
+            this.config = ConfigManager.create(Config.class, (it) -> {
+                it.withConfigurer(new YamlBukkitConfigurer());
+                it.withBindFile(new File(this.getDataFolder(), "config.yml"));
+                it.saveDefaults();
+                it.load(true);
+            });
+        } catch (Exception exception) {
+            this.getLogger().log(Level.SEVERE, "Error loading config.yml", exception);
             this.getPluginLoader().disablePlugin(this);
             return;
         }

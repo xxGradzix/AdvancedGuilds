@@ -74,7 +74,7 @@ public class Countdown extends BukkitRunnable {
             this.killTask();
             cancel();
         } else {
-            DHAPI.setHologramLine(this.hologram, 0, ChatColor.GRAY+ "To ulepszenie zostanie ukończone za:"); //TODO config
+            DHAPI.setHologramLine(this.hologram, 0, ChatColor.GRAY+ "ᴛᴏ ᴜʟᴇᴘꜱᴢᴇɴɪᴇ ᴢᴏꜱᴛᴀɴɪᴇ ᴜᴋᴏńᴄᴢᴏɴᴇ ᴢᴀ:");
             DHAPI.setHologramLine(this.hologram, 1, ChatColor.GREEN + format(this.secondsLeft * 1000L));
 
             hologram.updateAll();

@@ -1,6 +1,7 @@
 package me.xxgradzix.advancedclans.controllers;
 
 import lombok.Setter;
+import me.xxgradzix.advancedclans.config.Config;
 import me.xxgradzix.advancedclans.data.database.entities.User;
 import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
 import me.xxgradzix.advancedclans.messages.MessageManager;
@@ -26,21 +27,21 @@ public class UserController {
         User user = ClanAndUserDataManager.getCachedUser(player.getUniqueId());
         if(user==null)
         {
-            user = new User(player, 1000); // todo get default points
+            user = new User(player, Config.defaultPoints);
             topRankScheduler.addUser(user);
             ClanAndUserDataManager.updateUser(user);
         }
     }
 
     public void resetUser(User user) {
-        user.setPoints(1000); // todo get default points
+        user.setPoints(Config.defaultPoints);
         user.resetKill();
         user.resetDeath();
 
         ClanAndUserDataManager.updateUser(user);
     }
     public void resetPoints(User user) {
-        user.setPoints(1000); // todo get default points
+        user.setPoints(Config.defaultPoints);
         ClanAndUserDataManager.updateUser(user);
     }
 

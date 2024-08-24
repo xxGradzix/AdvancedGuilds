@@ -1,6 +1,7 @@
 package me.xxgradzix.advancedclans.listener;
 
 import me.xxgradzix.advancedclans.AdvancedGuilds;
+import me.xxgradzix.advancedclans.config.Config;
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.User;
 import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
@@ -55,7 +56,7 @@ public class EntityDamageListener implements Listener {
         Clan attackerClan = ClanAndUserDataManager.getCachedClan(attackerUserData.getClanTag());
 
         if (victimClan.isAlliance(attackerClan.getTag())) {
-            if (!false) { // TODO get if pvpAlliance is enabled globally
+            if (!Config.pvpAllianceEnabledGlobally) {
                 event.setCancelled(true);
             }
         }

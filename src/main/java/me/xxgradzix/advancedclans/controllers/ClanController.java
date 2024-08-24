@@ -2,6 +2,7 @@ package me.xxgradzix.advancedclans.controllers;
 
 import lombok.Setter;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
+import me.xxgradzix.advancedclans.config.Config;
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.User;
 import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
@@ -16,6 +17,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.*;
 
@@ -154,7 +156,7 @@ public class ClanController {
     }
 
     private boolean isLimitMember(Clan clan) {
-        return clan.getMembers().size()>= 15;   // TODO Config get max members | was getMaxMember(clan);
+        return clan.getMembers().size()>= Config.maxPlayers;
     }
 
     public void infoClan(Player player, Clan clan) {
@@ -184,9 +186,9 @@ public class ClanController {
         {
             OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
             if(player.isOnline())
-                membersText.add(ChatColor.GREEN +player.getName()); // TODO add color of online player
+                membersText.add(Config.onlinePlayerColor + player.getName());
             else
-                membersText.add(ChatColor.RED+player.getName()); // TODO add color of offline player
+                membersText.add(Config.offlinePlayerColor + player.getName());
 
         }
         return String.join(", ", membersText);
@@ -206,11 +208,11 @@ public class ClanController {
     {
         User user = ClanAndUserDataManager.getCachedUser(player.getUniqueId());
         if(user==null || !user.hasClan())
-            return "Nie ma klanu"; // TODO none points or clan not found from config
+            return Config.noClan;
 
         Clan clan = ClanAndUserDataManager.getCachedClan(user.getClanTag());
         if(!doesClanFulfillThreshold(clan)) {
-            return ColorFixer.addColors(" nie ma wystarczajaco czlonkow "); // TODO not enough player info
+            return ColorFixer.addColors(Config.noEnoughPlayerForRankingInClan);
         }
         return getAveragePoint(clan);
     }
@@ -237,13 +239,13 @@ public class ClanController {
     private String getPlayerName(UUID uuid)
     {
         if(uuid==null)
-            return " NIE MA "; // TODO none player
+            return Config.nonePlayer;
 
         return Bukkit.getOfflinePlayer(uuid).getName();
     }
     private String getPlayerName(User user) {
         if(user == null || user.getUuid()==null)
-            return " NIE MA "; // TODO none player
+            return Config.nonePlayer;
 
         return Bukkit.getOfflinePlayer(user.getUuid()).getName();
     }
@@ -358,7 +360,7 @@ public class ClanController {
         if(user==null)
             return;
 
-        boolean enablePayment = false; // TODO check if payment is enabled
+        boolean enablePayment = Config.paymentEnabled;
         if(enablePayment) {
             boolean status = checkPayments(player);
             if(!status)
@@ -382,7 +384,7 @@ public class ClanController {
     private boolean checkPayments(Player player) {
         // TODO check payment
         return true;
-//        if(config.costType == CostType.VAULT) {
+//        if(Config.costType == CostType.VAULT) {
 //            Economy economy = plugin.getEconomy();
 //            if(!economy.has(player, config.costCreate))
 //            {
@@ -610,10 +612,10 @@ public class ClanController {
     }
 
     public boolean doesClanFulfillThreshold(Clan clan) {
-        return clan.getMembers().size() >= 3; // todo set members required for ranking from config
+        return clan.getMembers().size() >= Config.minPlayersForRanking;
     }
     private boolean isLimitAlliance(Clan clan) {
-        return clan.getAlliances().size() >= 4; // todo set alliance limit from config
+        return clan.getAlliances().size() >= Config.allianceLimit;
     }
 
     public Clan getClan(String tag) {

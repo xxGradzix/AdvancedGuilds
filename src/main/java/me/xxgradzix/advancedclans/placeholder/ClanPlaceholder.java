@@ -3,6 +3,7 @@ package me.xxgradzix.advancedclans.placeholder;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.clip.placeholderapi.expansion.Relational;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
+import me.xxgradzix.advancedclans.config.Config;
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.User;
 import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
@@ -53,7 +54,6 @@ public class ClanPlaceholder extends PlaceholderExpansion implements Relational 
         this.userController = userController;
         this.clanController = clanController;
         this.topRankScheduler = topRankScheduler;
-//        this.config = plugin.getConfigPlugin();
         this.register();
     }
 
@@ -87,12 +87,9 @@ public class ClanPlaceholder extends PlaceholderExpansion implements Relational 
             }
             switch (identifier.toLowerCase()) {
                 case "user_has_clan":
-                    return user.hasClan() ? ColorFixer.addColors("config.hasClan") : ColorFixer.addColors("config.hasNotClan)");
+                    return user.hasClan() ? ColorFixer.addColors(Config.hasClan) : ColorFixer.addColors(Config.hasNotClan);
                 case "user_format_points":
-                    return ColorFixer.addColors(
-//                            config.formatUserPoints.replace("{points}", String.valueOf(user.getPoints()))
-                            String.valueOf(user.getPoints()) // TODO get from config
-                    );
+                    return ColorFixer.addColors(Config.formatUserPoints.replace("{points}", String.valueOf(user.getPoints())));
                 case "user_points":
                     return String.valueOf(user.getPoints());
                 case "user_kills":
@@ -111,14 +108,13 @@ public class ClanPlaceholder extends PlaceholderExpansion implements Relational 
                 case "clan_format_points":
                     String averagePoints = clanController.getAveragePoint(player);
                     return ColorFixer.addColors(
-//                            config.formatClanPoints.replace("{points}", averagePoints)
-                            averagePoints // TODO get from config
+                            Config.formatClanPoints.replace("{points}", averagePoints)
+//                            averagePoints
                     );
                 case "clan_format_tag":
                     if (ClanAndUserDataManager.getCachedClan(user.getClanTag()) == null) return "config.noneTag";
                     return ColorFixer.addColors(
-//                            config.formatTag.replace("{tag}", ClanAndUserDataManager.getCachedClan(user.getClanTag()).getTag())
-                            ClanAndUserDataManager.getCachedClan(user.getClanTag()).getTag() // TODO get from config
+                            Config.formatTag.replace("{tag}", ClanAndUserDataManager.getCachedClan(user.getClanTag()).getTag())
                     );
                 case "clan_points":
                     if (ClanAndUserDataManager.getCachedClan(user.getClanTag()) == null) return "";
@@ -154,19 +150,15 @@ public class ClanPlaceholder extends PlaceholderExpansion implements Relational 
             String tag = clan1.getTag();
 
             if (clan1.isMember(first.getUniqueId())) {
-//                return ColorFixer.addColors(config.formatMember.replace("{tag}", String.valueOf(tag)));
-                return ColorFixer.addColors(String.valueOf(tag)); //TODO get from config
+                return ColorFixer.addColors(Config.formatMember.replace("{tag}", String.valueOf(tag)));
             }
 
             Clan clan2 = ClanAndUserDataManager.getCachedClan(user1.getClanTag());
             if (clan2 != null && clan1.isAlliance(clan2.getTag())) {
-//                return ColorFixer.addColors(config.formatAlliance.replace("{tag}", String.valueOf(tag)));
-                return ColorFixer.addColors(String.valueOf(tag)); //TODO get from config
-
+                return ColorFixer.addColors(Config.formatAlliance.replace("{tag}", String.valueOf(tag)));
             }
 
-//            return ColorFixer.addColors(config.formatNormal.replace("{tag}", String.valueOf(tag)));
-            return ColorFixer.addColors(String.valueOf(tag)); //TODO get from config
+            return ColorFixer.addColors(Config.formatNormal.replace("{tag}", String.valueOf(tag)));
         }
         return null;
     }

@@ -14,13 +14,13 @@ public class ExpeditionVariant{
         @Getter
         private final long cooldownSeconds;
         @Getter
-        private final double chance;
+        private final double baseChance;
 
         public ExpeditionVariant(ExpeditionDto.ExpeditionObjective objective, int level, long cooldownSeconds) {
             this.objective = objective;
             this.level = level;
             this.cooldownSeconds = cooldownSeconds;
-            this.chance = getRandomChance(level);
+            this.baseChance = getRandomChance(level);
         }
 
         private static double getRandomChance(int level) {

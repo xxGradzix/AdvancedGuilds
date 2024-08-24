@@ -15,3 +15,7 @@ commands:
   stworzkryjowke:
     description: dla admina
     permission: advancedclans.admin
+
+  ekspedycja:
+    description: dla admia
+    permission: advancedclans.admin

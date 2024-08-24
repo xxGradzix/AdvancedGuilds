@@ -405,7 +405,6 @@ public class GuildHideOutController {
         for (NPC npc : NPC_REGISTRY) {
             npc.getOrAddTrait(LookClose.class).lookClose(true);
             npc.getOrAddTrait(LookClose.class).setRange(35);
-//            npc.data().setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false);
             npc.data().setPersistent(NPC.Metadata.ALWAYS_USE_NAME_HOLOGRAM, true);
             npc.scheduleUpdate(NPC.NPCUpdate.PACKET);
         }

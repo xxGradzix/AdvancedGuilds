@@ -5,6 +5,7 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 
 public abstract class EntityRepository<T, ID> {
@@ -44,5 +45,9 @@ public abstract class EntityRepository<T, ID> {
 
     public List<T> getAllEntitiesByField(String fieldName, Object value) throws SQLException {
         return entityDao.queryForEq(fieldName, value);
+    }
+
+    public List<T> getAllEntitiesByFields(HashMap<String, Object> fields) throws SQLException {
+        return entityDao.queryForFieldValues(fields);
     }
 }

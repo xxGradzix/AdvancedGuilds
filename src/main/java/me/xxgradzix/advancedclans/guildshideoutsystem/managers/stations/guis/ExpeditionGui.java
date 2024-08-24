@@ -11,6 +11,8 @@ import me.xxgradzix.advancedclans.controllers.UserController;
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.GuildHideout;
 import me.xxgradzix.advancedclans.data.database.entities.User;
+import me.xxgradzix.advancedclans.data.database.entities.hideout.venture.VentureReward;
+import me.xxgradzix.advancedclans.data.database.services.VentureRewardDataManager;
 import me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.messages.MessageType;
@@ -23,6 +25,7 @@ import org.bukkit.inventory.ItemStack;
 import java.io.InvalidObjectException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager.getStartExpeditionItem;
@@ -152,37 +155,48 @@ public class ExpeditionGui {
 
     private static void venturePreparation(Player player, ExpeditionVariant variant) {
 
-        AtomicBoolean foodSupplied = new AtomicBoolean(false);
-        AtomicBoolean toolsSupplied = new AtomicBoolean(false);
+        AtomicInteger foodTier = new AtomicInteger();
+        AtomicInteger toolTier = new AtomicInteger();
 
-        AtomicReference<Double> chance = new AtomicReference<>(calculateCurrentChance(variant.getLevel(), foodSupplied.get(), toolsSupplied.get()));
+        AtomicReference<Double> chance = new AtomicReference<>(calculateCurrentChance(variant.getBaseChance(), toolTier.get()));
 
-        int toolSlot = 29;
-        int foodSlot = 33;
+        int foodSlot = 2;
+        int toolSlot = 20;
 
         Gui gui = Gui.gui()
                 .type(GuiType.CHEST)
-                .title(Component.text("Przygotuj ekspedycje"))
-                .rows(6)
+                .title(Component.text("&f七七七七七七七七ㇰ".replace("&", "§")))
+                .rows(3)
                 .create();
 
-
-        gui.getFiller().fill(new GuiItem(new ItemStack(Material.GRAY_STAINED_GLASS_PANE)));
+        gui.setDragAction(event -> event.setCancelled(true));
 
         gui.setDefaultClickAction(event -> {
-
+            if(event.getClickedInventory() != null && event.getClickedInventory().equals(gui.getInventory()) && event.getSlot() != toolSlot && event.getSlot() != foodSlot) {
+                event.setCancelled(true);
+                return;
+            }
             switch (event.getAction()) {
                 case PLACE_ALL, PLACE_ONE, PLACE_SOME, SWAP_WITH_CURSOR-> {
+
                     ItemStack item = event.getCursor();
-                    if(item == null) return;
+                    if(item == null) break;
                     if(event.getSlot() == toolSlot) {
-                        if(!item.getType().equals(Material.IRON_PICKAXE)) event.setCancelled(true);
+                        if(!item.isSimilar(ItemManager.toolTier1) && !item.isSimilar(ItemManager.toolTier2) && !item.isSimilar(ItemManager.toolTier3)) {
+                            event.setCancelled(true);
+                            break;
+                        }
                     }
                     if(event.getSlot() == foodSlot) {
-                        if(!item.getType().equals(Material.COOKED_BEEF)) event.setCancelled(true);
+                        if(!item.isSimilar(ItemManager.foodRationTier3) && !item.isSimilar(ItemManager.foodRationTier2) && !item.isSimilar(ItemManager.foodRationTier1)) {
+                            event.setCancelled(true);
+                            break;
+                        }
                     }
+                    if(event.getClickedInventory() != null && event.getClickedInventory().equals(gui.getInventory())) event.setCancelled(false);
                 }
                 case PICKUP_ALL, PICKUP_HALF, PICKUP_ONE, PICKUP_SOME -> {
+                    if(event.getClickedInventory() != null && !event.getClickedInventory().equals(gui.getInventory())) break;
                     if(event.getSlot() != toolSlot && event.getSlot() != foodSlot) event.setCancelled(true);
                 }
                 default -> event.setCancelled(true);
@@ -191,18 +205,56 @@ public class ExpeditionGui {
             if(event.getSlot() == toolSlot || event.getSlot() == foodSlot || (event.getClickedInventory() != null && !event.getClickedInventory().equals(gui.getInventory()))) {
 
                 Bukkit.getScheduler().runTaskLaterAsynchronously(AdvancedGuilds.instance, () -> {
-                    toolsSupplied.set(gui.getInventory().getItem(toolSlot) != null && gui.getInventory().getItem(toolSlot).getType().equals(Material.IRON_PICKAXE));
-                    foodSupplied.set(gui.getInventory().getItem(foodSlot) != null && gui.getInventory().getItem(foodSlot).getType().equals(Material.COOKED_BEEF));
-                    chance.set(calculateCurrentChance(variant.getLevel(), foodSupplied.get(), toolsSupplied.get()));
-                    gui.updateItem(13, getStartExpeditionItem(chance.get(), variant.getLevel(), variant.getObjective(), variant.getCooldownSeconds()));
+
+                    if(gui.getInventory().getItem(foodSlot) != null) {
+                        if(gui.getInventory().getItem(foodSlot).isSimilar(ItemManager.foodRationTier1)) {
+                            foodTier.set(1);
+                        } else if(gui.getInventory().getItem(foodSlot).isSimilar(ItemManager.foodRationTier2)) {
+                            foodTier.set(2);
+                        } else if(gui.getInventory().getItem(foodSlot).isSimilar(ItemManager.foodRationTier3)) {
+                            foodTier.set(3);
+                        } else {
+                            foodTier.set(0);
+                        }
+                    } else {
+                        foodTier.set(0);
+                    }
+
+                    if (gui.getInventory().getItem(toolSlot) != null) {
+                        if(gui.getInventory().getItem(toolSlot).isSimilar(ItemManager.toolTier1)) {
+                            toolTier.set(1);
+                        } else if(gui.getInventory().getItem(toolSlot).isSimilar(ItemManager.toolTier2)) {
+                            toolTier.set(2);
+                        } else if(gui.getInventory().getItem(toolSlot).isSimilar(ItemManager.toolTier3)) {
+                            toolTier.set(3);
+                        } else {
+                            toolTier.set(0);
+                        }
+                    } else {
+                        toolTier.set(0);
+                    }
+
+                    chance.set(calculateCurrentChance(variant.getBaseChance(), toolTier.get()));
+
+                    gui.updateItem(23, ItemManager.getDifficultyItem(chance.get()));
+                    gui.updateItem(24, getStartExpeditionItem(chance.get(), variant.getLevel(), variant.getObjective(), variant.getCooldownSeconds()));
+                    gui.updateItem(25, getStartExpeditionItem(chance.get(), variant.getLevel(), variant.getObjective(), variant.getCooldownSeconds()));
+
+                    boolean toolsSupplied = toolTier.get() > 0;
+                    boolean foodSupplied = foodTier.get() > 0;
+
+                    gui.updateItem(toolSlot+1, ItemBuilder.from(ItemManager.createBonusSuppliedItem(toolsSupplied)).asGuiItem());
+                    gui.updateItem(foodSlot+1, ItemBuilder.from(ItemManager.createBonusSuppliedItem(foodSupplied)).asGuiItem());
+
                     }, 0);
                 return;
             }
             event.setCancelled(true);
         });
 
-        GuiItem expeditionFood = ItemBuilder.from(new ItemStack(Material.COOKED_BEEF)).asGuiItem();
-        GuiItem expeditionTool = ItemBuilder.from(new ItemStack(Material.DIAMOND_PICKAXE)).asGuiItem();
+
+        GuiItem expeditionFood = ItemBuilder.from(ItemManager.createBonusSuppliedItem(false)).asGuiItem();
+        GuiItem expeditionTool = ItemBuilder.from(ItemManager.createBonusSuppliedItem(false)).asGuiItem();
 
         gui.setCloseGuiAction(event -> {
             ItemStack food = gui.getInventory().getItem(foodSlot);
@@ -229,7 +281,7 @@ public class ExpeditionGui {
         startExpedition.setAction((e) -> {
             gui.setCloseGuiAction(null);
 
-            ExpeditionDto expeditionDto = new ExpeditionDto(chance.get(), variant.getLevel(), STONE, variant.getCooldownSeconds());
+            ExpeditionDto expeditionDto = new ExpeditionDto(chance.get(), variant.getLevel(), variant.getObjective(), variant.getCooldownSeconds());
 
             player.sendMessage("Expedition started with chance  " + chance); // TODO MESSAGE
 
@@ -238,10 +290,20 @@ public class ExpeditionGui {
             gui.close(player);
         });
 
-        gui.setItem(foodSlot-9, expeditionFood);
-        gui.setItem(toolSlot-9, expeditionTool);
+        List<VentureReward> rewards = expeditionRewards.getOrDefault(variant.getObjective(), new HashMap<>()).getOrDefault(variant.getLevel(), new ArrayList<>());
+        for (int i = 5; i <=8; i++) {
+            if(i-5 >= rewards.size()) break;
+            ItemStack reward = rewards.get(i-5).getReward();
+            GuiItem item = new GuiItem(reward);
+            gui.setItem(i, item);
+        }
 
-        gui.setItem(13, startExpedition);
+        gui.setItem(foodSlot+1, expeditionFood);
+        gui.setItem(toolSlot+1, expeditionTool);
+
+        gui.setItem(23, new GuiItem(ItemManager.getDifficultyItem(chance.get())));
+        gui.setItem(24, startExpedition);
+        gui.setItem(25, startExpedition);
 
         gui.removeItem(foodSlot);
         gui.removeItem(toolSlot);
@@ -249,18 +311,29 @@ public class ExpeditionGui {
 
     }
 
-    private static double calculateCurrentChance(int expeditionLevel, boolean toolsSupplied, boolean foodSupplied) {
-        double chance = 0;
-        switch (expeditionLevel) {
-            case 1 -> chance = 0.6;
-            case 2 -> chance = 0.4;
-            case 3 -> chance = 0.3;
-        }
-        if(toolsSupplied) {
-            chance *= 1.3;
-        }
-        if(foodSupplied) {
-            chance *= 1.3;
+//    private static double calculateCurrentChance(int expeditionLevel, boolean toolsSupplied, boolean foodSupplied) {
+//        double chance = 0;
+//        switch (expeditionLevel) {
+//            case 1 -> chance = 0.6;
+//            case 2 -> chance = 0.4;
+//            case 3 -> chance = 0.3;
+//        }
+//        if(toolsSupplied) {
+//            chance *= 1.3;
+//        }
+//        if(foodSupplied) {
+//            chance *= 1.3;
+//        }
+//        if(chance > 1) chance = 1;
+//        return chance;
+//    }
+
+    private static double calculateCurrentChance(double chance, int toolTier) {
+
+        switch (toolTier) {
+            case 1 -> chance += 0.10;
+            case 2 -> chance += 0.20;
+            case 3 -> chance += 0.30;
         }
         if(chance > 1) chance = 1;
         return chance;
@@ -274,8 +347,24 @@ public class ExpeditionGui {
         if(expeditionDto.isSuccessful()) {
             MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_SUCCESS, MessageType.CHAT);
 
-            for (String command : getExpeditionRewardsCommands(expeditionDto.getObjective(), expeditionDto.getExpeditionLevel())) {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", player.getName()));
+            if(expeditionRewards.isEmpty()) {
+                refreshAllExpeditionRewards();
+            }
+            List<VentureReward> rewards = expeditionRewards.getOrDefault(expeditionDto.getObjective(), new HashMap<>()).getOrDefault(expeditionDto.getExpeditionLevel(), new ArrayList<>());
+
+            for (VentureReward reward : rewards) {
+                int amount = reward.getRandomAmount();
+
+                while (amount > 0) {
+                    ItemStack item = reward.getReward().clone();
+                    item.setAmount(Math.min(amount, item.getMaxStackSize()));
+                    if(player.getInventory().firstEmpty() == -1) {
+                        player.getLocation().getWorld().dropItemNaturally(player.getLocation(), item);
+                    } else {
+                        player.getInventory().addItem(item);
+                    }
+                    amount -= item.getAmount();
+                }
             }
 
         } else {
@@ -286,33 +375,58 @@ public class ExpeditionGui {
 
     }
 
-    private static List<String> getExpeditionRewardsCommands(ExpeditionDto.ExpeditionObjective objective, int expeditionLevel) {
+    private static final HashMap<ExpeditionDto.ExpeditionObjective, HashMap<Integer, List<VentureReward>>> expeditionRewards = new HashMap<>();
 
-        return switch (objective) {
-
-            case WOOD -> switch (expeditionLevel) {
-                case 1 -> List.of("give %player% oak_log 32", "give %player% spruce_log 32");
-                case 2 -> List.of("give %player% birch_log 32", "give %player% jungle_log 32");
-                case 3 -> List.of("give %player% acacia_log 32", "give %player% dark_oak_log 32");
-                default -> List.of();
-            };
-            case STONE -> switch (expeditionLevel) {
-                case 1 -> List.of("give %player% cobblestone 32", "give %player% stone 32");
-                case 2 -> List.of("give %player% andesite 32", "give %player% diorite 32");
-                case 3 -> List.of("give %player% granite 32", "give %player% stone_bricks 32");
-                default -> List.of();
-            };
-            case CRYSTALS -> switch (expeditionLevel) {
-                case 1 -> List.of("give %player% lapis_lazuli 32", "give %player% redstone 32");
-                case 2 -> List.of("give %player% emerald 32", "give %player% quartz 32");
-                case 3 -> List.of("give %player% glowstone 32", "give %player% nether_quartz 32");
-                default -> List.of();
-            };
-
-            default -> List.of();
-        };
-
+    private static void refreshAllExpeditionRewards() {
+        for (ExpeditionDto.ExpeditionObjective objective : ExpeditionDto.ExpeditionObjective.values()) {
+            HashMap<Integer, List<VentureReward>> rewards = new HashMap<>();
+            for (int i = 1; i <= 3; i++) {
+                List<VentureReward> allByObjectiveAndLevel = VentureRewardDataManager.getAllByObjectiveAndLevel(objective, i);
+                rewards.put(i, allByObjectiveAndLevel);
+            }
+            expeditionRewards.put(objective, rewards);
+        }
     }
+
+    public static void refreshExpeditionRewards(ExpeditionDto.ExpeditionObjective objective, int level) {
+        if(expeditionRewards.isEmpty()) {
+            refreshAllExpeditionRewards();
+            return;
+        }
+        List<VentureReward> allByObjectiveAndLevel = VentureRewardDataManager.getAllByObjectiveAndLevel(objective, level);
+
+        HashMap<Integer, List<VentureReward>> integerListHashMap = expeditionRewards.getOrDefault(objective, new HashMap<>());
+        integerListHashMap.put(level, allByObjectiveAndLevel);
+        expeditionRewards.put(objective, integerListHashMap);
+    }
+
+//    private static List<String> getExpeditionRewardsCommands(ExpeditionDto.ExpeditionObjective objective, int expeditionLevel) {
+//
+//        return switch (objective) {
+//
+//            case WOOD -> switch (expeditionLevel) {
+//                case 1 -> List.of("give %player% oak_log 32", "give %player% spruce_log 32");
+//                case 2 -> List.of("give %player% birch_log 32", "give %player% jungle_log 32");
+//                case 3 -> List.of("give %player% acacia_log 32", "give %player% dark_oak_log 32");
+//                default -> List.of();
+//            };
+//            case STONE -> switch (expeditionLevel) {
+//                case 1 -> List.of("give %player% cobblestone 32", "give %player% stone 32");
+//                case 2 -> List.of("give %player% andesite 32", "give %player% diorite 32");
+//                case 3 -> List.of("give %player% granite 32", "give %player% stone_bricks 32");
+//                default -> List.of();
+//            };
+//            case CRYSTALS -> switch (expeditionLevel) {
+//                case 1 -> List.of("give %player% lapis_lazuli 32", "give %player% redstone 32");
+//                case 2 -> List.of("give %player% emerald 32", "give %player% quartz 32");
+//                case 3 -> List.of("give %player% glowstone 32", "give %player% nether_quartz 32");
+//                default -> List.of();
+//            };
+//
+//            default -> List.of();
+//        };
+//
+//    }
 
 
 }

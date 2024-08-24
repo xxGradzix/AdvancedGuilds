@@ -11,12 +11,137 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 
 public class ItemManager {
+
+    public static ItemStack foodRationTier3;
+    public static ItemStack foodRationTier2;
+    public static ItemStack foodRationTier1;
+
+    public static ItemStack toolTier1;
+    public static ItemStack toolTier2;
+    public static ItemStack toolTier3;
+
+
+    public static void init() {
+        createFoodRation1();
+        createFoodRation2();
+        createFoodRation3();
+
+        createToolPack1();
+        createToolPack2();
+        createToolPack3();
+    }
+
+    public static void createFoodRation3() {
+        ItemStack item = new ItemStack(Material.MUSHROOM_STEW);
+
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setCustomModelData(1);
+
+        itemMeta.setDisplayName(ColorFixer.addColors("&7ʀᴀᴄᴊᴀ żʏᴡɴᴏśᴄɪᴏᴡᴀ #a18b3dɪɪɪ"));
+        ArrayList<String> lore = new ArrayList<>();
+
+        lore.add(" ");
+        lore.add(ColorFixer.addColors("&7ᴢᴀᴘᴇᴡɴɪᴀ ᴡᴢᴍᴏᴄɴɪᴇɴɪᴀ #a18b3dɪɪɪ &7ᴘᴏᴢɪᴏᴍᴜ"));
+        lore.add(" ");
+        lore.add(ColorFixer.addColors("&7ᴍᴏżɴᴀ ᴜżʏć ᴅᴏ ᴡᴢᴍᴏᴄɴɪᴇɴɪᴀ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ &8(&a-90 &7ᴍɪɴ ᴄᴢᴀꜱᴜ ᴏᴄᴢᴇᴋɪᴡᴀɴɪᴀ&8)"));
+
+        itemMeta.setLore(lore);
+        item.setItemMeta(itemMeta);
+        foodRationTier3 = item;
+    }
+
+    public static void createFoodRation2() {
+        ItemStack item = new ItemStack(Material.PUMPKIN_PIE);
+
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setCustomModelData(1);
+
+        itemMeta.setDisplayName(ColorFixer.addColors("&7ʀᴀᴄᴊᴀ żʏᴡɴᴏśᴄɪᴏᴡᴀ #a18b3dɪɪ"));
+        ArrayList<String> lore = new ArrayList<>();
+
+        lore.add(" ");
+        lore.add(ColorFixer.addColors("&7ᴢᴀᴘᴇᴡɴɪᴀ ᴡᴢᴍᴏᴄɴɪᴇɴɪᴀ #a18b3dɪɪ &7ᴘᴏᴢɪᴏᴍᴜ"));
+        lore.add(" ");
+        lore.add(ColorFixer.addColors("&7ᴍᴏżɴᴀ ᴜżʏć ᴅᴏ ᴡᴢᴍᴏᴄɴɪᴇɴɪᴀ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ &8(&a-60 &7ᴍɪɴ ᴄᴢᴀꜱᴜ ᴏᴄᴢᴇᴋɪᴡᴀɴɪᴀ&8)"));
+
+        itemMeta.setLore(lore);
+        item.setItemMeta(itemMeta);
+        foodRationTier2 = item;
+    }
+    public static void createFoodRation1() {
+        ItemStack item = new ItemStack(Material.COOKED_BEEF);
+
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setCustomModelData(1);
+
+        itemMeta.setDisplayName(ColorFixer.addColors("&7ʀᴀᴄᴊᴀ żʏᴡɴᴏśᴄɪᴏᴡᴀ #a18b3dɪ"));
+        ArrayList<String> lore = new ArrayList<>();
+
+        lore.add(" ");
+        lore.add(ColorFixer.addColors("&7ᴢᴀᴘᴇᴡɴɪᴀ ᴡᴢᴍᴏᴄɴɪᴇɴɪᴀ #a18b3dɪ &7ᴘᴏᴢɪᴏᴍᴜ"));
+        lore.add(" ");
+        lore.add(ColorFixer.addColors("&7ᴍᴏżɴᴀ ᴜżʏć ᴅᴏ ᴡᴢᴍᴏᴄɴɪᴇɴɪᴀ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ &8(&a-30 &7ᴍɪɴ ᴄᴢᴀꜱᴜ ᴏᴄᴢᴇᴋɪᴡᴀɴɪᴀ&8)"));
+
+        itemMeta.setLore(lore);
+        item.setItemMeta(itemMeta);
+        foodRationTier1 = item;
+    }
+
+    public static void createToolPack1() {
+        ItemStack item = new ItemStack(Material.WOODEN_PICKAXE);
+
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setCustomModelData(1);
+
+        itemMeta.setDisplayName(ColorFixer.addColors("&7ᴢᴇꜱᴛᴀᴡ ᴜʟᴇᴘꜱᴢᴏɴʏᴄʜ ɴᴀʀᴢęᴅᴢɪ #a18b3dɪ"));
+        ArrayList<String> lore = new ArrayList<>();
+
+        lore.add(" ");
+        lore.add(ColorFixer.addColors("&7ᴍᴏżɴᴀ ᴜżʏć ᴅᴏ ᴡᴢᴍᴏᴄɴɪᴇɴɪᴀ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ &8(&a+10% &7ꜱᴢᴀɴꜱ ɴᴀ ᴘᴏᴡᴏᴅᴢᴇɴɪᴇ&8)"));
+
+        itemMeta.setLore(lore);
+        item.setItemMeta(itemMeta);
+        toolTier1 = item;
+    }
+    public static void createToolPack2() {
+        ItemStack item = new ItemStack(Material.IRON_PICKAXE);
+
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setCustomModelData(1);
+
+        itemMeta.setDisplayName(ColorFixer.addColors("&7ᴢᴇꜱᴛᴀᴡ ᴜʟᴇᴘꜱᴢᴏɴʏᴄʜ ɴᴀʀᴢęᴅᴢɪ #a18b3dɪɪ"));
+        ArrayList<String> lore = new ArrayList<>();
+
+        lore.add(" ");
+        lore.add(ColorFixer.addColors("&7ᴍᴏżɴᴀ ᴜżʏć ᴅᴏ ᴡᴢᴍᴏᴄɴɪᴇɴɪᴀ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ &8(&a+20% &7ꜱᴢᴀɴꜱ ɴᴀ ᴘᴏᴡᴏᴅᴢᴇɴɪᴇ&8)"));
+
+        itemMeta.setLore(lore);
+        item.setItemMeta(itemMeta);
+        toolTier2 = item;
+    }
+    public static void createToolPack3() {
+        ItemStack item = new ItemStack(Material.GOLDEN_PICKAXE);
+
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setCustomModelData(1);
+
+        itemMeta.setDisplayName(ColorFixer.addColors("&7ᴢᴇꜱᴛᴀᴡ ᴜʟᴇᴘꜱᴢᴏɴʏᴄʜ ɴᴀʀᴢęᴅᴢɪ #a18b3dɪɪɪ"));
+        ArrayList<String> lore = new ArrayList<>();
+
+        lore.add(" ");
+        lore.add(ColorFixer.addColors("&7ᴍᴏżɴᴀ ᴜżʏć ᴅᴏ ᴡᴢᴍᴏᴄɴɪᴇɴɪᴀ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ &8(&a+30% &7ꜱᴢᴀɴꜱ ɴᴀ ᴘᴏᴡᴏᴅᴢᴇɴɪᴇ&8)"));
+
+        itemMeta.setLore(lore);
+        item.setItemMeta(itemMeta);
+        toolTier3 = item;
+    }
 
     public static ItemStack getMainHallUpgradeButton(int price, boolean isUnlocked, boolean isFinished, Long secondsTillReady) {
         ItemStack item = new ItemStack(Material.BRICKS);
@@ -174,10 +299,11 @@ public class ItemManager {
 
     public static @NotNull ItemStack getStartExpeditionItem(double chance, int expeditionLevel, ExpeditionDto.ExpeditionObjective objective, long completionTime) {
 
-        ItemStack item = new ItemStack(Material.CREEPER_BANNER_PATTERN);
+        ItemStack item = new ItemStack(Material.MAP);
 
         ItemMeta itemMeta = item.getItemMeta();
 
+        itemMeta.setCustomModelData(1010);
         itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         itemMeta.addItemFlags(ItemFlag.HIDE_DYE);
@@ -218,6 +344,24 @@ public class ItemManager {
         return item;
     }
 
+    public static ItemStack getDifficultyItem(double chance) {
+        ItemStack item = new ItemStack(Material.NAME_TAG);
+        ItemMeta itemMeta = item.getItemMeta();
+        if(chance < 0.35) {
+            itemMeta.setCustomModelData(3);
+            itemMeta.setDisplayName(ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: &4ᴛʀᴜᴅɴʏ &8&l[&4" + (int)(chance * 100) + "%&8&l]"));
+        } else if (chance < 0.55) {
+            itemMeta.setCustomModelData(2);
+            itemMeta.setDisplayName(ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: &eśʀᴇᴅɴɪ &8&l[&e" + (int)(chance * 100) + "%&8&l]"));
+        } else {
+            itemMeta.setCustomModelData(1);
+            itemMeta.setDisplayName(ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: &aŁᴀᴛᴡʏ &8&l[&a" + (int)(chance * 100) + "%&8&l]"));
+        }
+
+        item.setItemMeta(itemMeta);
+        return item;
+    }
+
     public static @NotNull ItemStack createObjectiveGuiItem(ExpeditionVariant variant, int buttonSlot) {
         ItemStack item;
         String itemName;
@@ -248,10 +392,10 @@ public class ItemManager {
                         customModelData = 1;
                     }
                     case 2 -> {
-                        customModelData = 3;
+                        customModelData = 2;
                     }
                     case 3 -> {
-                        customModelData = 4;
+                        customModelData = 3;
                     }
                 }
             }
@@ -301,6 +445,39 @@ public class ItemManager {
         itemMeta.setLore(lore);
 
         itemMeta.setDisplayName(itemName);
+        item.setItemMeta(itemMeta);
+
+        return item;
+    }
+
+    public static ItemStack createBonusSuppliedItem(boolean isSupplied) {
+        ItemStack item = new ItemStack(Material.LIME_DYE);
+
+        ItemMeta itemMeta = item.getItemMeta();
+
+        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.addItemFlags(ItemFlag.HIDE_DYE);
+        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+        itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+
+        itemMeta.setDisplayName(ColorFixer.addColors("&7&lᴅᴏᴅᴀᴛᴋᴏᴡᴇ ᴢᴀᴘᴀꜱʏ"));
+
+        ArrayList<String> lore = new ArrayList<>();
+
+        lore.add(" ");
+
+        if(isSupplied) {
+            lore.add(ColorFixer.addColors("&aᴢᴀᴘᴀꜱʏ ᴅᴏᴅᴀɴᴇ"));
+            itemMeta.setCustomModelData(1);
+        } else {
+            lore.add(ColorFixer.addColors("&cᴢᴀᴘᴀꜱʏ ɴɪᴇ ᴅᴏᴅᴀɴᴇ"));
+            itemMeta.setCustomModelData(2);
+        }
+        itemMeta.setLore(lore);
+
         item.setItemMeta(itemMeta);
 
         return item;

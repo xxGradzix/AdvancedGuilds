@@ -8,7 +8,11 @@ import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
 import me.xxgradzix.advancedclans.commands.ClanCommand;
 import me.xxgradzix.advancedclans.commands.HideOutAdminCommands;
 import me.xxgradzix.advancedclans.commands.PlayerCommand;
+import me.xxgradzix.advancedclans.commands.VentureRewardCommands;
 import me.xxgradzix.advancedclans.config.Config;
+import me.xxgradzix.advancedclans.controllers.VentureRewardController;
+import me.xxgradzix.advancedclans.data.database.entities.hideout.venture.VentureReward;
+import me.xxgradzix.advancedclans.data.database.repositories.venture.VentureRewardRepository;
 import me.xxgradzix.advancedclans.data.database.services.GuildHideOutDataManager;
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.GuildHideout;
@@ -17,6 +21,8 @@ import me.xxgradzix.advancedclans.data.database.repositories.ClanEntityRepositor
 import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
 import me.xxgradzix.advancedclans.data.database.repositories.GuildHideoutEntityRepository;
 import me.xxgradzix.advancedclans.data.database.repositories.UserEntityRepository;
+import me.xxgradzix.advancedclans.data.database.services.VentureRewardDataManager;
+import me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.ExpeditionGui;
 import me.xxgradzix.advancedclans.listener.*;
 import me.xxgradzix.advancedclans.listener.guildHideOut.HideOutUpgrade;
@@ -51,15 +57,23 @@ public final class AdvancedGuilds extends JavaPlugin {
     private TopRankScheduler topRankScheduler;
 
     private ClanAndUserDataManager clanAndUserDataManager;
+
     private GuildHideOutController guildHideOutController;
+
     private MessageManager messages;
     private Config config;
     private ConnectionSource connectionSource;
 
     private ClanEntityRepository clanEntityRepository;
     private UserEntityRepository userEntityRepository;
+    private VentureRewardRepository ventureRewardRepository;
+
     private GuildHideoutEntityRepository guildHideoutEntityRepository;
     private GuildHideOutDataManager guildHideOutDataManager;
+
+
+    VentureRewardDataManager ventureRewardDataManager;
+    VentureRewardController ventureRewardController;
 
     Properties loadConfig() {
         Properties prop = new Properties();
@@ -93,10 +107,12 @@ public final class AdvancedGuilds extends JavaPlugin {
         TableUtils.createTableIfNotExists(connectionSource, User.class);
         TableUtils.createTableIfNotExists(connectionSource, GuildHideout.class);
         TableUtils.createTableIfNotExists(connectionSource, Clan.class);
+        TableUtils.createTableIfNotExists(connectionSource, VentureReward.class);
 
         clanEntityRepository = new ClanEntityRepository(connectionSource);
         userEntityRepository = new UserEntityRepository(connectionSource);
         guildHideoutEntityRepository = new GuildHideoutEntityRepository(connectionSource);
+        ventureRewardRepository = new VentureRewardRepository(connectionSource);
 
     }
 
@@ -106,6 +122,8 @@ public final class AdvancedGuilds extends JavaPlugin {
     public void onEnable() {
 
         instance = this;
+
+        ItemManager.init();
 
         try {
             configureDB();
@@ -142,7 +160,10 @@ public final class AdvancedGuilds extends JavaPlugin {
         guildHideOutDataManager = new GuildHideOutDataManager(guildHideoutEntityRepository);
         clansController = new ClanController(this, clanAndUserDataManager);
 
+        ventureRewardDataManager = new VentureRewardDataManager(ventureRewardRepository);
+
         userController = new UserController();
+        ventureRewardController = new VentureRewardController();
         guildHideOutController = new GuildHideOutController(userController, this);
 
         new ExpeditionGui(guildHideOutController, clansController);
@@ -181,6 +202,7 @@ public final class AdvancedGuilds extends JavaPlugin {
         getCommand("klan").setExecutor(new ClanCommand(clansController));
         getCommand("gracz").setExecutor(new PlayerCommand(userController));
         getCommand("stworzkryjowke").setExecutor(new HideOutAdminCommands(guildHideOutController));
+        getCommand("ekspedycja").setExecutor(new VentureRewardCommands(ventureRewardController));
 
     }
 

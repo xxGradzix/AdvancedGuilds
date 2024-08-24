@@ -6,6 +6,7 @@ import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
 import me.xxgradzix.advancedclans.data.database.services.GuildHideOutDataManager;
 import me.xxgradzix.advancedclans.exceptions.hideOuts.HideOutDoesNotExistException;
 import me.xxgradzix.advancedclans.exceptions.hideOuts.InvalidHideoutWorldNameException;
+import me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.ExpeditionGui;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.messages.MessageType;
@@ -87,6 +88,14 @@ public class HideOutAdminCommands implements CommandExecutor {
             }
             case "5" -> {
                 ExpeditionGui.shuffleExpeditions();
+            }
+            case "6" -> {
+                player.getInventory().addItem(ItemManager.foodRationTier1);
+                player.getInventory().addItem(ItemManager.foodRationTier2);
+                player.getInventory().addItem(ItemManager.foodRationTier3);
+                player.getInventory().addItem(ItemManager.toolTier1);
+                player.getInventory().addItem(ItemManager.toolTier2);
+                player.getInventory().addItem(ItemManager.toolTier3);
             }
         }
         return false;

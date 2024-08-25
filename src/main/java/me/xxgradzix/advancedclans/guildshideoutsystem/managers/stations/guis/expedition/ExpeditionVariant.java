@@ -1,4 +1,4 @@
-package me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis;
+package me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.expedition;
 
 import lombok.Getter;
 

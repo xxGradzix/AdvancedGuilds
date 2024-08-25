@@ -1,4 +1,4 @@
-package me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis;
+package me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.expedition;
 
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.components.GuiType;
@@ -18,48 +18,38 @@ import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.messages.MessageType;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.InvalidObjectException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager.getStartExpeditionItem;
-import static me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.ExpeditionDto.ExpeditionObjective.*;
+import static me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.expedition.ExpeditionDto.ExpeditionObjective.*;
 
 public class ExpeditionGui {
 
-    private static List<ExpeditionVariant> variants = new ArrayList<>();
+    private static final List<ExpeditionVariant> variants = new ArrayList<>();
 
     public static void shuffleExpeditions() {
 
         variants.clear();
         while (variants.size() < 6){
             int randomObjectiveIndex = new Random().nextInt(0, ExpeditionDto.ExpeditionObjective.values().length);
-
             ExpeditionDto.ExpeditionObjective randomObjective = values()[randomObjectiveIndex];
-
             int randomLevel= new Random().nextInt(1, 4);
-
-            int randomCooldownFluctuation = new Random().nextInt(-5, 5);
-
+            int randomCooldownFluctuation = new Random().nextInt(-5, 6);
             int cooldown = randomLevel * 60 * 60 + randomCooldownFluctuation * 15 * 60;
-
             int minCooldownValue = 30*60;
             if(cooldown < minCooldownValue) cooldown = minCooldownValue;
-
             variants.add(new ExpeditionVariant(randomObjective, randomLevel, cooldown));
         }
         variants.sort(Comparator.comparingInt(ExpeditionVariant::getLevel));
-
     }
 
     private static final HashMap<Player, ExpeditionDto> expeditionStatus = new HashMap<>();
-
 
     private static GuildHideOutController hideOutController;
     private static ClanController clanController;
@@ -109,18 +99,15 @@ public class ExpeditionGui {
         if(expeditionStatus.get(player) != null) {
             if(expeditionDto.isFinished()) {
                 openFinishedExpeditionGui(player);
-                return;
             } else {
                 MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_PENDING, MessageType.CHAT);
+                MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_WILL_END_IN.replace("{timeleft}", MessageManager.secondsToTimeFormat(expeditionDto.secondsToCompletion())), MessageType.CHAT);
                 player.sendMessage("Time to completion seconds: " + expeditionDto.secondsToCompletion());
-                return;
             }
+            return;
         }
-
         ventureChooseGui(player);
     }
-
-
 
     private static void ventureChooseGui(Player player) {
 
@@ -132,16 +119,13 @@ public class ExpeditionGui {
 
         int rep = 0;
 
-        if(variants.isEmpty()) {
-            shuffleExpeditions();
-        }
+        if(variants.isEmpty()) shuffleExpeditions();
+
         for(ExpeditionVariant variant : variants) {
             for (int i = 0; i<3; i++) {
                 GuiItem item = new GuiItem(ItemManager.createObjectiveGuiItem(variant, i));
 
-                item.setAction((a) -> {
-                    venturePreparation(player, variant);
-                });
+                item.setAction((a) -> venturePreparation(player, variant));
                 int slot = 6 + i + rep * 9;
                 if(slot > 53) break;
                 gui.setItem(slot, item);
@@ -149,7 +133,6 @@ public class ExpeditionGui {
             rep++;
         }
         gui.open(player);
-
     }
 
 
@@ -159,6 +142,7 @@ public class ExpeditionGui {
         AtomicInteger toolTier = new AtomicInteger();
 
         AtomicReference<Double> chance = new AtomicReference<>(calculateCurrentChance(variant.getBaseChance(), toolTier.get()));
+        AtomicReference<Integer> cooldownSeconds = new AtomicReference<>(calculateCurrentCooldown((int) variant.getCooldownSeconds(), foodTier.get()));
 
         int foodSlot = 2;
         int toolSlot = 20;
@@ -206,12 +190,14 @@ public class ExpeditionGui {
 
                 Bukkit.getScheduler().runTaskLaterAsynchronously(AdvancedGuilds.instance, () -> {
 
-                    if(gui.getInventory().getItem(foodSlot) != null) {
-                        if(gui.getInventory().getItem(foodSlot).isSimilar(ItemManager.foodRationTier1)) {
+                    ItemStack foodItem = gui.getInventory().getItem(foodSlot);
+
+                    if(foodItem != null) {
+                        if(foodItem.isSimilar(ItemManager.foodRationTier1)) {
                             foodTier.set(1);
-                        } else if(gui.getInventory().getItem(foodSlot).isSimilar(ItemManager.foodRationTier2)) {
+                        } else if(foodItem.isSimilar(ItemManager.foodRationTier2)) {
                             foodTier.set(2);
-                        } else if(gui.getInventory().getItem(foodSlot).isSimilar(ItemManager.foodRationTier3)) {
+                        } else if(foodItem.isSimilar(ItemManager.foodRationTier3)) {
                             foodTier.set(3);
                         } else {
                             foodTier.set(0);
@@ -220,12 +206,13 @@ public class ExpeditionGui {
                         foodTier.set(0);
                     }
 
-                    if (gui.getInventory().getItem(toolSlot) != null) {
-                        if(gui.getInventory().getItem(toolSlot).isSimilar(ItemManager.toolTier1)) {
+                    ItemStack toolItem = gui.getInventory().getItem(toolSlot);
+                    if (toolItem != null) {
+                        if(toolItem.isSimilar(ItemManager.toolTier1)) {
                             toolTier.set(1);
-                        } else if(gui.getInventory().getItem(toolSlot).isSimilar(ItemManager.toolTier2)) {
+                        } else if(toolItem.isSimilar(ItemManager.toolTier2)) {
                             toolTier.set(2);
-                        } else if(gui.getInventory().getItem(toolSlot).isSimilar(ItemManager.toolTier3)) {
+                        } else if(toolItem.isSimilar(ItemManager.toolTier3)) {
                             toolTier.set(3);
                         } else {
                             toolTier.set(0);
@@ -235,16 +222,14 @@ public class ExpeditionGui {
                     }
 
                     chance.set(calculateCurrentChance(variant.getBaseChance(), toolTier.get()));
+                    cooldownSeconds.set(calculateCurrentCooldown((int)variant.getCooldownSeconds(), foodTier.get()));
 
                     gui.updateItem(23, ItemManager.getDifficultyItem(chance.get()));
                     gui.updateItem(24, getStartExpeditionItem(chance.get(), variant.getLevel(), variant.getObjective(), variant.getCooldownSeconds()));
                     gui.updateItem(25, getStartExpeditionItem(chance.get(), variant.getLevel(), variant.getObjective(), variant.getCooldownSeconds()));
 
-                    boolean toolsSupplied = toolTier.get() > 0;
-                    boolean foodSupplied = foodTier.get() > 0;
-
-                    gui.updateItem(toolSlot+1, ItemBuilder.from(ItemManager.createBonusSuppliedItem(toolsSupplied)).asGuiItem());
-                    gui.updateItem(foodSlot+1, ItemBuilder.from(ItemManager.createBonusSuppliedItem(foodSupplied)).asGuiItem());
+                    gui.updateItem(toolSlot+1, ItemBuilder.from(ItemManager.createToolBonusSuppliedItem(toolTier.get())).asGuiItem());
+                    gui.updateItem(foodSlot+1, ItemBuilder.from(ItemManager.createFoodBonusSuppliedItem(foodTier.get())).asGuiItem());
 
                     }, 0);
                 return;
@@ -252,9 +237,8 @@ public class ExpeditionGui {
             event.setCancelled(true);
         });
 
-
-        GuiItem expeditionFood = ItemBuilder.from(ItemManager.createBonusSuppliedItem(false)).asGuiItem();
-        GuiItem expeditionTool = ItemBuilder.from(ItemManager.createBonusSuppliedItem(false)).asGuiItem();
+        GuiItem expeditionFood = ItemBuilder.from(ItemManager.createFoodBonusSuppliedItem(foodTier.get())).asGuiItem();
+        GuiItem expeditionTool = ItemBuilder.from(ItemManager.createToolBonusSuppliedItem(toolTier.get())).asGuiItem();
 
         gui.setCloseGuiAction(event -> {
             ItemStack food = gui.getInventory().getItem(foodSlot);
@@ -281,7 +265,7 @@ public class ExpeditionGui {
         startExpedition.setAction((e) -> {
             gui.setCloseGuiAction(null);
 
-            ExpeditionDto expeditionDto = new ExpeditionDto(chance.get(), variant.getLevel(), variant.getObjective(), variant.getCooldownSeconds());
+            ExpeditionDto expeditionDto = new ExpeditionDto(chance.get(), variant.getLevel(), variant.getObjective(), cooldownSeconds.get());
 
             player.sendMessage("Expedition started with chance  " + chance); // TODO MESSAGE
 
@@ -311,23 +295,6 @@ public class ExpeditionGui {
 
     }
 
-//    private static double calculateCurrentChance(int expeditionLevel, boolean toolsSupplied, boolean foodSupplied) {
-//        double chance = 0;
-//        switch (expeditionLevel) {
-//            case 1 -> chance = 0.6;
-//            case 2 -> chance = 0.4;
-//            case 3 -> chance = 0.3;
-//        }
-//        if(toolsSupplied) {
-//            chance *= 1.3;
-//        }
-//        if(foodSupplied) {
-//            chance *= 1.3;
-//        }
-//        if(chance > 1) chance = 1;
-//        return chance;
-//    }
-
     private static double calculateCurrentChance(double chance, int toolTier) {
 
         switch (toolTier) {
@@ -337,6 +304,16 @@ public class ExpeditionGui {
         }
         if(chance > 1) chance = 1;
         return chance;
+    }
+    private static int calculateCurrentCooldown(int cooldownSec, int foodTier) {
+
+        switch (foodTier) {
+            case 1 -> cooldownSec -= 60 * 30;
+            case 2 -> cooldownSec += 60 * 60;
+            case 3 -> cooldownSec += 60 * 90;
+        }
+        if(cooldownSec < 60*15) cooldownSec = 60 * 15;
+        return cooldownSec;
     }
 
     private static void openFinishedExpeditionGui(Player player) {
@@ -400,33 +377,6 @@ public class ExpeditionGui {
         expeditionRewards.put(objective, integerListHashMap);
     }
 
-//    private static List<String> getExpeditionRewardsCommands(ExpeditionDto.ExpeditionObjective objective, int expeditionLevel) {
-//
-//        return switch (objective) {
-//
-//            case WOOD -> switch (expeditionLevel) {
-//                case 1 -> List.of("give %player% oak_log 32", "give %player% spruce_log 32");
-//                case 2 -> List.of("give %player% birch_log 32", "give %player% jungle_log 32");
-//                case 3 -> List.of("give %player% acacia_log 32", "give %player% dark_oak_log 32");
-//                default -> List.of();
-//            };
-//            case STONE -> switch (expeditionLevel) {
-//                case 1 -> List.of("give %player% cobblestone 32", "give %player% stone 32");
-//                case 2 -> List.of("give %player% andesite 32", "give %player% diorite 32");
-//                case 3 -> List.of("give %player% granite 32", "give %player% stone_bricks 32");
-//                default -> List.of();
-//            };
-//            case CRYSTALS -> switch (expeditionLevel) {
-//                case 1 -> List.of("give %player% lapis_lazuli 32", "give %player% redstone 32");
-//                case 2 -> List.of("give %player% emerald 32", "give %player% quartz 32");
-//                case 3 -> List.of("give %player% glowstone 32", "give %player% nether_quartz 32");
-//                default -> List.of();
-//            };
-//
-//            default -> List.of();
-//        };
-//
-//    }
 
 
 }

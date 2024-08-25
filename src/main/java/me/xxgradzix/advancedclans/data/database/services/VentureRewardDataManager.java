@@ -1,30 +1,12 @@
 package me.xxgradzix.advancedclans.data.database.services;
 
-import eu.decentsoftware.holograms.api.DHAPI;
-import me.xxgradzix.advancedclans.AdvancedGuilds;
-import me.xxgradzix.advancedclans.data.database.entities.Clan;
-import me.xxgradzix.advancedclans.data.database.entities.GuildHideout;
 import me.xxgradzix.advancedclans.data.database.entities.hideout.venture.VentureReward;
-import me.xxgradzix.advancedclans.data.database.repositories.GuildHideoutEntityRepository;
 import me.xxgradzix.advancedclans.data.database.repositories.venture.VentureRewardRepository;
-import me.xxgradzix.advancedclans.exceptions.ClanDoesNotExistException;
-import me.xxgradzix.advancedclans.exceptions.PlayerDoesNotBelongToClanException;
-import me.xxgradzix.advancedclans.exceptions.hideOuts.HideOutDoesNotExistException;
-import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.ExpeditionDto;
-import me.xxgradzix.advancedclans.guildshideoutsystem.upgrades.UpgradePattern;
-import me.xxgradzix.advancedclans.utils.ColorFixer;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.expedition.ExpeditionDto;
 
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static me.xxgradzix.advancedclans.controllers.GuildHideOutController.*;
 
 public class VentureRewardDataManager {
 

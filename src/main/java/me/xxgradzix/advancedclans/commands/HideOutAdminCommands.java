@@ -7,7 +7,7 @@ import me.xxgradzix.advancedclans.data.database.services.GuildHideOutDataManager
 import me.xxgradzix.advancedclans.exceptions.hideOuts.HideOutDoesNotExistException;
 import me.xxgradzix.advancedclans.exceptions.hideOuts.InvalidHideoutWorldNameException;
 import me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager;
-import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.ExpeditionGui;
+import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.expedition.ExpeditionGui;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.messages.MessageType;
 import org.bukkit.Bukkit;

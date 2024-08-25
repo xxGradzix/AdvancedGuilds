@@ -1,20 +1,18 @@
 package me.xxgradzix.advancedclans.guildshideoutsystem;
 
 import me.xxgradzix.advancedclans.data.database.entities.GuildHideout;
-import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.ExpeditionDto;
-import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.ExpeditionVariant;
+import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.expedition.ExpeditionDto;
+import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.expedition.ExpeditionVariant;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.utils.ColorFixer;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -482,11 +480,9 @@ public class ItemManager {
         return item;
     }
 
-    public static ItemStack createBonusSuppliedItem(boolean isSupplied) {
+    public static ItemStack createFoodBonusSuppliedItem(int tier) {
         ItemStack item = new ItemStack(Material.LIME_DYE);
-
         ItemMeta itemMeta = item.getItemMeta();
-
         itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         itemMeta.addItemFlags(ItemFlag.HIDE_DYE);
@@ -494,24 +490,71 @@ public class ItemManager {
         itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
         itemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-
         itemMeta.setDisplayName(ColorFixer.addColors("&7&lᴅᴏᴅᴀᴛᴋᴏᴡᴇ ᴢᴀᴘᴀꜱʏ"));
-
         ArrayList<String> lore = new ArrayList<>();
-
         lore.add(" ");
-
-        if(isSupplied) {
-            lore.add(ColorFixer.addColors("&aᴢᴀᴘᴀꜱʏ ᴅᴏᴅᴀɴᴇ"));
-            itemMeta.setCustomModelData(1);
-        } else {
-            lore.add(ColorFixer.addColors("&cᴢᴀᴘᴀꜱʏ ɴɪᴇ ᴅᴏᴅᴀɴᴇ"));
-            itemMeta.setCustomModelData(2);
+        switch (tier) {
+            case 3 -> {
+                lore.add(ColorFixer.addColors("&aᴢᴀᴘᴀꜱʏ ᴅᴏᴅᴀɴᴇ"));
+                lore.add(ColorFixer.addColors("&7ᴀᴋᴛʏᴡɴʏ ʙᴏɴᴜꜱ&8: &a-90&7 ᴍɪɴ"));
+                itemMeta.setCustomModelData(1);
+            }
+            case 2 -> {
+                lore.add(ColorFixer.addColors("&aᴢᴀᴘᴀꜱʏ ᴅᴏᴅᴀɴᴇ"));
+                lore.add(ColorFixer.addColors("&7ᴀᴋᴛʏᴡɴʏ ʙᴏɴᴜꜱ&8: &a-60&7 ᴍɪɴ"));
+                itemMeta.setCustomModelData(1);
+            }
+            case 1 -> {
+                lore.add(ColorFixer.addColors("&aᴢᴀᴘᴀꜱʏ ᴅᴏᴅᴀɴᴇ"));
+                lore.add(ColorFixer.addColors("&7ᴀᴋᴛʏᴡɴʏ ʙᴏɴᴜꜱ&8: &a-30&7 ᴍɪɴ"));
+                itemMeta.setCustomModelData(1);
+            }
+            default -> {
+                lore.add(ColorFixer.addColors("&cᴢᴀᴘᴀꜱʏ ɴɪᴇ ᴅᴏᴅᴀɴᴇ"));
+                itemMeta.setCustomModelData(2);
+            }
         }
         itemMeta.setLore(lore);
-
         item.setItemMeta(itemMeta);
+        return item;
+    }
 
+    public static ItemStack createToolBonusSuppliedItem(int tier) {
+        ItemStack item = new ItemStack(Material.LIME_DYE);
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.addItemFlags(ItemFlag.HIDE_DYE);
+        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+        itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        itemMeta.setDisplayName(ColorFixer.addColors("&7&lᴅᴏᴅᴀᴛᴋᴏᴡᴇ ᴢᴀᴘᴀꜱʏ"));
+        ArrayList<String> lore = new ArrayList<>();
+        lore.add(" ");
+        switch (tier) {
+            case 3 -> {
+                lore.add(ColorFixer.addColors("&aᴢᴀᴘᴀꜱʏ ᴅᴏᴅᴀɴᴇ"));
+                lore.add(ColorFixer.addColors("&7ᴀᴋᴛʏᴡɴʏ ʙᴏɴᴜꜱ&8: &a+30%&7 ꜱᴢᴀɴꜱ"));
+                itemMeta.setCustomModelData(1);
+            }
+            case 2 -> {
+                lore.add(ColorFixer.addColors("&aᴢᴀᴘᴀꜱʏ ᴅᴏᴅᴀɴᴇ"));
+                lore.add(ColorFixer.addColors("&7ᴀᴋᴛʏᴡɴʏ ʙᴏɴᴜꜱ&8: &a+20%&7 ꜱᴢᴀɴꜱ"));
+                itemMeta.setCustomModelData(1);
+            }
+            case 1 -> {
+                lore.add(ColorFixer.addColors("&aᴢᴀᴘᴀꜱʏ ᴅᴏᴅᴀɴᴇ"));
+                lore.add(ColorFixer.addColors("&7ᴀᴋᴛʏᴡɴʏ ʙᴏɴᴜꜱ&8: &a+10%&7 ꜱᴢᴀɴꜱ"));
+                itemMeta.setCustomModelData(1);
+            }
+            default -> {
+                lore.add(ColorFixer.addColors("&cᴢᴀᴘᴀꜱʏ ɴɪᴇ ᴅᴏᴅᴀɴᴇ"));
+                itemMeta.setCustomModelData(2);
+            }
+        }
+        itemMeta.setLore(lore);
+        item.setItemMeta(itemMeta);
         return item;
     }
 }

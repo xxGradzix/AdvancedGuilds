@@ -248,6 +248,8 @@ public class MessageManager extends OkaeriConfig {
     public static String EXPEDITION_SUCCESS = "&7ᴇᴋꜱᴘᴇᴅʏᴄᴊᴀ ᴢᴀᴋᴏńᴄᴢʏʟᴀ ꜱɪę̨ ꜱᴜᴋᴄᴇꜱᴇᴍ";
     @Comment("Expedition pending")
     public static String EXPEDITION_PENDING = "&7ᴇᴋꜱᴘᴇᴅʏᴄᴊᴀ ᴊᴇꜱᴢᴄᴢᴇ ꜱɪę ɴɪᴇ ᴢᴀᴋᴏńᴄᴢʏʟᴀ";
+    @Comment("Expedition ends in {timeleft}")
+    public static String EXPEDITION_WILL_END_IN = "&7ᴇᴋꜱᴘᴇᴅʏᴄᴊᴀ ᴢᴀᴋᴏńᴄᴢʏ ꜱɪę ᴢᴀ {timeleft}";
     @Comment("Hideout does not have access to this")
     public static String YOUR_HIDEOUT_DOES_NOT_HAVE_ACCESS_TO_THIS = "&7ᴛᴡᴏᴊᴀ ᴋʀʏᴊóᴡᴋᴀ ɴɪᴇ ᴍᴀ ᴅᴏꜱᴛᴇᴘᴜ ᴅᴏ ᴛᴇɢᴏ";
 
@@ -297,7 +299,7 @@ public class MessageManager extends OkaeriConfig {
         int hours = minutes / 60;
         minutes %= 60;
         StringBuilder sb = new StringBuilder();
-        sb.append("§8");
+        sb.append("§3");
         if(hours > 0) {
             sb.append(hours).append(" §3ɢᴏᴅᴢɪɴ §b");
         }

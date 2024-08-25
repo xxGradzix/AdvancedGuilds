@@ -2,7 +2,7 @@ package me.xxgradzix.advancedclans.controllers;
 
 import me.xxgradzix.advancedclans.data.database.entities.hideout.venture.VentureReward;
 import me.xxgradzix.advancedclans.data.database.services.VentureRewardDataManager;
-import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.ExpeditionDto;
+import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.expedition.ExpeditionDto;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 

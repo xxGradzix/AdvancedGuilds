@@ -12,7 +12,6 @@ import me.xxgradzix.advancedclans.commands.VentureRewardCommands;
 import me.xxgradzix.advancedclans.config.Config;
 import me.xxgradzix.advancedclans.controllers.VentureRewardController;
 import me.xxgradzix.advancedclans.data.database.entities.hideout.venture.VentureReward;
-import me.xxgradzix.advancedclans.data.database.repositories.venture.VentureRewardRepository;
 import me.xxgradzix.advancedclans.data.database.services.GuildHideOutDataManager;
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.GuildHideout;
@@ -23,7 +22,7 @@ import me.xxgradzix.advancedclans.data.database.repositories.GuildHideoutEntityR
 import me.xxgradzix.advancedclans.data.database.repositories.UserEntityRepository;
 import me.xxgradzix.advancedclans.data.database.services.VentureRewardDataManager;
 import me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager;
-import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.ExpeditionGui;
+import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.expedition.ExpeditionGui;
 import me.xxgradzix.advancedclans.listener.*;
 import me.xxgradzix.advancedclans.listener.guildHideOut.HideOutUpgrade;
 import me.xxgradzix.advancedclans.controllers.ClanController;

@@ -1,8 +1,8 @@
-package me.xxgradzix.advancedclans.controllers;
+package me.xxgradzix.advancedclans.data.database.controllers.hideouts;
 
 import me.xxgradzix.advancedclans.data.database.entities.hideout.venture.VentureReward;
-import me.xxgradzix.advancedclans.data.database.services.VentureRewardDataManager;
-import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.expedition.ExpeditionDto;
+import me.xxgradzix.advancedclans.data.database.services.hideout.VentureRewardDataManager;
+import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition.ExpeditionDto;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 

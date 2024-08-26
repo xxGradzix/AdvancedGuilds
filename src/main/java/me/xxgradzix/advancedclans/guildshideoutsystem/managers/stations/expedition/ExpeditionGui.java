@@ -1,18 +1,18 @@
-package me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.expedition;
+package me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition;
 
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.components.GuiType;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
-import me.xxgradzix.advancedclans.controllers.ClanController;
-import me.xxgradzix.advancedclans.controllers.GuildHideOutController;
-import me.xxgradzix.advancedclans.controllers.UserController;
+import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.ClanController;
+import me.xxgradzix.advancedclans.data.database.controllers.hideouts.GuildHideOutController;
+import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.UserController;
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
-import me.xxgradzix.advancedclans.data.database.entities.GuildHideout;
+import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideout;
 import me.xxgradzix.advancedclans.data.database.entities.User;
 import me.xxgradzix.advancedclans.data.database.entities.hideout.venture.VentureReward;
-import me.xxgradzix.advancedclans.data.database.services.VentureRewardDataManager;
+import me.xxgradzix.advancedclans.data.database.services.hideout.VentureRewardDataManager;
 import me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.messages.MessageType;
@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager.getStartExpeditionItem;
-import static me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.expedition.ExpeditionDto.ExpeditionObjective.*;
+import static me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition.ExpeditionDto.ExpeditionObjective.*;
 
 public class ExpeditionGui {
 
@@ -75,12 +75,8 @@ public class ExpeditionGui {
             Bukkit.getLogger().warning("User " + player.getName() + " tried to open expedition gui with wrong clan");
             return;
         }
-        GuildHideout hideout;
-        try {
-            hideout = hideOutController.getPlayerHideOut(player);
-        } catch (InvalidObjectException e) {
-            throw new RuntimeException(e);
-        }
+        GuildHideout hideout = hideOutController.getPlayerHideOut(player);
+
 
         if (hideout == null) {
             MessageManager.sendMessageFormated(player, MessageManager.YOU_DONT_BELONG_TO_THIS_HIDEOUT, MessageType.CHAT);

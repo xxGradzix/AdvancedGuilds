@@ -1,8 +1,9 @@
-package me.xxgradzix.advancedclans.data.database.entities;
+package me.xxgradzix.advancedclans.data.database.entities.hideout;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import lombok.*;
+import me.xxgradzix.advancedclans.data.database.entities.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.fields.UpgradeInfoHolder;
 import me.xxgradzix.advancedclans.data.database.persister.*;
 import me.xxgradzix.advancedclans.exceptions.hideOuts.UpgradeWasNotBoughtException;

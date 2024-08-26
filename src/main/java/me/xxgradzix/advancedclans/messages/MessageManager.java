@@ -6,10 +6,6 @@ import me.xxgradzix.advancedclans.utils.ColorFixer;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.units.qual.C;
-import org.jetbrains.annotations.NotNull;
-
-import static me.xxgradzix.advancedclans.messages.MessageType.*;
 
 public class MessageManager extends OkaeriConfig {
 
@@ -252,6 +248,15 @@ public class MessageManager extends OkaeriConfig {
     public static String EXPEDITION_WILL_END_IN = "&7ᴇᴋꜱᴘᴇᴅʏᴄᴊᴀ ᴢᴀᴋᴏńᴄᴢʏ ꜱɪę ᴢᴀ {timeleft}";
     @Comment("Hideout does not have access to this")
     public static String YOUR_HIDEOUT_DOES_NOT_HAVE_ACCESS_TO_THIS = "&7ᴛᴡᴏᴊᴀ ᴋʀʏᴊóᴡᴋᴀ ɴɪᴇ ᴍᴀ ᴅᴏꜱᴛᴇᴘᴜ ᴅᴏ ᴛᴇɢᴏ";
+    @Comment("No money for guild")
+    public static String NO_MONEY = "&7ɴɪᴇ ᴍᴀꜱᴢ ᴡʏꜱᴛᴀʀᴄᴢᴀᴊąᴄᴏ ᴘɪᴇɴɪęᴅᴢʏ. ᴄᴇɴᴀ ᴛᴏ {cost}";
+
+    @Comment("No money for guild")
+    public static String NO_ITEMS = "&7ɴɪᴇ ᴍᴀꜱᴢ ᴛʏʟᴇ ᴡʏᴍᴀɢᴀɴʏᴄʜ ᴘʀᴢᴇᴅᴍɪᴏᴛóᴡ ᴄᴇɴᴀ ᴛᴏ {cost}";
+    @Comment("You dont have permission to this hideout storage")
+    public static String YOU_DONT_HAVE_PERMISSION_TO_THIS_STORAGE = "&7ɴɪᴇ ᴍᴀꜱᴢ ᴅᴏꜱᴛęᴘᴜ ᴅᴏ ᴛᴇɢᴏ ᴍᴀɢᴀᴢʏɴᴜ, ᴘᴏᴘʀᴏꜱ ᴏ ᴅᴏꜱᴛᴇᴘ ʟɪᴅᴇʀᴀ ꜱᴡᴏᴊᴇᴊ ɢɪʟᴅɪɪ";
+    @Comment("Storage permissions changed")
+    public static String PERMISSIONS_UPDATED = "&7ᴢᴍɪᴇɴɪᴏɴᴏ ᴜᴘʀᴀᴡɴɪᴇɴɪᴀ ᴅᴏ ᴍᴀɢᴀᴢʏɴᴜ";
 
     public static void sendMessageFormated(Player player, String message, MessageType type) {
         message = ColorFixer.addColors(message);

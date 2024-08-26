@@ -1,9 +1,8 @@
 package me.xxgradzix.advancedclans.listener.guildHideOut;
 
-import me.xxgradzix.advancedclans.controllers.GuildHideOutController;
-import me.xxgradzix.advancedclans.data.database.entities.GuildHideout;
+import me.xxgradzix.advancedclans.data.database.controllers.hideouts.GuildHideOutController;
+import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideout;
 import me.xxgradzix.advancedclans.exceptions.hideOuts.HideOutDoesNotExistException;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;

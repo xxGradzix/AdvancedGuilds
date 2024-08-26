@@ -1,8 +1,8 @@
-package me.xxgradzix.advancedclans.data.database.services;
+package me.xxgradzix.advancedclans.data.database.services.hideout;
 
 import me.xxgradzix.advancedclans.data.database.entities.hideout.venture.VentureReward;
-import me.xxgradzix.advancedclans.data.database.repositories.venture.VentureRewardRepository;
-import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.expedition.ExpeditionDto;
+import me.xxgradzix.advancedclans.data.database.repositories.hideout.venture.VentureRewardRepository;
+import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition.ExpeditionDto;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -29,13 +29,6 @@ public class VentureRewardDataManager {
         fields.put("diffLevel", level);
         try {
             return ventureRewardRepository.getAllEntitiesByFields(fields);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    public static void removeVentureReward(VentureReward ventureReward) {
-        try {
-            ventureRewardRepository.deleteEntity(ventureReward);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

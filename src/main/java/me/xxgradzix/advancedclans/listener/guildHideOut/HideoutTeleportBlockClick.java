@@ -2,8 +2,7 @@ package me.xxgradzix.advancedclans.listener.guildHideOut;
 
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.event.HologramClickEvent;
-import me.xxgradzix.advancedclans.controllers.GuildHideOutController;
-import org.bukkit.Bukkit;
+import me.xxgradzix.advancedclans.data.database.controllers.hideouts.GuildHideOutController;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

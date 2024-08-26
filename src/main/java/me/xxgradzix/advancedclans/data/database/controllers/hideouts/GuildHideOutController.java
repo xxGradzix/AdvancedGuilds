@@ -1,4 +1,4 @@
-package me.xxgradzix.advancedclans.controllers;
+package me.xxgradzix.advancedclans.data.database.controllers.hideouts;
 
 import com.fastasyncworldedit.core.Fawe;
 import com.sk89q.worldedit.EditSession;
@@ -13,10 +13,12 @@ import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.util.SideEffectSet;
 import eu.decentsoftware.holograms.api.DHAPI;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
+import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.UserController;
+import me.xxgradzix.advancedclans.data.database.controllers.dtos.SkinPersistentDTO;
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
-import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
-import me.xxgradzix.advancedclans.data.database.services.GuildHideOutDataManager;
-import me.xxgradzix.advancedclans.data.database.entities.GuildHideout;
+import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataManager;
+import me.xxgradzix.advancedclans.data.database.services.hideout.GuildHideOutDataManager;
+import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideout;
 import me.xxgradzix.advancedclans.data.database.entities.fields.UpgradeInfoHolder;
 import me.xxgradzix.advancedclans.data.database.entities.User;
 import me.xxgradzix.advancedclans.exceptions.ClanDoesNotExistException;
@@ -34,12 +36,9 @@ import net.citizensnpcs.api.event.DespawnReason;
 import net.citizensnpcs.api.npc.MemoryNPCDataStore;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
-import net.citizensnpcs.api.trait.Trait;
-import net.citizensnpcs.trait.ClickRedirectTrait;
 import net.citizensnpcs.trait.CommandTrait;
 import net.citizensnpcs.trait.LookClose;
 import net.citizensnpcs.trait.SkinTrait;
-import net.citizensnpcs.trait.versioned.DisplayTrait;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -124,9 +123,6 @@ public class GuildHideOutController {
         if (guildHideout1 == null) throw new HideOutDoesNotExistException("Hideout " + guildHideout + " does not exist");
         GuildHideOutDataManager.setHideOutOperatingLocation(guildHideout1, location);
     }
-    public void setOperatingLocationForHideout(GuildHideout guildHideout, Location location) throws HideOutDoesNotExistException {
-        GuildHideOutDataManager.setHideOutOperatingLocation(guildHideout, location);
-    }
 
     public void attemptTeleportByHologram(Player player, String hologramName) {
 
@@ -157,12 +153,15 @@ public class GuildHideOutController {
         }
     }
 
-    public GuildHideout getPlayerHideOut(Player player) throws InvalidObjectException {
+    public GuildHideout getPlayerHideOut(Player player) {
         Optional<User> optionalUser = userController.findUserByPlayer(player);
 
-        if(optionalUser.isEmpty()) {
+        if(optionalUser.isEmpty()) try {
             throw new InvalidObjectException("Dla gracza " + player.getName() + " nie ma usera");
+        } catch (InvalidObjectException e) {
+            throw new RuntimeException(e);
         }
+
 
         User user = optionalUser.get();
 
@@ -221,9 +220,7 @@ public class GuildHideOutController {
 
         if(upgradeHolder.isFinished()) return;
 
-
         if(!upgradeHolder.isBought()) return;
-
 
         long timeToCompletionSeconds;
 
@@ -312,11 +309,6 @@ public class GuildHideOutController {
     public static final String HIDEOUT_WITCH = "hideout_witch";
     public static final String HIDEOUT_TELEPORT = "hideout_teleport";
 
-    public static final String HIDEOUT_BLACKSMITH = "hideout_blacksmith";
-    public static final String HIDEOUT_SORCERER = "hideout_sorcerer";
-    public static final String HIDEOUT_VENTURE = "hideout_venturer";
-
-
     private void prepareHideOutHologramsAndNpcs(@NotNull GuildHideout guildHideout) throws InvalidObjectException {
 
         final String hideoutPanel = guildHideout.getWorldName() + HIDEOUT_PANEL;
@@ -351,12 +343,11 @@ public class GuildHideOutController {
     }
 
 
-    private static SkinPersistentDTO traderDTO;
-    private static SkinPersistentDTO witchDTO;
-    private static SkinPersistentDTO teleportDTO;
-    private static SkinPersistentDTO blacksmithDTO;
-    private static SkinPersistentDTO ventureDTO;
-    private static SkinPersistentDTO sorcererDTO;
+    private static final SkinPersistentDTO traderDTO;
+    private static final SkinPersistentDTO teleportDTO;
+    private static final SkinPersistentDTO blacksmithDTO;
+    private static final SkinPersistentDTO ventureDTO;
+    private static final SkinPersistentDTO sorcererDTO;
 
     static {
         traderDTO = new SkinPersistentDTO("ddd87d9e", "irpVrcqKWn35YcwRTt4B1+S/fvXtnUlj121Lu6uCRTK6AdAaPapfHuWkxL5v49RwuP0rqZA/d8HK+bpLtLGL9q20SNff0W2mpJu9gj4xn5hv6v1mFmSuobpfrNuTYHfZcHUla2qiEPYdv56z6fxw/CGMyqwCc9MIj+PCB82BwtR0+t049zeFJjV1cJJcZSpKerA9nN5uzfsIcLpYpbOnL/16VmNZIY6lWnwQ8cTmbuYcwLekBs2F59ackBTUH3SHxOjDlYBCYPTiULvsnZjfZjKeal9O1ckp+gEWvy83Z6cTYuegIAlt/B4tFfzP0CQbTA2qEKip++AWHIEszcvXU3m9uhHFSoKlLdW5ukBGWzIyQWuYl8RCn/hYjZEOr0Lr/tUN6Qcz+6QLNGFYssm15QnA1xMzTA5XoWtQ6ACeoyz0b0x0WZcN1H53gYN3s39Be75QEIKz+QxlQlPl64PMFLPfCT44c4Y6VQnFVEE7GNvnQNDHxIjlt2GY9oQfUK+TVxMK+kbcqBLkl+QyZGT8dz+3fZvL5impI/cRfYmfvpDtg51InxEJahMQN1cc4HxtsIpVbf4uZScpBWu0NM64iPyEMSnVWKDqjx3VlWns4kDScJ79Mv57f7sdbORbzZDIGAU/6B2gsBBs9FL+O43uv/HHJULWx44tPK4e+cHO0PU=","ewogICJ0aW1lc3RhbXAiIDogMTY0MjY5Mzk5OTM2MywKICAicHJvZmlsZUlkIiA6ICJhYTZhNzUwNWVkYmU0NjNiYjk1NWYyMWY0MjNiYTM1NCIsCiAgInByb2ZpbGVOYW1lIiA6ICJub3RhbmR5d2FyaG9sIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2FiMDQxMTQ1NjhkMmI5NzczYjI5OTc5YWQ1NzZkM2M4YmY1Yjg3NDA1NGE0YjQyMjFjOGJiY2M3YTgyMDMwMmIiCiAgICB9CiAgfQp9");
@@ -365,6 +356,8 @@ public class GuildHideOutController {
         teleportDTO = new SkinPersistentDTO("498afcab", "yTyaTlyHbZruHT0/06fCHEfwtf7QRmbQAOFeSmqQ5QFWKikrwTXEFq7+62pBM9aFmDzGVNIZ2b5wNd9ZVxKNhkfjKck9SHl3UiI5AvQNfbp6OXNNPeKArdLYvcgRzcddTbHe2yKVRpFVG4UUysCnl1oyk3frWAKTbUBaUwlWDg9HnAeXIVoaXqlNI6stdPwbrUczW/zh6Nb//+HHCEipbdGbU35EB0O3Vp6AlzeV3jn5wT/j8kItQU/m27TwtPA+6Urx8ypzNuTMmUipEMhfnRayqxgPEnssP82Nk02b7yno5vBtLjOU0O7JWLwwTkC2bE6OKXEu46Ul9Vuqwj0OrJDvC9LYn+t74spINNqV1pWCx5z7/LUO2NAyjyoxUjIbRO3NK/BnhtXAycOoKa0Rx6EThcgPeEGiLDaAOu5WNM/BMqYqmTqc9BNdZzzEwKv0Mbyth2XkRuw6sBdKijN+TnegQh1/PkD26+xEscvuC7dWKK0RLD1FxZKhI6j0dNhvq7aEKYuEV7nAvnZyOhrmPGJ4t3G6hJ8uTwxlRORatQUJ7CHlvw3U/Ee/JfdIBjxhDdEcqkoBEqPIP9Dr6ZNqu/06HRGgroDqES3kdTRQTkBWkrmgLShi23V/YE0HKZUdrKe9TfEFXFekSkmoSHlAjrP73b7Torjrk8kNVf1D++8=","eyJ0aW1lc3RhbXAiOjE1ODcxNzI2NTc2NTcsInByb2ZpbGVJZCI6ImIwZDczMmZlMDBmNzQwN2U5ZTdmNzQ2MzAxY2Q5OGNhIiwicHJvZmlsZU5hbWUiOiJPUHBscyIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDU4NWRhNjA2Yzc5NTZmNmE4YjI0NzRjYTM5N2UwZTFlMTg1NTc0YjYyMmY5YTJlNzFlZjIzOWI4NDliNDVhYyIsIm1ldGFkYXRhIjp7Im1vZGVsIjoic2xpbSJ9fX19");
         sorcererDTO = new SkinPersistentDTO("e7a8bb24", "Ob1xZlOiHj/BtWh+Vmpf4nkg0rYMuNw7YpgWzln3uLiYIg78eEgfz05AbzzYUghvVEwh5yXXKUTSgvBDo6MkoaOO7+rnUPXfZ1edhVWbQX5tJQHzNDO1nBZXlO0K7JO3xPdf1DyepryNpYFtl7x+HO+02n1hNXzuKA/RE6PbuVmpWtVDSyfzdCpbXi5fXMSCGoZb3Z4rvPewDk2qjBcurne0mRHyxGlTkYu7HuVITbcIgdDpKSrmCKfjZCLG9QK0+lLMPSJBlIw5fLEINXrFH6AfkjuszEenjugGbrcp2MtaDC568cE62Lwrwb5JepbnD32jkB+k/4eKcbNsBc7dSZ3WpL+r2DpI7WU0uNbqVe0QwBs9XMFJkTaIeWsxm1zKBAuj5wux1aimHRcCJJ3xQP1NOZscJqBZejMdZ5sscXebRGLhBhxNYSoqaKu+f93BqKHLraOBS+nj3YG2w/4/yGaLQEIPfuHoC8VBVMGwezAcEvmV66gQVSS6UmN0edWsmFVUMjPZcHYUAMtK8MZ8d4zaDWI95dIh55MI2JFhqr31qkUmfc2+aTy0dgIJ2G0QmUc23yYXwYqHvfditKIm1Co75ZB4OYqEYmJHtsRyaO0t3SCUdoWiMes+ElYiKQJB68CWV606kPpvAiF1lFDqz198/ClnrPOu99vEPSH51ls=","ewogICJ0aW1lc3RhbXAiIDogMTU4ODE5MjY4MTMwNSwKICAicHJvZmlsZUlkIiA6ICIzZmM3ZmRmOTM5NjM0YzQxOTExOTliYTNmN2NjM2ZlZCIsCiAgInByb2ZpbGVOYW1lIiA6ICJZZWxlaGEiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWU0OTE0YzQ4YmU2YTVhNzEyYWIwMWJhZGE2Nzk3Yjc1NjYyNzM4OWNkM2ZmOWJlOTJmMWY4M2I3MGE0ZTVkNiIKICAgIH0KICB9Cn0=");
       }
+
+
 
     public void resetNpcsForHideOut(GuildHideout guildHideout) {
 
@@ -377,14 +370,6 @@ public class GuildHideOutController {
         NPC_REGISTRY.despawnNPCs(DespawnReason.PENDING_RESPAWN);
         NPC_REGISTRY.deregisterAll();
 
-//        final String hideoutTrader = guildHideout.getWorldName() + HIDEOUT_TRADER;
-//        final String witch = guildHideout.getWorldName() + HIDEOUT_WITCH;
-//        final String teleport = guildHideout.getWorldName() + HIDEOUT_TELEPORT;
-//
-//        final String blacksmith = guildHideout.getWorldName() + HIDEOUT_BLACKSMITH;
-//        final String sorcerer = guildHideout.getWorldName() + HIDEOUT_SORCERER;
-//        final String venture = guildHideout.getWorldName() + HIDEOUT_VENTURE;
-
         final String hideoutTrader = ColorFixer.addColors("#4daac9ʜᴀɴᴅʟᴀʀᴢ");
         final String witch = ColorFixer.addColors("#c94db5ᴡɪᴇᴅźᴍᴀ");
         final String teleport = ColorFixer.addColors("#dbc274ᴘʀᴢᴇᴡᴏźɴɪᴋ");
@@ -392,8 +377,6 @@ public class GuildHideOutController {
         final String blacksmith = ColorFixer.addColors("#7a7a7aᴋᴏᴡᴀʟ");
         final String sorcerer = ColorFixer.addColors("#9b33d4ᴢᴀᴋʟɪɴᴀᴄᴢ");
         final String venture = ColorFixer.addColors("#366b9cᴋᴀᴘɪᴛᴀɴ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ");
-
-
 
         NPC traderNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, hideoutTrader);
         NPC witchNPC = NPC_REGISTRY.createNPC(EntityType.WITCH, witch);
@@ -417,7 +400,6 @@ public class GuildHideOutController {
 
         traderNPC.getOrAddTrait(CommandTrait.class).addCommand(new CommandTrait.NPCCommandBuilder("open shop", CommandTrait.Hand.RIGHT));
         ventureNPC.getOrAddTrait(CommandTrait.class).addCommand(new CommandTrait.NPCCommandBuilder("stworzkryjowke 4 %player%", CommandTrait.Hand.RIGHT).player(true));
-//        ventureNPC.getOrAddTrait(CommandTrait.class).addCommand(new CommandTrait.NPCCommandBuilder("bc announcement test", CommandTrait.Hand.RIGHT).player(false));
 
         traderNPC.spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), -7.5 , 97, -48.5));
         witchNPC.spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), 6.5 , 97, -49.5));

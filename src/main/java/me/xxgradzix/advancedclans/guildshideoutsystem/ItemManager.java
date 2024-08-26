@@ -1,10 +1,11 @@
 package me.xxgradzix.advancedclans.guildshideoutsystem;
 
-import me.xxgradzix.advancedclans.data.database.entities.GuildHideout;
-import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.expedition.ExpeditionDto;
-import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.expedition.ExpeditionVariant;
+import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideout;
+import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition.ExpeditionDto;
+import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition.ExpeditionVariant;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.utils.ColorFixer;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -14,9 +15,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class ItemManager {
 
@@ -351,18 +351,17 @@ public class ItemManager {
         switch (objective) {
             case STONE -> lore.add(ColorFixer.addColors("&7ᴄᴇʟ: &fᴋᴀᴍɪᴇń"));
             case WOOD -> lore.add(ColorFixer.addColors("&7ᴄᴇʟ: &fᴅʀᴇᴡɴᴏ"));
-            case CRYSTALS -> lore.add(ColorFixer.addColors("&7ᴄᴇʟ: &fᴋʀʏꜱᴛᴀłʏ"));
+            case CRYSTALS -> lore.add(ColorFixer.addColors("&7ᴄᴇʟ: &fᴋʀʏꜱᴢᴛᴀŁʏ"));
         }
         switch (expeditionLevel) {
             case 1 -> lore.add(ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: &fłᴀᴛᴡᴀ"));
             case 2 -> lore.add(ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: &fᴛʀᴜᴅɴᴀ"));
             case 3 -> lore.add(ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: &fʙᴀʀᴅᴢᴏ ᴛʀᴜᴅɴᴀ"));
         }
-        LocalDateTime dateTime = LocalDateTime.ofEpochSecond(completionTime, 0, ZoneOffset.UTC);
         lore.add(" ");
         lore.add(ColorFixer.addColors("&7ꜱᴢᴀɴꜱᴀ ɴᴀ ᴘᴏᴡᴏᴅᴢᴇɴɪᴇ: &f" + chance * 100 + "%"));
         lore.add(" ");
-        lore.add("ɢᴏᴅᴢɪɴᴀ ᴜᴋᴏńᴄᴢᴇɴɪ: " + dateTime.getHour() + ":" + dateTime.getMinute() + ":" + dateTime.getSecond());
+        lore.add("ᴄᴢᴀꜱ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: " + MessageManager.secondsToTimeFormat(Math.toIntExact(completionTime)));
         lore.add(" ");
         lore.add("ᴋʟɪᴋɴɪᴊ ᴀʙʏ ʀᴏᴢᴘᴏᴄᴢąć");
 
@@ -555,6 +554,94 @@ public class ItemManager {
         }
         itemMeta.setLore(lore);
         item.setItemMeta(itemMeta);
+        return item;
+    }
+
+    public static @NotNull ItemStack getExpeditionStorageItem(int num, boolean isOwner, boolean hasAccess) {
+        ItemStack item = new ItemStack(Material.CHEST);
+        ItemMeta itemMeta = item.getItemMeta();
+
+        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.addItemFlags(ItemFlag.HIDE_DYE);
+        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+        itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        String romeNum = "";
+        switch (num) {
+            case 1 -> romeNum = "ɪ";
+            case 2 -> romeNum = "ɪɪ";
+            case 3 -> romeNum = "ɪɪɪ";
+            case 4 -> romeNum = "ɪᴠ";
+            case 5 -> romeNum = "ᴠ";
+            case 6 -> romeNum = "ᴠɪ";
+            case 7 -> romeNum = "ᴠɪɪ";
+            case 8 -> romeNum = "ᴠɪɪɪ";
+            case 9 -> romeNum = "ɪx";
+            case 10 -> romeNum = "x";
+        }
+        itemMeta.setDisplayName(ColorFixer.addColors("&7&lᴍᴀɢᴀᴢʏɴ #a18b3d" + romeNum));
+
+        ArrayList<String> lore = new ArrayList<>();
+        lore.add(" ");
+
+        if(!hasAccess) {
+            lore.add(ColorFixer.addColors("&7ɴɪᴇ ᴍᴀꜱᴢ ᴅᴏꜱᴛęᴘᴜ ᴅᴏ ᴛᴇɢᴏ ᴍᴀɢᴀᴢʏɴᴜ, ᴘᴏᴘʀᴏś ʟɪᴅᴇʀᴀ ꜱᴡᴏᴊᴇᴊ ɢɪʟᴅɪ ᴏ ᴜᴘʀᴀᴡɴɪᴇɴɪᴀ"));
+        } else {
+            if(isOwner) {
+                lore.add(ColorFixer.addColors("&7ᴋʟɪᴋɴɪᴊ #a18b3dʟᴘᴍ &7ᴀʙʏ ᴏᴛᴡᴏʀᴢʏć ᴍᴀɢᴀᴢʏɴ"));
+                lore.add(ColorFixer.addColors("&7ᴋʟɪᴋɴɪᴊ #a18b3dᴘᴘᴍ &7ᴀʙʏ ᴇᴅʏᴛᴏᴡᴀᴄ ᴜᴘʀᴀᴡɴɪᴇɴɪᴀ"));
+
+            } else {
+                lore.add(ColorFixer.addColors("&7ᴋʟɪᴋɴɪᴊ ᴀʙʏ ᴏᴛᴡᴏʀᴢʏć ᴍᴀɢᴀᴢʏɴ"));
+            }
+        }
+
+        itemMeta.setLore(lore);
+        item.setItemMeta(itemMeta);
+
+        return item;
+    }
+
+    public static @NotNull ItemStack getPermissionItem(UUID uuid, boolean contains) {
+        ItemStack item = new ItemStack(Material.NAME_TAG);
+
+        ItemMeta itemMeta = item.getItemMeta();
+
+        itemMeta.setDisplayName(ColorFixer.addColors("&7&l" + Bukkit.getOfflinePlayer(uuid).getName()));
+
+        ArrayList<String> lore = new ArrayList<>();
+        lore.add(" ");
+        lore.add(ColorFixer.addColors("&7ᴋʟɪᴋɴɪᴊ ᴀʙʏ " + (contains ? "&cᴜꜱᴜɴąć" : "&aᴅᴏᴅᴀć") + "&7 ᴘᴇʀᴍɪꜱję"));
+
+        if(contains) {
+            itemMeta.addEnchant(Enchantment.LUCK, 1, true);
+            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        }
+
+        itemMeta.setLore(lore);
+        item.setItemMeta(itemMeta);
+
+        return item;
+    }
+
+    public static ItemStack getPersonalStorageItem() {
+        ItemStack item = new ItemStack(Material.NAME_TAG);
+
+        ItemMeta itemMeta = item.getItemMeta();
+
+        itemMeta.setDisplayName(ColorFixer.addColors("&7&lᴍᴀɢᴀᴢʏɴ ᴘᴇʀꜱᴏɴᴀʟɴʏ"));
+
+        ArrayList<String> lore = new ArrayList<>();
+        lore.add(" ");
+        lore.add(ColorFixer.addColors("ᴘʀᴢᴇᴅᴍɪᴏᴛʏ ᴡ ᴛʏᴍ ᴍᴀɢᴀᴢʏɴɪᴇ ʙęᴅą ᴅᴏꜱᴛęᴘɴᴇ ᴛʏʟᴋᴏ ᴅʟᴀ ᴄɪᴇʙɪᴇ"));
+        lore.add(" ");
+        lore.add(ColorFixer.addColors("&7ᴋʟɪᴋɴɪᴊ ᴀʙʏ ᴏᴛᴡᴏʀᴢʏć ᴍᴀɢᴀᴢʏɴ"));
+
+        itemMeta.setLore(lore);
+        item.setItemMeta(itemMeta);
+
         return item;
     }
 }

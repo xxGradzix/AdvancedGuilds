@@ -1,8 +1,8 @@
 package me.xxgradzix.advancedclans.commands;
 
-import me.xxgradzix.advancedclans.controllers.VentureRewardController;
-import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.expedition.ExpeditionDto;
-import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.expedition.ExpeditionGui;
+import me.xxgradzix.advancedclans.data.database.controllers.hideouts.VentureRewardController;
+import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition.ExpeditionDto;
+import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition.ExpeditionGui;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

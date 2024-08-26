@@ -2,7 +2,7 @@ package me.xxgradzix.advancedclans.listener;
 
 import me.xxgradzix.advancedclans.data.database.entities.User;
 import me.xxgradzix.advancedclans.manager.CooldownManager;
-import me.xxgradzix.advancedclans.controllers.UserController;
+import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.UserController;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

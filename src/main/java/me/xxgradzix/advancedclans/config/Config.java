@@ -2,6 +2,8 @@ package me.xxgradzix.advancedclans.config;
 
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Comment;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 import org.checkerframework.checker.units.qual.C;
 
 public class Config extends OkaeriConfig {
@@ -51,4 +53,9 @@ public class Config extends OkaeriConfig {
     public static String formatAlliance =  "§b{tag}";
     @Comment("tag, when normal")
     public static String formatNormal =  "§c{tag}";
+
+    @Comment("Cost of create clan with money")
+    public static double costCreate = 1000;
+//    @Comment("Cost of create with items")
+//    public static ItemStack itemCost = new ItemStack(Material.DIAMOND, 1);
 }

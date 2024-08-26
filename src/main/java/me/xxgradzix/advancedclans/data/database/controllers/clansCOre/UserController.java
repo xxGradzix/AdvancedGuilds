@@ -1,9 +1,9 @@
-package me.xxgradzix.advancedclans.controllers;
+package me.xxgradzix.advancedclans.data.database.controllers.clansCOre;
 
 import lombok.Setter;
 import me.xxgradzix.advancedclans.config.Config;
 import me.xxgradzix.advancedclans.data.database.entities.User;
-import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
+import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataManager;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.messages.MessageType;
 import me.xxgradzix.advancedclans.scheduler.TopRankScheduler;

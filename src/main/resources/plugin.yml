@@ -3,6 +3,8 @@ version: '${project.version}'
 main: me.xxgradzix.advancedclans.AdvancedGuilds
 api-version: '1.17'
 
+softdepend:
+  - Vault
 depend: [FastAsyncWorldEdit]
 
 commands:

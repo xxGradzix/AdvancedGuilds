@@ -10,27 +10,35 @@ import me.xxgradzix.advancedclans.commands.HideOutAdminCommands;
 import me.xxgradzix.advancedclans.commands.PlayerCommand;
 import me.xxgradzix.advancedclans.commands.VentureRewardCommands;
 import me.xxgradzix.advancedclans.config.Config;
-import me.xxgradzix.advancedclans.controllers.VentureRewardController;
+import me.xxgradzix.advancedclans.data.database.controllers.hideouts.VentureRewardController;
+import me.xxgradzix.advancedclans.data.database.entities.hideout.storage.GuildlStorageEntity;
+import me.xxgradzix.advancedclans.data.database.entities.hideout.storage.PersonalStorageEntity;
 import me.xxgradzix.advancedclans.data.database.entities.hideout.venture.VentureReward;
-import me.xxgradzix.advancedclans.data.database.services.GuildHideOutDataManager;
+import me.xxgradzix.advancedclans.data.database.repositories.hideout.storage.HideoutStorageRepository;
+import me.xxgradzix.advancedclans.data.database.repositories.hideout.storage.PersonalStorageRepository;
+import me.xxgradzix.advancedclans.data.database.repositories.hideout.venture.VentureRewardRepository;
+import me.xxgradzix.advancedclans.data.database.services.hideout.GuildHideOutDataManager;
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
-import me.xxgradzix.advancedclans.data.database.entities.GuildHideout;
+import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideout;
 import me.xxgradzix.advancedclans.data.database.entities.User;
-import me.xxgradzix.advancedclans.data.database.repositories.ClanEntityRepository;
-import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
-import me.xxgradzix.advancedclans.data.database.repositories.GuildHideoutEntityRepository;
-import me.xxgradzix.advancedclans.data.database.repositories.UserEntityRepository;
-import me.xxgradzix.advancedclans.data.database.services.VentureRewardDataManager;
+import me.xxgradzix.advancedclans.data.database.repositories.clansCore.ClanEntityRepository;
+import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataManager;
+import me.xxgradzix.advancedclans.data.database.repositories.hideout.GuildHideoutEntityRepository;
+import me.xxgradzix.advancedclans.data.database.repositories.clansCore.UserEntityRepository;
+import me.xxgradzix.advancedclans.data.database.services.hideout.StorageEntityDataManager;
+import me.xxgradzix.advancedclans.data.database.services.hideout.VentureRewardDataManager;
 import me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager;
-import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.guis.expedition.ExpeditionGui;
+import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition.ExpeditionGui;
+import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.storage.HideoutStorage;
 import me.xxgradzix.advancedclans.listener.*;
 import me.xxgradzix.advancedclans.listener.guildHideOut.HideOutUpgrade;
-import me.xxgradzix.advancedclans.controllers.ClanController;
+import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.ClanController;
 import me.xxgradzix.advancedclans.listener.guildHideOut.HideoutOccupyBlockPlace;
+import me.xxgradzix.advancedclans.listener.guildHideOut.HideoutStorageChestClick;
 import me.xxgradzix.advancedclans.listener.guildHideOut.HideoutTeleportBlockClick;
 import me.xxgradzix.advancedclans.manager.CooldownManager;
-import me.xxgradzix.advancedclans.controllers.GuildHideOutController;
-import me.xxgradzix.advancedclans.controllers.UserController;
+import me.xxgradzix.advancedclans.data.database.controllers.hideouts.GuildHideOutController;
+import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.UserController;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.placeholder.ClanPlaceholder;
 import me.xxgradzix.advancedclans.scheduler.TopRankScheduler;
@@ -48,31 +56,43 @@ public final class AdvancedGuilds extends JavaPlugin {
 
     public static AdvancedGuilds instance;
 
+//    private static Economy econ = null;
+
     // manager
-    private UserController userController;
-    private ClanController clansController;
+
     private CooldownManager cooldownManager;
 
-    private TopRankScheduler topRankScheduler;
-
-    private ClanAndUserDataManager clanAndUserDataManager;
-
-    private GuildHideOutController guildHideOutController;
-
-    private MessageManager messages;
-    private Config config;
-    private ConnectionSource connectionSource;
+    /** REPOSITORIES **/
 
     private ClanEntityRepository clanEntityRepository;
     private UserEntityRepository userEntityRepository;
     private VentureRewardRepository ventureRewardRepository;
-
+    private PersonalStorageRepository personalStorageRepository;
+    private HideoutStorageRepository hideoutStorageRepository;
     private GuildHideoutEntityRepository guildHideoutEntityRepository;
+
+    /** SERVICES **/
+
+    private ClanAndUserDataManager clanAndUserDataManager;
     private GuildHideOutDataManager guildHideOutDataManager;
+    private StorageEntityDataManager storageEntityDataManager;
+    private VentureRewardDataManager ventureRewardDataManager;
+
+    /** CONTROLLERS **/
+
+    private UserController userController;
+    private ClanController clansController;
+    private GuildHideOutController guildHideOutController;
+    private VentureRewardController ventureRewardController;
+
+    /** OTHERS **/
+
+    private TopRankScheduler topRankScheduler;
+    private MessageManager messages;
+    private Config config;
+    private ConnectionSource connectionSource;
 
 
-    VentureRewardDataManager ventureRewardDataManager;
-    VentureRewardController ventureRewardController;
 
     Properties loadConfig() {
         Properties prop = new Properties();
@@ -107,11 +127,16 @@ public final class AdvancedGuilds extends JavaPlugin {
         TableUtils.createTableIfNotExists(connectionSource, GuildHideout.class);
         TableUtils.createTableIfNotExists(connectionSource, Clan.class);
         TableUtils.createTableIfNotExists(connectionSource, VentureReward.class);
+        TableUtils.createTableIfNotExists(connectionSource, PersonalStorageEntity.class);
+        TableUtils.createTableIfNotExists(connectionSource, GuildlStorageEntity.class);
+
 
         clanEntityRepository = new ClanEntityRepository(connectionSource);
         userEntityRepository = new UserEntityRepository(connectionSource);
         guildHideoutEntityRepository = new GuildHideoutEntityRepository(connectionSource);
         ventureRewardRepository = new VentureRewardRepository(connectionSource);
+        personalStorageRepository = new PersonalStorageRepository(connectionSource);
+        hideoutStorageRepository = new HideoutStorageRepository(connectionSource);
 
     }
 
@@ -120,8 +145,15 @@ public final class AdvancedGuilds extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        instance = this;
+        /** INSTANCES **/
 
+//        if (!setupEconomy() ) {
+//            getLogger().severe("Vault not found! Disabling plugin...");
+//            return;
+//        }
+
+
+        instance = this;
         ItemManager.init();
 
         try {
@@ -155,20 +187,25 @@ public final class AdvancedGuilds extends JavaPlugin {
             return;
         }
 
+        /** SERVICES **/
+
         clanAndUserDataManager = new ClanAndUserDataManager(clanEntityRepository, userEntityRepository);
         guildHideOutDataManager = new GuildHideOutDataManager(guildHideoutEntityRepository);
-        clansController = new ClanController(this, clanAndUserDataManager);
-
         ventureRewardDataManager = new VentureRewardDataManager(ventureRewardRepository);
+        storageEntityDataManager = new StorageEntityDataManager(personalStorageRepository, hideoutStorageRepository);
+
+        /** CONTROLLERS **/
 
         userController = new UserController();
-        ventureRewardController = new VentureRewardController();
+        clansController = new ClanController(this, clanAndUserDataManager);
         guildHideOutController = new GuildHideOutController(userController, this);
+        ventureRewardController = new VentureRewardController();
 
         new ExpeditionGui(guildHideOutController, clansController);
+        new HideoutStorage(userController, guildHideOutController, clansController);
+
 
         topRankScheduler = new TopRankScheduler(userController, clansController);
-
         topRankScheduler.runTaskTimerAsynchronously(this, 0, 20 * 60 * 2);
 
         clansController.setTopRankScheduler(topRankScheduler);
@@ -195,18 +232,37 @@ public final class AdvancedGuilds extends JavaPlugin {
                 new PlayerInteractionEntityListener(userController, cooldownManager),
                 new HideOutUpgrade(guildHideOutController),
                 new HideoutTeleportBlockClick(guildHideOutController),
-                new HideoutOccupyBlockPlace(guildHideOutController)
+                new HideoutOccupyBlockPlace(guildHideOutController),
+                new HideoutStorageChestClick()
+
         ).forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
 
         getCommand("klan").setExecutor(new ClanCommand(clansController));
         getCommand("gracz").setExecutor(new PlayerCommand(userController));
         getCommand("stworzkryjowke").setExecutor(new HideOutAdminCommands(guildHideOutController));
         getCommand("ekspedycja").setExecutor(new VentureRewardCommands(ventureRewardController));
+        HideoutStorage.loadGuildGuis();
+        HideoutStorage.loadPersonalGuis();
 
     }
+//    private boolean setupEconomy() {
+//        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+//            return false;
+//        }
+//        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+//        if (rsp == null) {
+//            return false;
+//        }
+//        econ = rsp.getProvider();
+//        return true;
+//    }
+//
+//    public static Economy getEconomy() {
+//        return econ;
+//    }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        HideoutStorage.saveGuis();
     }
 }

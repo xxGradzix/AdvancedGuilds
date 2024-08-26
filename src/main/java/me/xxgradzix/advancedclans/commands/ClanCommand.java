@@ -1,8 +1,8 @@
 package me.xxgradzix.advancedclans.commands;
 
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
-import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
-import me.xxgradzix.advancedclans.controllers.ClanController;
+import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataManager;
+import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.ClanController;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.messages.MessageType;
 import org.bukkit.command.Command;

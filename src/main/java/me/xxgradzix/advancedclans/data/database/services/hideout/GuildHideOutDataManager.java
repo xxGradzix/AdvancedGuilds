@@ -1,10 +1,11 @@
-package me.xxgradzix.advancedclans.data.database.services;
+package me.xxgradzix.advancedclans.data.database.services.hideout;
 
 import eu.decentsoftware.holograms.api.DHAPI;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
-import me.xxgradzix.advancedclans.data.database.entities.GuildHideout;
-import me.xxgradzix.advancedclans.data.database.repositories.GuildHideoutEntityRepository;
+import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideout;
+import me.xxgradzix.advancedclans.data.database.repositories.hideout.GuildHideoutEntityRepository;
+import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataManager;
 import me.xxgradzix.advancedclans.exceptions.ClanDoesNotExistException;
 import me.xxgradzix.advancedclans.exceptions.PlayerDoesNotBelongToClanException;
 import me.xxgradzix.advancedclans.exceptions.hideOuts.HideOutDoesNotExistException;
@@ -21,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static me.xxgradzix.advancedclans.controllers.GuildHideOutController.*;
+import static me.xxgradzix.advancedclans.data.database.controllers.hideouts.GuildHideOutController.*;
 
 public class GuildHideOutDataManager {
 
@@ -130,11 +131,6 @@ public class GuildHideOutDataManager {
         Location teleportLocation = guildHideout.getTeleportLocation();
         Bukkit.getScheduler().runTask(AdvancedGuilds.instance, () -> player.teleport(teleportLocation));
 
-    }
-
-    public static void attemptTeleportToHideOut(Player player, String guildHideoutName) throws HideOutDoesNotExistException, ClanDoesNotExistException, PlayerDoesNotBelongToClanException {
-        GuildHideout guildHideout = guildHideouts.get(guildHideoutName);
-        attemptTeleportToHideOut(player, guildHideout);
     }
 
     public static void occupyHideOut(String hideOutWorldName, Clan clan) throws HideOutDoesNotExistException {

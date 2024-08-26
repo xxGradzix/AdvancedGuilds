@@ -23,6 +23,10 @@ public class UpgradeInfoHolder implements Serializable {
         if(!isBought()) throw new UpgradeWasNotBoughtException("Upgrade was not bought");
         return (timeOfCompletion - System.currentTimeMillis()) / 1000;
     }
+//    public Long getTimeToCompletionSeconds() throws UpgradeWasNotBoughtException {
+//        if(!isBought()) throw new UpgradeWasNotBoughtException("Upgrade was not bought");
+//        return (timeOfCompletion - System.currentTimeMillis());
+//    }
 
     public boolean isFinished() {
         if(!isBought()) return false;

@@ -1,9 +1,9 @@
-package me.xxgradzix.advancedclans.data.database.services;
+package me.xxgradzix.advancedclans.data.database.services.clansCore;
 
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.User;
-import me.xxgradzix.advancedclans.data.database.repositories.ClanEntityRepository;
-import me.xxgradzix.advancedclans.data.database.repositories.UserEntityRepository;
+import me.xxgradzix.advancedclans.data.database.repositories.clansCore.ClanEntityRepository;
+import me.xxgradzix.advancedclans.data.database.repositories.clansCore.UserEntityRepository;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -24,29 +24,18 @@ public class ClanAndUserDataManager {
     }
 
     public static User getCachedUser(UUID uuid) {
-//        try {
             if(uuid == null) return null;
-//            return userEntityRepository.getEntityById(uuid);
             return userData.get(uuid);
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
     }
 
     public static Clan getCachedClan(String tag) {
-//        try {
             if(tag == null) return null;
-//            return clanEntityRepository.getEntityById(tag);
             return clansData.get(tag.toUpperCase());
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
     }
 
     public static void updateClan(Clan clan) {
         try {
             clansData.put(clan.getTag().toUpperCase(), clan);
-
             clanEntityRepository.createOrUpdateEntity(clan);
         } catch (SQLException e) {
             throw new RuntimeException(e);

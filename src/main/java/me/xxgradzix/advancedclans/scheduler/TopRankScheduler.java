@@ -2,11 +2,11 @@ package me.xxgradzix.advancedclans.scheduler;
 
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.User;
-import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
+import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataManager;
 import me.xxgradzix.advancedclans.entities.PlayerStat;
 import me.xxgradzix.advancedclans.entities.RankType;
-import me.xxgradzix.advancedclans.controllers.ClanController;
-import me.xxgradzix.advancedclans.controllers.UserController;
+import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.ClanController;
+import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.UserController;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.scheduler.BukkitRunnable;

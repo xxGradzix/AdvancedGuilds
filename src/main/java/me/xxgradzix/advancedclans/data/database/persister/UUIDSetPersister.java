@@ -3,8 +3,6 @@ package me.xxgradzix.advancedclans.data.database.persister;
 import com.j256.ormlite.field.FieldType;
 import com.j256.ormlite.field.SqlType;
 import com.j256.ormlite.field.types.StringType;
-import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideout;
-import me.xxgradzix.advancedclans.data.database.entities.fields.UpgradeInfoHolder;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
@@ -12,23 +10,25 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
-public class UpgradeInfoHolderPersisterMap extends StringType {
+public class UUIDSetPersister extends StringType {
 
-    private static final UpgradeInfoHolderPersisterMap INSTANCE = new UpgradeInfoHolderPersisterMap();
+    private static final UUIDSetPersister INSTANCE = new UUIDSetPersister();
 
-    private UpgradeInfoHolderPersisterMap() {
-        super(SqlType.STRING, new Class<?>[] { HashMap.class });
+    private UUIDSetPersister() {
+        super(SqlType.STRING, new Class<?>[] { Set.class });
     }
 
-    public static UpgradeInfoHolderPersisterMap getSingleton() {
+    public static UUIDSetPersister getSingleton() {
         return INSTANCE;
     }
 
     @Override
     public Object javaToSqlArg(FieldType fieldType, Object javaObject) {
-        HashMap<GuildHideout.Upgrade, UpgradeInfoHolder> myFieldClass = (HashMap<GuildHideout.Upgrade, UpgradeInfoHolder>) javaObject;
+        Set<UUID> myFieldClass = (Set<UUID>) javaObject;
         return myFieldClass != null ? getJsonFromItemStackClass(myFieldClass) : null;
     }
 
@@ -41,12 +41,12 @@ public class UpgradeInfoHolderPersisterMap extends StringType {
         }
     }
 
-    private String getJsonFromItemStackClass(HashMap<GuildHideout.Upgrade, UpgradeInfoHolder> map) {
+    private String getJsonFromItemStackClass(Set<UUID> UUIDs) {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
 
-            dataOutput.writeObject(map);
+            dataOutput.writeObject(UUIDs);
             dataOutput.close();
 
             return Base64Coder.encodeLines(outputStream.toByteArray());
@@ -55,12 +55,12 @@ public class UpgradeInfoHolderPersisterMap extends StringType {
         }
     }
 
-    private HashMap<GuildHideout.Upgrade, UpgradeInfoHolder>  getItemStackClassFromJson(String data) throws IOException {
+    private Set<UUID> getItemStackClassFromJson(String data) throws IOException {
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
 
-            HashMap<GuildHideout.Upgrade, UpgradeInfoHolder>  items = (HashMap<GuildHideout.Upgrade, UpgradeInfoHolder> ) dataInput.readObject();
+            Set<UUID> items = (Set<UUID>) dataInput.readObject();
             dataInput.close();
             return items;
         } catch (ClassNotFoundException e) {

@@ -1,12 +1,12 @@
-package me.xxgradzix.advancedclans.controllers;
+package me.xxgradzix.advancedclans.data.database.controllers.clansCOre;
 
 import lombok.Setter;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
 import me.xxgradzix.advancedclans.config.Config;
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.User;
-import me.xxgradzix.advancedclans.data.database.services.ClanAndUserDataManager;
-import me.xxgradzix.advancedclans.data.database.services.GuildHideOutDataManager;
+import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataManager;
+import me.xxgradzix.advancedclans.data.database.services.hideout.GuildHideOutDataManager;
 import me.xxgradzix.advancedclans.events.*;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.messages.MessageType;
@@ -14,10 +14,8 @@ import me.xxgradzix.advancedclans.scheduler.TopRankScheduler;
 import me.xxgradzix.advancedclans.utils.ColorFixer;
 import me.xxgradzix.advancedclans.utils.ConsoleColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.units.qual.C;
 
 import java.util.*;
 
@@ -381,29 +379,31 @@ public class ClanController {
         }
     }
 
+    private enum CostType {
+        VAULT,
+        ITEM
+    }
+    private static final CostType costType = CostType.VAULT;
     private boolean checkPayments(Player player) {
-        // TODO check payment
         return true;
-//        if(Config.costType == CostType.VAULT) {
+//        if(costType == CostType.VAULT) {
 //            Economy economy = plugin.getEconomy();
-//            if(!economy.has(player, config.costCreate))
+//            if(!economy.has(player, Config.costCreate))
 //            {
-//                MessageUtil.sendMessage(player, lang.noMoney.replace("{cost}", String.valueOf(config.costCreate)));
+//                MessageManager.sendMessageFormated(player, MessageManager.NO_MONEY.replace("{cost}", String.valueOf(Config.costCreate)), MessageType.CHAT);
 //                return false;
 //            }
-//            economy.withdrawPlayer(player, config.costCreate);
+//            economy.withdrawPlayer(player, Config.costCreate);
 //            return true;
 //        } else {
-//            int amount = ItemUtil.calcItemAmount(player, config.itemCost);
-//            int needAmount = (int) config.costCreate;
+//            int amount = ItemUtil.calcItemAmount(player, Config.itemCost);
+//            int needAmount = (int) Config.costCreate;
 //            if(amount<needAmount)
 //            {
-//                MessageUtil.sendMessage(player, lang.noItem
-//                        .replace("{amount}", String.valueOf(needAmount))
-//                );
+//                MessageManager.sendMessageFormated(player, MessageManager.NO_ITEMS.replace("{cost}", String.valueOf(Config.costCreate)), MessageType.CHAT);
 //                return false;
 //            }
-//            ItemUtil.removeItems(player, config.itemCost, needAmount);
+//            ItemUtil.removeItems(player, Config.itemCost, needAmount);
 //            return true;
 //        }
     }

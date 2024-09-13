@@ -244,7 +244,7 @@ public class GuildHideOutController {
             return;
         }
 
-        Countdown countdown = new Countdown(plugin, Math.toIntExact(timeToCompletionSeconds), upgradePattern.getHologramLocation(Bukkit.getWorld(hideout.getWorldName())), () -> {
+        Countdown countdown = new Countdown(plugin, Math.toIntExact(timeToCompletionSeconds)+1, upgradePattern.getHologramLocation(Bukkit.getWorld(hideout.getWorldName())), () -> {
 
             Bukkit.broadcastMessage("Zakupiono ulepszenie: " + upgrade.name()); // TODO CHANGE MESSAGE
             Location loc = new Location(Bukkit.getWorld(hideout.getWorldName()), 0, 100, 0);

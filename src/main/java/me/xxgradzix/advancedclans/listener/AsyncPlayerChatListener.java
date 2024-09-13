@@ -54,6 +54,7 @@ public class AsyncPlayerChatListener implements Listener {
 //                    .replace("{message}", message)
 //                    .replace("{player}", player.getName())
 //            );
+
             return;
         }
         if(message.startsWith("!"))

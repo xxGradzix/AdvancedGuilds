@@ -1,6 +1,5 @@
 package me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.storage;
 
-import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
 import dev.triumphteam.gui.guis.StorageGui;
@@ -161,7 +160,7 @@ public class HideoutStorage {
 
         Gui gui = Gui.gui().rows(3).disableAllInteractions().title(Component.text("Guild Storage")).create();
 
-        GuiItem personalStorage = ItemBuilder.from(ItemManager.getPersonalStorageItem()).asGuiItem();
+        GuiItem personalStorage = new GuiItem(ItemManager.getPersonalStorageItem());
         personalStorage.setAction(e -> openPersonalStorageGui(player));
         gui.setItem(10, personalStorage);
 
@@ -169,7 +168,7 @@ public class HideoutStorage {
 
             final boolean hasAccess = isOwner || getOrCreateHideoutGuis(playerHideOut).getPermissionsByNum(i+1).contains(player.getUniqueId());
 
-            GuiItem expeditionStorage = ItemBuilder.from(ItemManager.getExpeditionStorageItem(i+1, isOwner, hasAccess)).asGuiItem();
+            GuiItem expeditionStorage = new GuiItem(ItemManager.getExpeditionStorageItem(i+1, isOwner, hasAccess));
             int finalI = i;
             expeditionStorage.setAction(e -> {
 
@@ -208,13 +207,14 @@ public class HideoutStorage {
         clanMembers.remove(clan.getOwnerUUID());
 
         gui.setCloseGuiAction(e -> {
-            hideoutGuis.getPermissionsByNum(guiNum).clear();
+//            hideoutGuis.getPermissionsByNum(guiNum).clear();
+//            hideoutGuis.getPermissionsByNum(guiNum).addAll(permittedPlayers);
             MessageManager.sendMessageFormated(player, MessageManager.PERMISSIONS_UPDATED, MessageType.CHAT);
         });
 
         for(UUID uuid : clanMembers) {
 
-            GuiItem playerItem = ItemBuilder.from(ItemManager.getPermissionItem(uuid, permittedPlayers.contains(uuid))).asGuiItem();
+            GuiItem playerItem = new GuiItem(ItemManager.getPermissionItem(uuid, permittedPlayers.contains(uuid)));
 
             playerItem.setAction(e -> {
                 if(permittedPlayers.contains(uuid)) {

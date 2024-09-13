@@ -109,7 +109,7 @@ public class Clan {
     public void removeMember(User user) {
         if(user == null)
             return;
-        if(ownerDeputyUUID.equals(user.getUuid()))
+        if(ownerDeputyUUID != null && ownerDeputyUUID.equals(user.getUuid()))
             ownerDeputyUUID = null;
 
         members.remove(user.getUuid());

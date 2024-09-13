@@ -13,6 +13,8 @@ import me.xxgradzix.advancedclans.messages.MessageType;
 import me.xxgradzix.advancedclans.scheduler.TopRankScheduler;
 import me.xxgradzix.advancedclans.utils.ColorFixer;
 import me.xxgradzix.advancedclans.utils.ConsoleColor;
+import me.xxgradzix.advancedclans.utils.ItemUtil;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -385,17 +387,18 @@ public class ClanController {
     }
     private static final CostType costType = CostType.VAULT;
     private boolean checkPayments(Player player) {
-        return true;
-//        if(costType == CostType.VAULT) {
-//            Economy economy = plugin.getEconomy();
-//            if(!economy.has(player, Config.costCreate))
-//            {
-//                MessageManager.sendMessageFormated(player, MessageManager.NO_MONEY.replace("{cost}", String.valueOf(Config.costCreate)), MessageType.CHAT);
-//                return false;
-//            }
-//            economy.withdrawPlayer(player, Config.costCreate);
-//            return true;
-//        } else {
+//        return true;
+        if(costType == CostType.VAULT) {
+            Economy economy = AdvancedGuilds.getEconomy();
+            if(!economy.has(player, Config.costCreate))
+            {
+                MessageManager.sendMessageFormated(player, MessageManager.NO_MONEY.replace("{cost}", String.valueOf(Config.costCreate)), MessageType.CHAT);
+                return false;
+            }
+            economy.withdrawPlayer(player, Config.costCreate);
+            return true;
+        }
+//        else {
 //            int amount = ItemUtil.calcItemAmount(player, Config.itemCost);
 //            int needAmount = (int) Config.costCreate;
 //            if(amount<needAmount)
@@ -406,6 +409,7 @@ public class ClanController {
 //            ItemUtil.removeItems(player, Config.itemCost, needAmount);
 //            return true;
 //        }
+        return false;
     }
 
     // kick user from clan by admin

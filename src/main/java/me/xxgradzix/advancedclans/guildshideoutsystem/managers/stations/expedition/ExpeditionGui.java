@@ -1,6 +1,5 @@
 package me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition;
 
-import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.components.GuiType;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
@@ -16,12 +15,13 @@ import me.xxgradzix.advancedclans.data.database.services.hideout.VentureRewardDa
 import me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.messages.MessageType;
+import me.xxgradzix.advancedclans.utils.ItemUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.io.InvalidObjectException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -93,13 +93,14 @@ public class ExpeditionGui {
         ExpeditionDto expeditionDto = expeditionStatus.getOrDefault(player, null);
 
         if(expeditionStatus.get(player) != null) {
-            if(expeditionDto.isFinished()) {
-                openFinishedExpeditionGui(player);
-            } else {
-                MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_PENDING, MessageType.CHAT);
-                MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_WILL_END_IN.replace("{timeleft}", MessageManager.secondsToTimeFormat(expeditionDto.secondsToCompletion())), MessageType.CHAT);
-                player.sendMessage("Time to completion seconds: " + expeditionDto.secondsToCompletion());
-            }
+//            if(expeditionDto.isFinished()) {
+//                openFinishedExpeditionGui(player);
+                openCurrentExpeditionGui(player);
+//            }
+//            else {
+//                MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_PENDING, MessageType.CHAT);
+//                MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_WILL_END_IN.replace("{timeleft}", MessageManager.secondsToTimeFormat(expeditionDto.secondsToCompletion())), MessageType.CHAT);
+//            }
             return;
         }
         ventureChooseGui(player);
@@ -224,8 +225,8 @@ public class ExpeditionGui {
                     gui.updateItem(24, getStartExpeditionItem(chance.get(), variant.getLevel(), variant.getObjective(), variant.getCooldownSeconds()));
                     gui.updateItem(25, getStartExpeditionItem(chance.get(), variant.getLevel(), variant.getObjective(), variant.getCooldownSeconds()));
 
-                    gui.updateItem(toolSlot+1, ItemBuilder.from(ItemManager.createToolBonusSuppliedItem(toolTier.get())).asGuiItem());
-                    gui.updateItem(foodSlot+1, ItemBuilder.from(ItemManager.createFoodBonusSuppliedItem(foodTier.get())).asGuiItem());
+                    gui.updateItem(toolSlot+1, new GuiItem(ItemManager.createToolBonusSuppliedItem(toolTier.get())));
+                    gui.updateItem(foodSlot+1, new GuiItem(ItemManager.createFoodBonusSuppliedItem(foodTier.get())));
 
                     }, 0);
                 return;
@@ -233,8 +234,8 @@ public class ExpeditionGui {
             event.setCancelled(true);
         });
 
-        GuiItem expeditionFood = ItemBuilder.from(ItemManager.createFoodBonusSuppliedItem(foodTier.get())).asGuiItem();
-        GuiItem expeditionTool = ItemBuilder.from(ItemManager.createToolBonusSuppliedItem(toolTier.get())).asGuiItem();
+        GuiItem expeditionFood = new GuiItem(ItemManager.createFoodBonusSuppliedItem(foodTier.get()));
+        GuiItem expeditionTool = new GuiItem(ItemManager.createToolBonusSuppliedItem(toolTier.get()));
 
         gui.setCloseGuiAction(event -> {
             ItemStack food = gui.getInventory().getItem(foodSlot);
@@ -256,7 +257,7 @@ public class ExpeditionGui {
             }
         });
 
-        GuiItem startExpedition = ItemBuilder.from(ItemManager.getStartExpeditionItem(chance.get(), variant.getLevel(), variant.getObjective(), variant.getCooldownSeconds())).asGuiItem();
+        GuiItem startExpedition = new GuiItem(ItemManager.getStartExpeditionItem(chance.get(), variant.getLevel(), variant.getObjective(), variant.getCooldownSeconds()));
 
         startExpedition.setAction((e) -> {
             gui.setCloseGuiAction(null);
@@ -312,42 +313,122 @@ public class ExpeditionGui {
         return cooldownSec;
     }
 
-    private static void openFinishedExpeditionGui(Player player) {
+//    private static void openFinishedExpeditionGui(Player player) {
+//
+//        ExpeditionDto expeditionDto = expeditionStatus.get(player);
+//        if(expeditionDto == null) return;
+//
+//        if(expeditionDto.isSuccessful()) {
+//            MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_SUCCESS, MessageType.CHAT);
+//
+//            if(expeditionRewards.isEmpty()) {
+//                refreshAllExpeditionRewards();
+//            }
+//            List<VentureReward> rewards = expeditionRewards.getOrDefault(expeditionDto.getObjective(), new HashMap<>()).getOrDefault(expeditionDto.getExpeditionLevel(), new ArrayList<>());
+//
+//            for (VentureReward reward : rewards) {
+//                int amount = reward.getRandomAmount();
+//
+//                while (amount > 0) {
+//                    ItemStack item = reward.getReward().clone();
+//                    item.setAmount(Math.min(amount, item.getMaxStackSize()));
+//                    if(player.getInventory().firstEmpty() == -1) {
+//                        player.getLocation().getWorld().dropItemNaturally(player.getLocation(), item);
+//                    } else {
+//                        player.getInventory().addItem(item);
+//                    }
+//                    amount -= item.getAmount();
+//                }
+//            }
+//
+//        } else {
+//            MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_FAILED, MessageType.CHAT);
+//        }
+//
+//        expeditionStatus.remove(player);
+//
+//    }
+
+    private static void openCurrentExpeditionGui(Player player) {
 
         ExpeditionDto expeditionDto = expeditionStatus.get(player);
         if(expeditionDto == null) return;
 
-        if(expeditionDto.isSuccessful()) {
-            MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_SUCCESS, MessageType.CHAT);
+        Gui gui = Gui.gui()
+                .type(GuiType.CHEST)
+                .title(Component.text("Twoja ekspedycja".replace("&", "§")))
+                .rows(3)
+                .disableAllInteractions()
+                .create();
 
-            if(expeditionRewards.isEmpty()) {
-                refreshAllExpeditionRewards();
-            }
-            List<VentureReward> rewards = expeditionRewards.getOrDefault(expeditionDto.getObjective(), new HashMap<>()).getOrDefault(expeditionDto.getExpeditionLevel(), new ArrayList<>());
+        GuiItem expeditionItem = new GuiItem(ItemManager.getCurrentExpeditionItem(expeditionDto.getObjective(), expeditionDto.isFinished(), expeditionDto.getExpeditionLevel(), expeditionDto.secondsToCompletion()));
 
-            for (VentureReward reward : rewards) {
-                int amount = reward.getRandomAmount();
+        expeditionItem.setAction((e) -> {
 
-                while (amount > 0) {
-                    ItemStack item = reward.getReward().clone();
-                    item.setAmount(Math.min(amount, item.getMaxStackSize()));
-                    if(player.getInventory().firstEmpty() == -1) {
-                        player.getLocation().getWorld().dropItemNaturally(player.getLocation(), item);
+
+            if(e.getClick().isRightClick()) {
+
+                if(!expeditionDto.isFinished()) {
+
+                    ItemStack targetItem = new ItemStack(Material.EMERALD);
+                    int requiredEmeralds = expeditionDto.secondsToCompletion() / (60 * 30);
+
+                    int i = ItemUtil.calcItemAmount(player, targetItem);
+
+                    if(i < requiredEmeralds) {
+                        MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_NOT_ENOUGH_PREMIUM_MONEY, MessageType.CHAT);
+                        return;
                     } else {
-                        player.getInventory().addItem(item);
+                        ItemUtil.removeItems(player, targetItem, i);
+                        expeditionDto.setForceFinish(true);
+                        MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_FORCED, MessageType.CHAT);
+                        openCurrentExpeditionGui(player);
                     }
-                    amount -= item.getAmount();
                 }
             }
 
-        } else {
-            MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_FAILED, MessageType.CHAT);
-        }
+            if(expeditionDto.isFinished()) {
 
-        expeditionStatus.remove(player);
+                if(expeditionDto.isSuccessful()) {
+                    MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_SUCCESS, MessageType.CHAT);
+                    if(expeditionRewards.isEmpty()) {
+                        refreshAllExpeditionRewards();
+                    }
+                    List<VentureReward> rewards = expeditionRewards.getOrDefault(expeditionDto.getObjective(), new HashMap<>()).getOrDefault(expeditionDto.getExpeditionLevel(), new ArrayList<>());
+
+                    for (VentureReward reward : rewards) {
+                        int amount = reward.getRandomAmount();
+
+                        while (amount > 0) {
+                            ItemStack item = reward.getReward().clone();
+                            item.setAmount(Math.min(amount, item.getMaxStackSize()));
+                            if(player.getInventory().firstEmpty() == -1) {
+                                player.getLocation().getWorld().dropItemNaturally(player.getLocation(), item);
+                            } else {
+                                player.getInventory().addItem(item);
+                            }
+                            amount -= item.getAmount();
+                        }
+                    }
+                } else {
+                    MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_FAILED, MessageType.CHAT);
+                }
+                expeditionStatus.remove(player);
+                gui.close(player);
+
+            } else {
+                gui.close(player);
+                MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_PENDING, MessageType.CHAT);
+                MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_WILL_END_IN.replace("{timeleft}", MessageManager.secondsToTimeFormat(expeditionDto.secondsToCompletion())), MessageType.CHAT);
+            }
+
+        });
+
+        gui.setItem(13, expeditionItem);
+
+        gui.open(player);
 
     }
-
     private static final HashMap<ExpeditionDto.ExpeditionObjective, HashMap<Integer, List<VentureReward>>> expeditionRewards = new HashMap<>();
 
     private static void refreshAllExpeditionRewards() {

@@ -257,6 +257,12 @@ public class MessageManager extends OkaeriConfig {
     public static String YOU_DONT_HAVE_PERMISSION_TO_THIS_STORAGE = "&7ɴɪᴇ ᴍᴀꜱᴢ ᴅᴏꜱᴛęᴘᴜ ᴅᴏ ᴛᴇɢᴏ ᴍᴀɢᴀᴢʏɴᴜ, ᴘᴏᴘʀᴏꜱ ᴏ ᴅᴏꜱᴛᴇᴘ ʟɪᴅᴇʀᴀ ꜱᴡᴏᴊᴇᴊ ɢɪʟᴅɪɪ";
     @Comment("Storage permissions changed")
     public static String PERMISSIONS_UPDATED = "&7ᴢᴍɪᴇɴɪᴏɴᴏ ᴜᴘʀᴀᴡɴɪᴇɴɪᴀ ᴅᴏ ᴍᴀɢᴀᴢʏɴᴜ";
+    @Comment("Slow down message")
+    public static String SLOW_DOWN = "&7ᴘᴏᴄᴢᴇᴋᴀᴊ ᴄʜᴡɪʟᴇ ᴢᴀɴɪᴍ ᴡʏᴋᴏɴᴀꜱᴢ ᴛą ᴀᴋᴄᴊᴇ";
+    @Comment("Expedition not enough premium money")
+    public static String EXPEDITION_NOT_ENOUGH_PREMIUM_MONEY = "&7ɴɪᴇ ᴍᴀꜱᴢ ᴡʏꜱᴛᴀʀᴄᴢᴀᴊąᴄᴏ ᴡᴀʟᴜᴛʏ ᴘʀᴇᴍɪᴜᴍ";
+    @Comment("Expedition forced")
+    public static String EXPEDITION_FORCED = "&7ᴘʀᴢʏꜱᴘɪᴇꜱᴢʏᴌᴇś ᴇᴋꜱᴘᴇᴅʏᴄᴊę ᴢᴀ ᴡᴀʟᴜᴛᴇ ᴘʀᴇᴍɪᴜᴍ";
 
     public static void sendMessageFormated(Player player, String message, MessageType type) {
         message = ColorFixer.addColors(message);
@@ -313,6 +319,21 @@ public class MessageManager extends OkaeriConfig {
         }
         if(sec > 0) {
             sb.append(sec).append(" §3ꜱᴇᴋᴜɴᴅ §b");
+        }
+
+        return sb.toString();
+    }
+    public static String secondsToTimeFormatSkipSeconds(int seconds) {
+        int minutes = seconds / 60;
+        int hours = minutes / 60;
+        minutes %= 60;
+        StringBuilder sb = new StringBuilder();
+        sb.append("§3");
+        if(hours > 0) {
+            sb.append(hours).append(" §3ɢᴏᴅᴢɪɴ §b");
+        }
+        if(minutes > 0) {
+            sb.append(minutes).append(" §3ᴍɪɴᴜᴛ §b");
         }
 
         return sb.toString();

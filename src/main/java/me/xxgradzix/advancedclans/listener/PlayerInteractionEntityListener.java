@@ -3,6 +3,8 @@ package me.xxgradzix.advancedclans.listener;
 import me.xxgradzix.advancedclans.data.database.entities.User;
 import me.xxgradzix.advancedclans.manager.CooldownManager;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.UserController;
+import me.xxgradzix.advancedclans.messages.MessageManager;
+import me.xxgradzix.advancedclans.messages.MessageType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,8 +36,7 @@ public class PlayerInteractionEntityListener implements Listener {
             if(event.getHand() == EquipmentSlot.OFF_HAND) return;
             // check user has cooldown
             if(cooldownManager.hasCooldown(player)) {
-//                MessageUtil.sendMessage(player, lang.langSlowDown);
-                // TODO Send message to player about cooldown
+                MessageManager.sendMessageFormated(player, MessageManager.SLOW_DOWN, MessageType.CHAT);
                 return;
             }
             // add cooldown

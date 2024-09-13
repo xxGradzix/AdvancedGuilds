@@ -42,7 +42,12 @@ import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.UserContro
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.placeholder.ClanPlaceholder;
 import me.xxgradzix.advancedclans.scheduler.TopRankScheduler;
+import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,7 +61,7 @@ public final class AdvancedGuilds extends JavaPlugin {
 
     public static AdvancedGuilds instance;
 
-//    private static Economy econ = null;
+    private static Economy econ;
 
     // manager
 
@@ -147,10 +152,10 @@ public final class AdvancedGuilds extends JavaPlugin {
 
         /** INSTANCES **/
 
-//        if (!setupEconomy() ) {
-//            getLogger().severe("Vault not found! Disabling plugin...");
-//            return;
-//        }
+        if (!setupEconomy() ) {
+            getLogger().severe("Vault not found! Disabling plugin...");
+            return;
+        }
 
 
         instance = this;
@@ -245,21 +250,25 @@ public final class AdvancedGuilds extends JavaPlugin {
         HideoutStorage.loadPersonalGuis();
 
     }
-//    private boolean setupEconomy() {
-//        if (getServer().getPluginManager().getPlugin("Vault") == null) {
-//            return false;
-//        }
-//        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-//        if (rsp == null) {
-//            return false;
-//        }
-//        econ = rsp.getProvider();
-//        return true;
-//    }
-//
-//    public static Economy getEconomy() {
-//        return econ;
-//    }
+    private boolean setupEconomy() {
+        Bukkit.broadcastMessage("rsfdsfseef fe   f e              fefefefefefefefefefefefefes");
+        for (@NotNull Plugin plugin : getServer().getPluginManager().getPlugins()) {
+            Bukkit.broadcastMessage("Rlo - " + plugin.getName());
+        }
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+        econ = rsp.getProvider();
+        return true;
+    }
+
+    public static Economy getEconomy() {
+        return econ;
+    }
 
     @Override
     public void onDisable() {

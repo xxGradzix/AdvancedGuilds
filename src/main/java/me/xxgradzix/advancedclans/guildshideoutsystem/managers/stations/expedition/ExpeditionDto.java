@@ -1,6 +1,7 @@
 package me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition;
 
 import lombok.Getter;
+import lombok.Setter;
 
 public class ExpeditionDto {
 
@@ -9,6 +10,10 @@ public class ExpeditionDto {
     }
 
     private final double chance;
+
+    @Getter
+    @Setter
+    private boolean forceFinish;
 
     @Getter
     private int expeditionLevel;
@@ -20,16 +25,17 @@ public class ExpeditionDto {
 
     private final long timeOfCompletionMills;
 
-    public ExpeditionDto(double chance, int expeditionLevel, ExpeditionObjective objective, long completionTimeSeconds) {
+    public ExpeditionDto(double chance, int expeditionLevel, ExpeditionObjective objective, int cooldownTimeSeconds) {
         this.chance = chance;
+        this.forceFinish = false;
         this.expeditionLevel = expeditionLevel;
         this.objective = objective;
-        this.cooldownTimeSeconds = completionTimeSeconds;
-        this.timeOfCompletionMills = System.currentTimeMillis() + 1000*completionTimeSeconds;
+        this.cooldownTimeSeconds = cooldownTimeSeconds;
+        this.timeOfCompletionMills = System.currentTimeMillis() + 1000L *cooldownTimeSeconds;
     }
 
     public boolean isFinished() {
-        return cooldownTimeSeconds <= System.currentTimeMillis();
+        return (timeOfCompletionMills <= System.currentTimeMillis()) || forceFinish;
     }
 
     public boolean isSuccessful() {

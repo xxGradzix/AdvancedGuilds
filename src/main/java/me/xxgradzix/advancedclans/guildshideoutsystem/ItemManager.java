@@ -1,5 +1,6 @@
 package me.xxgradzix.advancedclans.guildshideoutsystem;
 
+import dev.triumphteam.gui.guis.GuiItem;
 import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideout;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition.ExpeditionDto;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition.ExpeditionVariant;
@@ -28,9 +29,6 @@ public class ItemManager {
     public static ItemStack toolTier2;
     public static ItemStack toolTier3;
 
-    public static ItemStack guildSword;
-
-
     public static void init() {
         createFoodRation1();
         createFoodRation2();
@@ -39,34 +37,8 @@ public class ItemManager {
         createToolPack1();
         createToolPack2();
         createToolPack3();
-
-        createGuildSword();
     }
 
-
-    public static void createGuildSword() {
-        ItemStack item = new ItemStack(Material.DIAMOND_SWORD);
-
-        ItemMeta itemMeta = item.getItemMeta();
-        itemMeta.setCustomModelData(1);
-
-        itemMeta.setDisplayName(ColorFixer.addColors("&7ᴍɪᴇᴄᴢ ᴢɢɪʟᴅɪ"));
-
-        ArrayList<String> lore = new ArrayList<>();
-
-        lore.add(" ");
-        lore.add(ColorFixer.addColors("&7ᴍᴏżɴᴀ ᴜżʏć ᴅᴏ ᴡᴢᴍᴏᴄɴɪᴇɴɪᴀ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ &8(&a+10% &7ᴅᴏ ᴅᴜᴢᴇɢᴏ ɢʟᴏᴡᴀ&8)"));
-
-        itemMeta.setLore(lore);
-
-        itemMeta.removeAttributeModifier(Attribute.GENERIC_ATTACK_SPEED);
-        itemMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED,  new AttributeModifier("speed", 0.1, AttributeModifier.Operation.ADD_NUMBER));
-
-        item.setItemMeta(itemMeta);
-
-
-        guildSword = item;
-    }
 
     public static void createFoodRation3() {
         ItemStack item = new ItemStack(Material.MUSHROOM_STEW);
@@ -186,7 +158,7 @@ public class ItemManager {
         lore.add(" ");
 
         if(isUnlocked && isFinished) {
-            itemMeta.addEnchant(Enchantment.LUCK, 1, true);
+            itemMeta.addEnchant(Enchantment.LUCK_OF_THE_SEA, 1, true);
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
             lore.add(ColorFixer.addColors("&aᴜʟᴇᴘꜱᴢᴇɴɪᴇ ᴊᴇꜱᴛ ᴊᴜż ᴏᴅʙʟᴏᴋᴏᴡᴀɴᴇ"));
@@ -227,7 +199,7 @@ public class ItemManager {
         lore.add(" ");
 
         if(isUnlocked && isFinished) {
-            itemMeta.addEnchant(Enchantment.LUCK, 1, true);
+            itemMeta.addEnchant(Enchantment.LUCK_OF_THE_SEA, 1, true);
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
             lore.add(ColorFixer.addColors("&aᴜʟᴇᴘꜱᴢᴇɴɪᴇ ᴊᴇꜱᴛ ᴊᴜż ᴏᴅʙʟᴏᴋᴏᴡᴀɴᴇ"));
@@ -260,7 +232,7 @@ public class ItemManager {
         lore.add(" ");
 
         if(isUnlocked && isFinished) {
-            itemMeta.addEnchant(Enchantment.LUCK, 1, true);
+            itemMeta.addEnchant(Enchantment.LUCK_OF_THE_SEA, 1, true);
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
             lore.add(ColorFixer.addColors("&aᴜʟᴇᴘꜱᴢᴇɴɪᴇ ᴊᴇꜱᴛ ᴊᴜż ᴏᴅʙʟᴏᴋᴏᴡᴀɴᴇ"));
@@ -293,7 +265,7 @@ public class ItemManager {
         lore.add(" ");
 
         if(isUnlocked && isFinished) {
-            itemMeta.addEnchant(Enchantment.LUCK, 1, true);
+            itemMeta.addEnchant(Enchantment.LUCK_OF_THE_SEA, 1, true);
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
             lore.add(ColorFixer.addColors("&aᴜʟᴇᴘꜱᴢᴇɴɪᴇ ᴊᴇꜱᴛ ᴊᴜż ᴏᴅʙʟᴏᴋᴏᴡᴀɴᴇ"));
@@ -317,13 +289,13 @@ public class ItemManager {
     }
 
 
-    public static ItemStack getUpgradeButton(GuildHideout.Upgrade upgrade, int price, boolean bought, boolean finished, Long timeTOCompletionSeconds) {
+    public static @NotNull ItemStack getUpgradeButton(GuildHideout.Upgrade upgrade, int price, boolean bought, boolean finished, Long timeTOCompletionSeconds) {
         return switch (upgrade) {
             case STATION_HALL -> getMainHallUpgradeButton(price, bought, finished, timeTOCompletionSeconds);
             case BLACKSMITH -> getBlacksmithUpgradeButton(price, bought, finished, timeTOCompletionSeconds);
             case SORCERER -> getSorcererUpgradeButton(price, bought, finished, Math.toIntExact(timeTOCompletionSeconds));
             case VENTURE -> getVentureUpgradeButton(price, bought, finished, Math.toIntExact(timeTOCompletionSeconds));
-            default -> null;
+            default -> throw new IllegalStateException("Unexpected value: " + upgrade);
         };
     }
 
@@ -337,7 +309,7 @@ public class ItemManager {
         itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         itemMeta.addItemFlags(ItemFlag.HIDE_DYE);
-        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
         itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
         itemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
@@ -459,7 +431,7 @@ public class ItemManager {
         itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         itemMeta.addItemFlags(ItemFlag.HIDE_DYE);
-        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
         itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
         itemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
@@ -485,7 +457,7 @@ public class ItemManager {
         itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         itemMeta.addItemFlags(ItemFlag.HIDE_DYE);
-        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
         itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
         itemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
@@ -524,7 +496,7 @@ public class ItemManager {
         itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         itemMeta.addItemFlags(ItemFlag.HIDE_DYE);
-        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
         itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
         itemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
@@ -564,7 +536,7 @@ public class ItemManager {
         itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         itemMeta.addItemFlags(ItemFlag.HIDE_DYE);
-        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
         itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
         itemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
@@ -616,7 +588,7 @@ public class ItemManager {
         lore.add(ColorFixer.addColors("&7ᴋʟɪᴋɴɪᴊ ᴀʙʏ " + (contains ? "&cᴜꜱᴜɴąć" : "&aᴅᴏᴅᴀć") + "&7 ᴘᴇʀᴍɪꜱję"));
 
         if(contains) {
-            itemMeta.addEnchant(Enchantment.LUCK, 1, true);
+            itemMeta.addEnchant(Enchantment.LUCK_OF_THE_SEA, 1, true);
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
 
@@ -639,6 +611,44 @@ public class ItemManager {
         lore.add(" ");
         lore.add(ColorFixer.addColors("&7ᴋʟɪᴋɴɪᴊ ᴀʙʏ ᴏᴛᴡᴏʀᴢʏć ᴍᴀɢᴀᴢʏɴ"));
 
+        itemMeta.setLore(lore);
+        item.setItemMeta(itemMeta);
+
+        return item;
+    }
+
+    public static @NotNull ItemStack getCurrentExpeditionItem(ExpeditionDto.ExpeditionObjective objective, boolean isFinished, int expeditionLevel, int secondsToComplete) {
+
+        ItemStack item = new ItemStack(Material.CHEST);
+
+        ItemMeta itemMeta = item.getItemMeta();
+
+        itemMeta.setDisplayName(ColorFixer.addColors("&7ᴀᴋᴛᴜᴀʟɴᴀ ᴇᴋꜱᴘᴇᴅʏᴄᴊᴀ"));
+
+        ArrayList<String> lore = new ArrayList<>();
+        lore.add(" ");
+
+        if(isFinished) {
+            lore.add(ColorFixer.addColors("&aᴇᴋꜱᴘᴇᴅʏᴄᴊᴀ ᴊᴇꜱᴛ ɢᴏᴛᴏᴡᴀ ᴅᴏ ᴏᴅᴇʙʀᴀɴɪᴀ"));
+        } else {
+            lore.add(ColorFixer.addColors("&7ᴇᴋꜱᴘᴇᴅʏᴄᴊᴀ ᴢᴏꜱᴛᴀɴɪᴇ ᴜᴋᴏńᴄᴢᴏɴᴀ ᴢᴀ&7: &6" + MessageManager.secondsToTimeFormatSkipSeconds(secondsToComplete)));
+        }
+
+        lore.add(" ");
+        lore.add(ColorFixer.addColors("&7ᴄᴇʟ: &f" + objective.toString().toLowerCase()));
+        switch (expeditionLevel) {
+            case 1 -> lore.add(ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: &aŁᴀᴛᴡʏ"));
+            case 2 -> lore.add(ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: &eśʀᴇᴅɴɪ"));
+            case 3 -> lore.add(ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: &4ᴛʀᴜᴅɴʏ"));
+        }
+
+        if(!isFinished) {
+            lore.add(" ");
+            lore.add(ColorFixer.addColors("&7ᴋʟɪᴋɴɪᴊ ᴘᴘᴍ ᴀʙʏ ᴘᴏᴍɪɴąć ᴄᴢᴀꜱ ᴏᴄᴢᴇᴋɪᴡᴀɴɪᴀ" + MessageManager.secondsToTimeFormatSkipSeconds(secondsToComplete)));
+
+            int price = secondsToComplete /(60 * 30);
+            lore.add(ColorFixer.addColors("&7ᴄᴇɴᴀ: &6" + price + " ᴍᴏɴᴇᴛ ᴘʀᴇᴍɪᴜᴍ"));
+        }
         itemMeta.setLore(lore);
         item.setItemMeta(itemMeta);
 

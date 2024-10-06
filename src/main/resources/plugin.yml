@@ -3,7 +3,7 @@ version: '${project.version}'
 main: me.xxgradzix.advancedclans.AdvancedGuilds
 api-version: '1.17'
 
-depend: [FastAsyncWorldEdit, Vault]
+depend: [FastAsyncWorldEdit, Vault, Citizens]
 
 commands:
   klan:

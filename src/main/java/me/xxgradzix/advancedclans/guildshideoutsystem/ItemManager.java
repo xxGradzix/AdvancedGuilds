@@ -400,7 +400,7 @@ public class ItemManager {
                     }
                 }
             }
-            case 2 -> {
+            case 1 -> {
                 switch (variant.getObjective()) {
                     case STONE -> {
                         item = new ItemStack(Material.STONE);
@@ -650,6 +650,49 @@ public class ItemManager {
             lore.add(ColorFixer.addColors("&7ᴄᴇɴᴀ: &6" + price + " ᴍᴏɴᴇᴛ ᴘʀᴇᴍɪᴜᴍ"));
         }
         itemMeta.setLore(lore);
+        item.setItemMeta(itemMeta);
+
+        return item;
+    }
+
+    public static ItemStack getArenaUpgradeButton(int price, boolean isUnlocked, boolean isFinished, Long secondsTillReady) {
+        ItemStack item = new ItemStack(Material.BRICKS);
+
+        ItemMeta itemMeta = item.getItemMeta();
+
+        itemMeta.setDisplayName(ColorFixer.addColors("&7ꜱᴛʀᴇꜰᴀ ɴɪᴇʟᴇɢᴀʟɴʏᴄʜ ʙɪᴢɴᴇꜱóᴡ"));
+
+        ArrayList<String> lore = new ArrayList<>();
+
+
+        lore.add(" ");
+
+        if(isUnlocked && isFinished) {
+            itemMeta.addEnchant(Enchantment.LUCK_OF_THE_SEA, 1, true);
+            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+
+            lore.add(ColorFixer.addColors("&aᴜʟᴇᴘꜱᴢᴇɴɪᴇ ᴊᴇꜱᴛ ᴊᴜż ᴏᴅʙʟᴏᴋᴏᴡᴀɴᴇ"));
+            lore.add(ColorFixer.addColors(" "));
+            lore.add(ColorFixer.addColors("&aᴋʟɪᴋɴɪᴊ ᴀʙʏ ᴘʀᴢᴇᴊść ᴅᴏ ᴍᴇɴᴜ ꜱᴛʀᴇꜰʏ ɴɪᴇʟᴇɢᴀʟɴʏᴄʜ ʙɪᴢɴᴇꜱóᴡ"));
+        } else if (isUnlocked) {
+
+            lore.add(ColorFixer.addColors("&eᴜʟᴇᴘꜱᴢᴇɴɪᴇ ᴢᴏꜱᴛᴀᴌᴏ ᴋᴜᴘɪᴏɴᴇ ɪ ᴢᴏꜱᴛᴀɴɪᴇ ᴜᴋᴏɴ́ᴄᴢᴏɴᴇ ᴢᴀ&7: &6" + MessageManager.secondsToTimeFormat(Math.toIntExact(secondsTillReady))));
+
+
+        } else {
+            lore.add(ColorFixer.addColors("&7ᴏᴅʙʟᴏᴋᴏᴡᴜᴊᴇ ᴅᴏᴅᴀᴛᴋᴏᴡą̨ ᴘʀᴢᴇꜱᴛʀᴢᴇń ɴᴀ ɴɪᴇʟᴇɢᴀʟɴᴇ ʙɪᴢɴᴇꜱʏ ɢɪʟᴅɪɪ"));
+            lore.add(ColorFixer.addColors(" "));
+            lore.add(ColorFixer.addColors("&7ᴄᴇɴᴀ ᴏᴅʙʟᴏᴋᴏᴡᴀɴɪᴀ: &e" + price + " ᴍᴏɴᴇᴛ"));
+            lore.add(ColorFixer.addColors(" "));
+            lore.add(ColorFixer.addColors("&a%lᴋʟɪᴋɴɪᴊ ᴀʙʏ ᴋᴜᴘɪć ᴜʟᴇᴘꜱᴢᴇɴɪᴇ"));
+            lore.add(ColorFixer.addColors(" "));
+            lore.add(ColorFixer.addColors("&cᴛᴏ ᴜʟᴇᴘꜱᴢᴇɴɪᴇ ᴅᴀᴊᴇ ᴅᴏꜱᴛęᴘ ᴅᴏ:"));
+            lore.add(ColorFixer.addColors("&c- ᴘᴏᴅᴢɪᴇᴍɴᴀ ᴀʀᴇɴᴀ"));
+            lore.add(ColorFixer.addColors("&c- ᴄᴢᴀʀɴʏ ʀʏɴᴇᴋ"));
+        }
+
+        itemMeta.setLore(lore);
+
         item.setItemMeta(itemMeta);
 
         return item;

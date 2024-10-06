@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import me.xxgradzix.advancedclans.data.database.persister.StringListPersister;
 import me.xxgradzix.advancedclans.data.database.persister.UUIDListPersister;
-import org.stringtemplate.v4.ST;
 
 import java.util.ArrayList;
 import java.util.List;

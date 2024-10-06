@@ -36,7 +36,7 @@ public class ExpeditionGui {
     public static void shuffleExpeditions() {
 
         variants.clear();
-        while (variants.size() < 6){
+        while (variants.size() < 10){
             int randomObjectiveIndex = new Random().nextInt(0, ExpeditionDto.ExpeditionObjective.values().length);
             ExpeditionDto.ExpeditionObjective randomObjective = values()[randomObjectiveIndex];
             int randomLevel= new Random().nextInt(1, 4);
@@ -115,19 +115,29 @@ public class ExpeditionGui {
                 .create();
 
         int rep = 0;
+        int shift = 0;
 
         if(variants.isEmpty()) shuffleExpeditions();
 
+//        Bukkit.broadcastMessage("Variants: " + variants.size());
         for(ExpeditionVariant variant : variants) {
-            for (int i = 0; i<3; i++) {
+//            Bukkit.broadcastMessage("var");
+            for (int i = 0; i<2; i++) {
                 GuiItem item = new GuiItem(ItemManager.createObjectiveGuiItem(variant, i));
 
                 item.setAction((a) -> venturePreparation(player, variant));
-                int slot = 6 + i + rep * 9;
+                int slot = 11 + i + shift + rep * 9;
+
+//                Bukkit.broadcastMessage("Slot " + (i + 1) + ": " + slot);
                 if(slot > 53) break;
                 gui.setItem(slot, item);
             }
+
             rep++;
+            if(rep == 5) {
+                rep = 0;
+                shift += 3;
+            }
         }
         gui.open(player);
     }
@@ -272,6 +282,9 @@ public class ExpeditionGui {
         });
 
         List<VentureReward> rewards = expeditionRewards.getOrDefault(variant.getObjective(), new HashMap<>()).getOrDefault(variant.getLevel(), new ArrayList<>());
+        Bukkit.broadcastMessage("OBjectibe " + variant.getObjective());
+        Bukkit.broadcastMessage("Level " + variant.getLevel());
+        Bukkit.broadcastMessage("Rewards: " + rewards.size());
         for (int i = 5; i <=8; i++) {
             if(i-5 >= rewards.size()) break;
             ItemStack reward = rewards.get(i-5).getReward();

@@ -28,6 +28,7 @@ import me.xxgradzix.advancedclans.data.database.repositories.clansCore.UserEntit
 import me.xxgradzix.advancedclans.data.database.services.hideout.StorageEntityDataManager;
 import me.xxgradzix.advancedclans.data.database.services.hideout.VentureRewardDataManager;
 import me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager;
+import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition.ExpeditionDto;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition.ExpeditionGui;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.storage.HideoutStorage;
 import me.xxgradzix.advancedclans.listener.*;
@@ -207,6 +208,11 @@ public final class AdvancedGuilds extends JavaPlugin {
         ventureRewardController = new VentureRewardController();
 
         new ExpeditionGui(guildHideOutController, clansController);
+        for (ExpeditionDto.ExpeditionObjective objective : ExpeditionDto.ExpeditionObjective.values()) {
+            for (int i = 1; i <= 3; i++) {
+                ExpeditionGui.refreshExpeditionRewards(objective, i);
+            }
+        }
         new HideoutStorage(userController, guildHideOutController, clansController);
 
 

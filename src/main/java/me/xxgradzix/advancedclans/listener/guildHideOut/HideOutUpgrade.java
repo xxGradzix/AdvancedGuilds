@@ -68,18 +68,26 @@ public class HideOutUpgrade implements Listener {
         UpgradePattern upgradePattern = guildHideOutController.getUpgradePattern(GuildHideout.Upgrade.STATION_HALL);
 
         GuildHideout.Upgrade stationHallUpgrade = GuildHideout.Upgrade.STATION_HALL;
+        GuildHideout.Upgrade arenaUpgrade = GuildHideout.Upgrade.ARENA;
 
-        long timeToCompletionSeconds;
+        long timeToStationHallUpgradeCompletionSeconds;
 
         try {
-            timeToCompletionSeconds = playerHideOut.getTimeToCompletionSeconds(stationHallUpgrade);
+            timeToStationHallUpgradeCompletionSeconds = playerHideOut.getTimeToCompletionSeconds(stationHallUpgrade);
         } catch (UpgradeWasNotBoughtException e) {
-            timeToCompletionSeconds = -1;
+            timeToStationHallUpgradeCompletionSeconds = -1;
         }
 
-        GuiItem hallItem = new GuiItem(ItemManager.getMainHallUpgradeButton(upgradePattern.getPrice(), playerHideOut.hasBoughtUpgrade(stationHallUpgrade), playerHideOut.hasBoughtUpgrade(stationHallUpgrade), timeToCompletionSeconds));
-        hallItem.setAction(inventoryClickEvent -> {
+        long timeToArenaUpgradeCompletionSeconds;
 
+        try {
+            timeToArenaUpgradeCompletionSeconds = playerHideOut.getTimeToCompletionSeconds(arenaUpgrade);
+        } catch (UpgradeWasNotBoughtException e) {
+            timeToArenaUpgradeCompletionSeconds = -1;
+        }
+
+        GuiItem hallItem = new GuiItem(ItemManager.getMainHallUpgradeButton(upgradePattern.getPrice(), playerHideOut.hasBoughtUpgrade(stationHallUpgrade), playerHideOut.hasBoughtUpgrade(stationHallUpgrade), timeToStationHallUpgradeCompletionSeconds));
+        hallItem.setAction(inventoryClickEvent -> {
             if(playerHideOut.hasBoughtUpgrade(stationHallUpgrade) && playerHideOut.hasFinishedUpgrade(stationHallUpgrade)) {
                 openMainHallUpgrades(player, playerHideOut);
                 return;
@@ -90,11 +98,28 @@ public class HideOutUpgrade implements Listener {
                 guildHideOutController.upgradeHideOut(playerHideOut, stationHallUpgrade);
                 DHAPI.removeHologram(playerHideOut.getWorldName() + GuildHideOutController.STATION_HALL);
             }
-
             openUpgradeGui(player, playerHideOut);
         });
 
-        upgradeGui.setItem(2, 5, hallItem);
+        GuiItem arenaItem = new GuiItem(ItemManager.getArenaUpgradeButton(upgradePattern.getPrice(), playerHideOut.hasBoughtUpgrade(arenaUpgrade), playerHideOut.hasBoughtUpgrade(arenaUpgrade), timeToArenaUpgradeCompletionSeconds));
+        arenaItem.setAction(inventoryClickEvent -> {
+//            if(playerHideOut.hasBoughtUpgrade(arenaUpgrade) && playerHideOut.hasFinishedUpgrade(arenaUpgrade)) {
+//                openMainHallUpgrades(player, playerHideOut);
+//                return;
+//            } else
+            //TODO ARENA MANAGEMENT LOGIC
+            if(playerHideOut.hasBoughtUpgrade(arenaUpgrade) && !playerHideOut.hasFinishedUpgrade(arenaUpgrade)) {
+                MessageManager.sendMessageFormated(player, MessageManager.UPGRADE_IS_NOT_FINISHED_YET, MessageType.CHAT);
+            } else if(!playerHideOut.hasBoughtUpgrade(arenaUpgrade)) {
+                // TODO buy logic
+                guildHideOutController.upgradeHideOut(playerHideOut, arenaUpgrade);
+                DHAPI.removeHologram(playerHideOut.getWorldName() + GuildHideOutController.ARENA_UPGRADE);
+            }
+            openUpgradeGui(player, playerHideOut);
+        });
+
+        upgradeGui.setItem(2, 4, hallItem);
+        upgradeGui.setItem(2, 6, arenaItem);
 
         upgradeGui.open(player);
     }

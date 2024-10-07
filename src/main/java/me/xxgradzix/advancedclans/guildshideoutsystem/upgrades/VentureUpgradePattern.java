@@ -16,7 +16,7 @@ public class VentureUpgradePattern implements UpgradePattern {
     public VentureUpgradePattern(JavaPlugin plugin) {
         this.schemFile = new File(plugin.getDataFolder().getAbsolutePath() + "/venture_station.schem");
         this.price = 1_000;
-        this.coolDown = 20;
+        this.coolDown = 5 * 60 * 60;
     }
 
     @Override

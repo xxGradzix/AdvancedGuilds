@@ -326,42 +326,6 @@ public class ExpeditionGui {
         return cooldownSec;
     }
 
-//    private static void openFinishedExpeditionGui(Player player) {
-//
-//        ExpeditionDto expeditionDto = expeditionStatus.get(player);
-//        if(expeditionDto == null) return;
-//
-//        if(expeditionDto.isSuccessful()) {
-//            MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_SUCCESS, MessageType.CHAT);
-//
-//            if(expeditionRewards.isEmpty()) {
-//                refreshAllExpeditionRewards();
-//            }
-//            List<VentureReward> rewards = expeditionRewards.getOrDefault(expeditionDto.getObjective(), new HashMap<>()).getOrDefault(expeditionDto.getExpeditionLevel(), new ArrayList<>());
-//
-//            for (VentureReward reward : rewards) {
-//                int amount = reward.getRandomAmount();
-//
-//                while (amount > 0) {
-//                    ItemStack item = reward.getReward().clone();
-//                    item.setAmount(Math.min(amount, item.getMaxStackSize()));
-//                    if(player.getInventory().firstEmpty() == -1) {
-//                        player.getLocation().getWorld().dropItemNaturally(player.getLocation(), item);
-//                    } else {
-//                        player.getInventory().addItem(item);
-//                    }
-//                    amount -= item.getAmount();
-//                }
-//            }
-//
-//        } else {
-//            MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_FAILED, MessageType.CHAT);
-//        }
-//
-//        expeditionStatus.remove(player);
-//
-//    }
-
     private static void openCurrentExpeditionGui(Player player) {
 
         ExpeditionDto expeditionDto = expeditionStatus.get(player);
@@ -383,16 +347,17 @@ public class ExpeditionGui {
 
                 if(!expeditionDto.isFinished()) {
 
-                    ItemStack targetItem = new ItemStack(Material.EMERALD);
-                    int requiredEmeralds = expeditionDto.secondsToCompletion() / (60 * 30);
+                    ItemStack targetItem = ItemManager.getPremiumGuildCoin();
+
+                    int requiredCoins = expeditionDto.secondsToCompletion() / (60 * 30);
 
                     int i = ItemUtil.calcItemAmount(player, targetItem);
 
-                    if(i < requiredEmeralds) {
+                    if(i < requiredCoins) {
                         MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_NOT_ENOUGH_PREMIUM_MONEY, MessageType.CHAT);
                         return;
                     } else {
-                        ItemUtil.removeItems(player, targetItem, i);
+                        ItemUtil.removeItems(player, targetItem, requiredCoins);
                         expeditionDto.setForceFinish(true);
                         MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_FORCED, MessageType.CHAT);
                         openCurrentExpeditionGui(player);
@@ -403,10 +368,13 @@ public class ExpeditionGui {
             if(expeditionDto.isFinished()) {
 
                 if(expeditionDto.isSuccessful()) {
+
                     MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_SUCCESS, MessageType.CHAT);
+
                     if(expeditionRewards.isEmpty()) {
                         refreshAllExpeditionRewards();
                     }
+
                     List<VentureReward> rewards = expeditionRewards.getOrDefault(expeditionDto.getObjective(), new HashMap<>()).getOrDefault(expeditionDto.getExpeditionLevel(), new ArrayList<>());
 
                     for (VentureReward reward : rewards) {

@@ -16,7 +16,7 @@ public class SorcererUpgradePattern implements UpgradePattern {
     public SorcererUpgradePattern(JavaPlugin plugin) {
         this.schemFile = new File(plugin.getDataFolder().getAbsolutePath() + "/sorcery-station.schem");
         this.price = 1_000;
-        this.coolDown = 20;
+        this.coolDown = 5 * 60 * 60;
     }
 
     @Override

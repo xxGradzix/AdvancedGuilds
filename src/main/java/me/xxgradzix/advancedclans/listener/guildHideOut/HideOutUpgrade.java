@@ -49,7 +49,6 @@ public class HideOutUpgrade implements Listener {
 
         GuildHideout playerHideOut = guildHideOutController.getPlayerHideOut(player);
 
-
         if(playerHideOut == null) {
             MessageManager.sendMessageFormated(player, MessageManager.YOU_DONT_BELONG_TO_THIS_HIDEOUT, MessageType.CHAT);
             return;
@@ -67,23 +66,14 @@ public class HideOutUpgrade implements Listener {
 
         UpgradePattern upgradePattern = guildHideOutController.getUpgradePattern(GuildHideout.Upgrade.STATION_HALL);
 
+        /** MAIN HALL UPGRADES **/
+
         GuildHideout.Upgrade stationHallUpgrade = GuildHideout.Upgrade.STATION_HALL;
-        GuildHideout.Upgrade arenaUpgrade = GuildHideout.Upgrade.ARENA;
-
         long timeToStationHallUpgradeCompletionSeconds;
-
         try {
             timeToStationHallUpgradeCompletionSeconds = playerHideOut.getTimeToCompletionSeconds(stationHallUpgrade);
         } catch (UpgradeWasNotBoughtException e) {
             timeToStationHallUpgradeCompletionSeconds = -1;
-        }
-
-        long timeToArenaUpgradeCompletionSeconds;
-
-        try {
-            timeToArenaUpgradeCompletionSeconds = playerHideOut.getTimeToCompletionSeconds(arenaUpgrade);
-        } catch (UpgradeWasNotBoughtException e) {
-            timeToArenaUpgradeCompletionSeconds = -1;
         }
 
         GuiItem hallItem = new GuiItem(ItemManager.getMainHallUpgradeButton(upgradePattern.getPrice(), playerHideOut.hasBoughtUpgrade(stationHallUpgrade), playerHideOut.hasBoughtUpgrade(stationHallUpgrade), timeToStationHallUpgradeCompletionSeconds));
@@ -101,12 +91,19 @@ public class HideOutUpgrade implements Listener {
             openUpgradeGui(player, playerHideOut);
         });
 
+        /** ARENA UPGRADES **/
+
+        GuildHideout.Upgrade arenaUpgrade = GuildHideout.Upgrade.ARENA;
+
+        long timeToArenaUpgradeCompletionSeconds;
+
+        try {
+            timeToArenaUpgradeCompletionSeconds = playerHideOut.getTimeToCompletionSeconds(arenaUpgrade);
+        } catch (UpgradeWasNotBoughtException e) {
+            timeToArenaUpgradeCompletionSeconds = -1;
+        }
         GuiItem arenaItem = new GuiItem(ItemManager.getArenaUpgradeButton(upgradePattern.getPrice(), playerHideOut.hasBoughtUpgrade(arenaUpgrade), playerHideOut.hasBoughtUpgrade(arenaUpgrade), timeToArenaUpgradeCompletionSeconds));
         arenaItem.setAction(inventoryClickEvent -> {
-//            if(playerHideOut.hasBoughtUpgrade(arenaUpgrade) && playerHideOut.hasFinishedUpgrade(arenaUpgrade)) {
-//                openMainHallUpgrades(player, playerHideOut);
-//                return;
-//            } else
             //TODO ARENA MANAGEMENT LOGIC
             if(playerHideOut.hasBoughtUpgrade(arenaUpgrade) && !playerHideOut.hasFinishedUpgrade(arenaUpgrade)) {
                 MessageManager.sendMessageFormated(player, MessageManager.UPGRADE_IS_NOT_FINISHED_YET, MessageType.CHAT);

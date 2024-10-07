@@ -80,12 +80,6 @@ public class HideOutAdminCommands implements CommandExecutor {
                     MessageManager.sendMessageFormated(player, MessageManager.HIDEOUT_DOES_NOT_EXIST, MessageType.CHAT);
                 }
             }
-            case "4" -> {
-                String playername = strings[1];
-
-                Player player1 = Bukkit.getPlayer(playername);
-                ExpeditionGui.openExpeditionGui(player1);
-            }
             case "5" -> {
                 ExpeditionGui.shuffleExpeditions();
             }
@@ -96,6 +90,7 @@ public class HideOutAdminCommands implements CommandExecutor {
                 player.getInventory().addItem(ItemManager.toolTier1);
                 player.getInventory().addItem(ItemManager.toolTier2);
                 player.getInventory().addItem(ItemManager.toolTier3);
+                player.getInventory().addItem(ItemManager.getPremiumGuildCoin());
             }
         }
         return false;

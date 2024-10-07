@@ -697,4 +697,44 @@ public class ItemManager {
 
         return item;
     }
+
+    public static ItemStack getPremiumGuildCoin() {
+        ItemStack item = new ItemStack(Material.EMERALD);
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setDisplayName(ColorFixer.addColors("&2ᴍᴏɴᴇᴛᴀ ᴘʀᴇᴍɪᴜᴍ"));
+        itemMeta.setCustomModelData(1);
+        itemMeta.setMaxStackSize(99);
+        item.setItemMeta(itemMeta);
+        return item;
+    }
+
+
+    public static ItemStack getCurrentCooldownItem(int secondsToComplete) {
+
+        ItemStack item = new ItemStack(Material.CHEST);
+
+        ItemMeta itemMeta = item.getItemMeta();
+
+        itemMeta.setDisplayName(ColorFixer.addColors("&7ᴘʀᴢʏꜱᴘɪᴇꜱᴢ"));
+
+        ArrayList<String> lore = new ArrayList<>();
+        lore.add(" ");
+
+        lore.add(ColorFixer.addColors("&7ᴜʟᴇᴘꜱᴢᴇɴɪᴇ ᴢᴀᴋᴏɴ́ᴄᴢʏ ꜱɪᴇ̨ ᴢᴀ&7: &6" + MessageManager.secondsToTimeFormatSkipSeconds(secondsToComplete)));
+
+        lore.add(" ");
+
+
+        lore.add(" ");
+        lore.add(ColorFixer.addColors("&7ᴋʟɪᴋɴɪᴊ ᴘᴘᴍ ᴀʙʏ ᴘᴏᴍɪɴąć ᴄᴢᴀꜱ ᴏᴄᴢᴇᴋɪᴡᴀɴɪᴀ" + MessageManager.secondsToTimeFormatSkipSeconds(secondsToComplete)));
+
+        int price = secondsToComplete /(60 * 30);
+        lore.add(ColorFixer.addColors("&7ᴄᴇɴᴀ: &6" + price + " ᴍᴏɴᴇᴛ ᴘʀᴇᴍɪᴜᴍ"));
+
+        itemMeta.setLore(lore);
+        item.setItemMeta(itemMeta);
+
+        return item;
+    }
+
 }

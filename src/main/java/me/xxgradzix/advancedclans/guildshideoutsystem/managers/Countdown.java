@@ -10,8 +10,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class Countdown extends BukkitRunnable {
+
+    public static final HashMap<String, Countdown> countdowns = new HashMap<>();
 
     private final JavaPlugin plugin;
 
@@ -22,6 +25,10 @@ public class Countdown extends BukkitRunnable {
     private final Hologram hologram;
 
     private final Action action;
+
+    public int secondsLeft() {
+        return this.secondsLeft;
+    }
 
     public Countdown(final JavaPlugin plugin, final int seconds, Location location, Action action) {
 
@@ -37,6 +44,9 @@ public class Countdown extends BukkitRunnable {
 
 
         this.hologram = DHAPI.createHologram(hologramName, location, Arrays.asList(" ", " "));
+
+        countdowns.put(hologramName, this);
+
         hologram.register();
         hologram.showAll();
     }
@@ -88,11 +98,17 @@ public class Countdown extends BukkitRunnable {
 
     public void killTask() {
 
+        countdowns.remove(this.hologram.getName());
+
         hologram.getLocation().getWorld().spawnParticle(Particle.CLOUD, hologram.getLocation(), 120, 2, 2 ,2, 0.005);
         hologram.destroy();
         hologram.unregister();
 
         Bukkit.getScheduler().cancelTask(this.assignedTaskId);
+    }
+
+    public void fastForward() {
+        this.secondsLeft = 0;
     }
 
     public void scheduleTimer() {

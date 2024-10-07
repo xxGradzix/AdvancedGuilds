@@ -50,10 +50,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InvalidObjectException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 
 public class GuildHideOutController {
@@ -253,9 +250,14 @@ public class GuildHideOutController {
             Bukkit.broadcastMessage("Zakupiono ulepszenie: " + upgrade.name()); // TODO CHANGE MESSAGE
             Location loc = new Location(Bukkit.getWorld(hideout.getWorldName()), 0, 100, 0);
             paste(loc, upgradePattern.getSchemFile());
+
+            upgradeHolder.setFinished();
+
+            hideout.setUpgradeHolder(upgrade, upgradeHolder);
+
+            hideout.getUpgradeHolder(upgrade);
             GuildHideOutDataManager.updateHideOut(hideout);
-            // TODO change
-//            resetNpcsForHideOut(hideout);
+
             try {
                 prepareHideOutHologramsAndNpcs(hideout);
             } catch (InvalidObjectException e) {
@@ -397,7 +399,6 @@ public class GuildHideOutController {
         blackMarketDealerDTO = new SkinPersistentDTO("64c46b20", "eEQ7IViA3+UtVRQbbGzZ+EP/vguj5dzcP1HUzeJEKgu5vHvj7HFxkSwHQkSWMXFKpxyYoxU0LnlYoZe2Ng15M1TNbxnYB8Y28afXOUEbOBrHlY0X/D+C9/iZ1Rdb1lpdk/QYJtER2NDxyUFJsGESKUVQA5JSvVaeOCGRSl4CfDzkQe7NuWlRpSUbHpDQsWJ9lwxk3dSwYqRF1cbuZtkgotDYvtdQ1FEYEoRaJr5FDXfLeGr6bkXPQEPxnFeVFhBZizVC7ego8yhmP89m3M7z8frempeG2P/kqZY0dPdlgdRd+WdwhL8KX+Y9GLlndEcGwclMHgb0J9E8U5PQ32e6MY8cusxiRSpguEcTdlWvtZTR7x8gRoGA6Lsky7QrCC9HbkhZ2KTRkivcitBmIvxVPNlWmEL72UV9aTiXwmljXD14NCZF9bGYW5fBMTLPoazfZK7a5c7AXtn7B2ZZ1NvYnHA6bMg4lmWgDRMes+Zq26GHWRMRpoETO780sAxqtcZIo4t5tZPm+DfDbtpDrm4VKQyjjZ3s42tyAWU1UL/YidB/rcGO4T7R4pRyzNVaPvmtMKRhudaxaUooPHIOAPKVhx9tfdtPGDb8L7GtHxKpLCbp5+gQJ9WvomAneAcTU2YbM6/IPLxDa0cXcf4I8Z4peALJUFVPt7crRs12FBPm8TY=", "ewogICJ0aW1lc3RhbXAiIDogMTcyODIzNjcwMzEwNiwKICAicHJvZmlsZUlkIiA6ICJjMjVlMWMxZTE1YTQ0N2IwOTQ2Zjg2YzYzYzhjYjZkOCIsCiAgInByb2ZpbGVOYW1lIiA6ICJiaWdpYm9zMzIxIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2VmNWQ5ZjEwYzJhZmIyN2I1YjVmYWIwMzFhZWMyMjcwZGYxMTUyY2NhYzdiZDhjMTA5YTJmZTFkNmIxMzQwMTkiCiAgICB9CiAgfQp9");
         arenaMasterDTO = new SkinPersistentDTO("338f8012", "e/6VycZ9E6BIJzir553LdxFgnfIo7qSLkk3TJ4q+tfiN0cArWBNbnBehol3WYOHkuQzZCgsul2LMujk7PtsTsEyyRvnMmoWdX22xQqyAKLLoh/MoXNcxkWFbOgfS9209gFjDr+tse1FDmgnXhtpTli4ZZXl9V2wH+HdtTuvUcCOSTMlAfW8bpei4dZU9XTsznZQngdZRFJ4q3XGaiG+hNJGvUYEpVVxr8ASMgukVrO516uO6etdlCZOWOZty0RBysUwBw92jRK43nl1Ns+sc2789Pv16QXqdS/MXIa6LN77fZXkRd/G8+byHzH65IAw8MYxL0Yzokwvb7Lqij3wlDFylXbuZVL3iAuBNhlrkwVuOBVIctqGXhur3u7nEfEFvqnGA/qc58+4xGF+d3bIncE+R7w95gSK1tIJMMQV8WJCbUNME2SVjubf4wxUnzPQp6LGYJFy2a5werDMcw5vU6XAqdAnqzw89TSrB99ksp+tIvy89Er7A+A4W5lcc7zy7euZRPX+p9pLRh4/tJyNQLFoPEIHhtJ51BNfoLvQh2sly52y9XceqYfzeDXadpbwBAgvAGaoFuPa4BpT9ZBwuzZWK0UlopgI2erO1EoXVCJPYKMfbcYWZ8/z8UfRJbuks7n6OZUhpud6yvO6+gRTW98G/uF1S22lnJhMuaAQp3Yw=", "ewogICJ0aW1lc3RhbXAiIDogMTY2OTg3NjM3OTAxMywKICAicHJvZmlsZUlkIiA6ICI3YzI2YTAxY2U4NjU0NDkzOTA3NzA2OGQxZTA5ZjE5MiIsCiAgInByb2ZpbGVOYW1lIiA6ICJodG93ZXI4IiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzM2MTRhMjY4NWRjZTRlNTkyMWY2MmM2ZDk2ZjlmMjRlNTk5NjI4YzliNTU4NWUyZTllOGM0YzQ5MTU5NTU0ZmYiCiAgICB9CiAgfQp9");
         spawnArenaNpcDTO = new SkinPersistentDTO("498afcab", "yTyaTlyHbZruHT0/06fCHEfwtf7QRmbQAOFeSmqQ5QFWKikrwTXEFq7+62pBM9aFmDzGVNIZ2b5wNd9ZVxKNhkfjKck9SHl3UiI5AvQNfbp6OXNNPeKArdLYvcgRzcddTbHe2yKVRpFVG4UUysCnl1oyk3frWAKTbUBaUwlWDg9HnAeXIVoaXqlNI6stdPwbrUczW/zh6Nb//+HHCEipbdGbU35EB0O3Vp6AlzeV3jn5wT/j8kItQU/m27TwtPA+6Urx8ypzNuTMmUipEMhfnRayqxgPEnssP82Nk02b7yno5vBtLjOU0O7JWLwwTkC2bE6OKXEu46Ul9Vuqwj0OrJDvC9LYn+t74spINNqV1pWCx5z7/LUO2NAyjyoxUjIbRO3NK/BnhtXAycOoKa0Rx6EThcgPeEGiLDaAOu5WNM/BMqYqmTqc9BNdZzzEwKv0Mbyth2XkRuw6sBdKijN+TnegQh1/PkD26+xEscvuC7dWKK0RLD1FxZKhI6j0dNhvq7aEKYuEV7nAvnZyOhrmPGJ4t3G6hJ8uTwxlRORatQUJ7CHlvw3U/Ee/JfdIBjxhDdEcqkoBEqPIP9Dr6ZNqu/06HRGgroDqES3kdTRQTkBWkrmgLShi23V/YE0HKZUdrKe9TfEFXFekSkmoSHlAjrP73b7Torjrk8kNVf1D++8=","eyJ0aW1lc3RhbXAiOjE1ODcxNzI2NTc2NTcsInByb2ZpbGVJZCI6ImIwZDczMmZlMDBmNzQwN2U5ZTdmNzQ2MzAxY2Q5OGNhIiwicHJvZmlsZU5hbWUiOiJPUHBscyIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDU4NWRhNjA2Yzc5NTZmNmE4YjI0NzRjYTM5N2UwZTFlMTg1NTc0YjYyMmY5YTJlNzFlZjIzOWI4NDliNDVhYyIsIm1ldGFkYXRhIjp7Im1vZGVsIjoic2xpbSJ9fX19");
-
     }
 
 
@@ -426,19 +427,16 @@ public class GuildHideOutController {
         final String bookMaker = ColorFixer.addColors("#e6af25ʙᴜᴋᴍᴀᴄʜᴇʀ");
         final String spawnArena = ColorFixer.addColors("#4daac9ᴘʀᴢᴇᴡᴏźɴɪᴋ");
 
-        NPC traderNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, hideoutTrader);
-        NPC witchNPC = NPC_REGISTRY.createNPC(EntityType.WITCH, witch);
-        NPC ventureNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, venture);
-
-        NPC blacksmithNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, blacksmith);
-        NPC sorcererNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, sorcerer);
-        NPC teleportNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, teleport);
-
-        NPC blackMarketDealerNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, blackMarketDealer);
-        NPC spawnArenaNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, spawnArena);
-        NPC bookMakerNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, bookMaker);
-        NPC arenaMasterNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, arenaMaster);
-
+        NPC traderNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, UUID.randomUUID(), 1, hideoutTrader);
+        NPC witchNPC = NPC_REGISTRY.createNPC(EntityType.WITCH, UUID.randomUUID(), 2, witch);
+        NPC ventureNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, UUID.randomUUID(), 3, venture);
+        NPC blacksmithNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, UUID.randomUUID(), 4, blacksmith);
+        NPC sorcererNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, UUID.randomUUID(), 5, sorcerer);
+        NPC teleportNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, UUID.randomUUID(), 6, teleport);
+        NPC blackMarketDealerNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, UUID.randomUUID(), 7, blackMarketDealer);
+        NPC spawnArenaNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, UUID.randomUUID(), 8, spawnArena);
+        NPC bookMakerNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, UUID.randomUUID(), 9, bookMaker);
+        NPC arenaMasterNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, UUID.randomUUID(), 10, arenaMaster);
 
         for (NPC npc : NPC_REGISTRY) {
             npc.getOrAddTrait(LookClose.class).lookClose(true);
@@ -458,8 +456,8 @@ public class GuildHideOutController {
         bookMakerNPC.getOrAddTrait(SkinTrait.class).setSkinPersistent(bookMakerDTO.skinName(), bookMakerDTO.skinSignature(), bookMakerDTO.skinValue());
         arenaMasterNPC.getOrAddTrait(SkinTrait.class).setSkinPersistent(arenaMasterDTO.skinName(), arenaMasterDTO.skinSignature(), arenaMasterDTO.skinValue());
 
-        traderNPC.getOrAddTrait(CommandTrait.class).addCommand(new CommandTrait.NPCCommandBuilder("open shop", CommandTrait.Hand.RIGHT));
-        ventureNPC.getOrAddTrait(CommandTrait.class).addCommand(new CommandTrait.NPCCommandBuilder("stworzkryjowke 4 %player%", CommandTrait.Hand.RIGHT).player(true));
+//        traderNPC.getOrAddTrait(CommandTrait.class).addCommand(new CommandTrait.NPCCommandBuilder("open shop", CommandTrait.Hand.RIGHT));
+//        ventureNPC.getOrAddTrait(CommandTrait.class).addCommand(new CommandTrait.NPCCommandBuilder("stworzkryjowke 4 %player%", CommandTrait.Hand.RIGHT).player(true));
 
         traderNPC.spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), -7.5 , 97, -48.5));
         witchNPC.spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), 6.5 , 97, -49.5));
@@ -486,4 +484,5 @@ public class GuildHideOutController {
     public GuildHideout getHideoutByLocation(Location location) {
         return GuildHideOutDataManager.getHideOutByLocation(location);
     }
+
 }

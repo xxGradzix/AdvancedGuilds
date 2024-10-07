@@ -16,7 +16,7 @@ public class ArenaUpgradePattern implements UpgradePattern {
     public ArenaUpgradePattern(JavaPlugin plugin) {
         this.schemFile = new File(plugin.getDataFolder().getAbsolutePath() + "/upgrade-arena.schem");
         this.price = 1_000;
-        this.coolDown = 20;
+        this.coolDown = 20 * 60 * 60;
     }
 
     @Override

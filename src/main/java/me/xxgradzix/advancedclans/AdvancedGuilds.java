@@ -32,11 +32,8 @@ import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expediti
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition.ExpeditionGui;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.storage.HideoutStorage;
 import me.xxgradzix.advancedclans.listener.*;
-import me.xxgradzix.advancedclans.listener.guildHideOut.HideOutUpgrade;
+import me.xxgradzix.advancedclans.listener.guildHideOut.*;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.ClanController;
-import me.xxgradzix.advancedclans.listener.guildHideOut.HideoutOccupyBlockPlace;
-import me.xxgradzix.advancedclans.listener.guildHideOut.HideoutStorageChestClick;
-import me.xxgradzix.advancedclans.listener.guildHideOut.HideoutTeleportBlockClick;
 import me.xxgradzix.advancedclans.manager.CooldownManager;
 import me.xxgradzix.advancedclans.data.database.controllers.hideouts.GuildHideOutController;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.UserController;
@@ -63,8 +60,6 @@ public final class AdvancedGuilds extends JavaPlugin {
     public static AdvancedGuilds instance;
 
     private static Economy econ;
-
-    // manager
 
     private CooldownManager cooldownManager;
 
@@ -98,8 +93,6 @@ public final class AdvancedGuilds extends JavaPlugin {
     private Config config;
     private ConnectionSource connectionSource;
 
-
-
     Properties loadConfig() {
         Properties prop = new Properties();
         InputStream input = getClass().getClassLoader().getResourceAsStream("application.properties");
@@ -120,6 +113,7 @@ public final class AdvancedGuilds extends JavaPlugin {
 
         return prop;
     }
+
     public void configureDB() throws SQLException, IOException {
         Properties config = loadConfig();
 
@@ -135,7 +129,6 @@ public final class AdvancedGuilds extends JavaPlugin {
         TableUtils.createTableIfNotExists(connectionSource, VentureReward.class);
         TableUtils.createTableIfNotExists(connectionSource, PersonalStorageEntity.class);
         TableUtils.createTableIfNotExists(connectionSource, GuildlStorageEntity.class);
-
 
         clanEntityRepository = new ClanEntityRepository(connectionSource);
         userEntityRepository = new UserEntityRepository(connectionSource);
@@ -158,8 +151,8 @@ public final class AdvancedGuilds extends JavaPlugin {
             return;
         }
 
-
         instance = this;
+
         ItemManager.init();
 
         try {
@@ -177,7 +170,6 @@ public final class AdvancedGuilds extends JavaPlugin {
             });
         } catch (Exception exception) {
             this.getLogger().log(Level.SEVERE, "Error loading messages.yml", exception);
-            this.getPluginLoader().disablePlugin(this);
             return;
         }
         try {
@@ -189,7 +181,6 @@ public final class AdvancedGuilds extends JavaPlugin {
             });
         } catch (Exception exception) {
             this.getLogger().log(Level.SEVERE, "Error loading config.yml", exception);
-            this.getPluginLoader().disablePlugin(this);
             return;
         }
 
@@ -234,7 +225,6 @@ public final class AdvancedGuilds extends JavaPlugin {
         clansController.loadAllClans();
         userController.loadAllUsers();
 
-
         Stream.of(
                 new PlayerConnectionListener(this, cooldownManager, userController),
                 new PlayerDeathListener(this, userController),
@@ -244,8 +234,9 @@ public final class AdvancedGuilds extends JavaPlugin {
                 new HideOutUpgrade(guildHideOutController),
                 new HideoutTeleportBlockClick(guildHideOutController),
                 new HideoutOccupyBlockPlace(guildHideOutController),
-                new HideoutStorageChestClick()
-
+                new HideoutStorageChestClick(),
+                new InteractWithNpcEvent(),
+                new DHAPIHologramClickEvent()
         ).forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
 
         getCommand("klan").setExecutor(new ClanCommand(clansController));

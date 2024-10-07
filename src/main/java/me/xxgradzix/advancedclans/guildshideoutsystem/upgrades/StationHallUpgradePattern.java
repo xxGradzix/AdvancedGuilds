@@ -16,7 +16,7 @@ public class StationHallUpgradePattern implements UpgradePattern {
     public StationHallUpgradePattern(JavaPlugin plugin) {
         this.schemFile = new File(plugin.getDataFolder().getAbsolutePath() + "/upgrade-station-hall.schem");
         this.price = 10_000;
-        this.coolDown = 25;
+        this.coolDown = 10 * 60 * 60;
     }
 
     @Override

@@ -349,13 +349,13 @@ public class ItemManager {
         ItemStack item = new ItemStack(Material.NAME_TAG);
         ItemMeta itemMeta = item.getItemMeta();
         if(chance < 0.35) {
-            itemMeta.setCustomModelData(3);
+            itemMeta.setCustomModelData(1003);
             itemMeta.setDisplayName(ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: &4ᴛʀᴜᴅɴʏ &8&l[&4" + (int)(chance * 100) + "%&8&l]"));
         } else if (chance < 0.55) {
-            itemMeta.setCustomModelData(2);
+            itemMeta.setCustomModelData(1002);
             itemMeta.setDisplayName(ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: &eśʀᴇᴅɴɪ &8&l[&e" + (int)(chance * 100) + "%&8&l]"));
         } else {
-            itemMeta.setCustomModelData(1);
+            itemMeta.setCustomModelData(1001);
             itemMeta.setDisplayName(ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: &aŁᴀᴛᴡʏ &8&l[&a" + (int)(chance * 100) + "%&8&l]"));
         }
 
@@ -390,13 +390,13 @@ public class ItemManager {
                 item = new ItemStack(Material.NAME_TAG);
                 switch (variant.getLevel()) {
                     default -> {
-                        customModelData = 1;
+                        customModelData = 1001;
                     }
                     case 2 -> {
-                        customModelData = 2;
+                        customModelData = 1002;
                     }
                     case 3 -> {
-                        customModelData = 3;
+                        customModelData = 1003;
                     }
                 }
             }

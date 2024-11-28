@@ -1,0 +1,21 @@
+name: AdvancedGuilds
+version: '1.0-SNAPSHOT'
+main: me.xxgradzix.advancedclans.AdvancedGuilds
+api-version: '1.17'
+
+depend: [FastAsyncWorldEdit, Vault, Citizens]
+
+commands:
+  klan:
+    description: klan
+
+  gracz:
+    description: gracz
+
+  stworzkryjowke:
+    description: dla admina
+    permission: advancedclans.admin
+
+  ekspedycja:
+    description: dla admia
+    permission: advancedclans.admin

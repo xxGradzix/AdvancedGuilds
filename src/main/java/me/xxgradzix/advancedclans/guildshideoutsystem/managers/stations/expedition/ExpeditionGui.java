@@ -15,6 +15,7 @@ import me.xxgradzix.advancedclans.data.database.services.hideout.VentureRewardDa
 import me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.messages.MessageType;
+import me.xxgradzix.advancedclans.utils.ColorFixer;
 import me.xxgradzix.advancedclans.utils.ItemUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -48,8 +49,6 @@ public class ExpeditionGui {
         }
         variants.sort(Comparator.comparingInt(ExpeditionVariant::getLevel));
     }
-
-    private static final HashMap<Player, ExpeditionDto> expeditionStatus = new HashMap<>();
 
     private static GuildHideOutController hideOutController;
     private static ClanController clanController;
@@ -90,17 +89,10 @@ public class ExpeditionGui {
             return;
         }
 
-        ExpeditionDto expeditionDto = expeditionStatus.getOrDefault(player, null);
+        ExpeditionDto expeditionDto = ExpeditionManager.getExpeditionDtoByPlayer(player);
 
-        if(expeditionStatus.get(player) != null) {
-//            if(expeditionDto.isFinished()) {
-//                openFinishedExpeditionGui(player);
-                openCurrentExpeditionGui(player);
-//            }
-//            else {
-//                MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_PENDING, MessageType.CHAT);
-//                MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_WILL_END_IN.replace("{timeleft}", MessageManager.secondsToTimeFormat(expeditionDto.secondsToCompletion())), MessageType.CHAT);
-//            }
+        if(expeditionDto != null) {
+            openCurrentExpeditionGui(player);
             return;
         }
         ventureChooseGui(player);
@@ -119,16 +111,13 @@ public class ExpeditionGui {
 
         if(variants.isEmpty()) shuffleExpeditions();
 
-//        Bukkit.broadcastMessage("Variants: " + variants.size());
         for(ExpeditionVariant variant : variants) {
-//            Bukkit.broadcastMessage("var");
             for (int i = 0; i<2; i++) {
                 GuiItem item = new GuiItem(ItemManager.createObjectiveGuiItem(variant, i));
 
                 item.setAction((a) -> venturePreparation(player, variant));
                 int slot = 11 + i + shift + rep * 9;
 
-//                Bukkit.broadcastMessage("Slot " + (i + 1) + ": " + slot);
                 if(slot > 53) break;
                 gui.setItem(slot, item);
             }
@@ -272,19 +261,49 @@ public class ExpeditionGui {
         startExpedition.setAction((e) -> {
             gui.setCloseGuiAction(null);
 
-            ExpeditionDto expeditionDto = new ExpeditionDto(chance.get(), variant.getLevel(), variant.getObjective(), cooldownSeconds.get());
+            ExpeditionDto expeditionDto = new ExpeditionDto(chance.get(), variant.getLevel(), variant.getObjective(), foodTier.get(), toolTier.get(), cooldownSeconds.get());
 
-            player.sendMessage("Expedition started with chance  " + chance); // TODO MESSAGE
+            String color = "&7";
+            String level = "";
+            if(chance.get() < 0.35) {
+                color = "&4";
 
-            expeditionStatus.put(player, expeditionDto);
+            } else if (chance.get() < 0.55) {
+                color = "&e";
+
+            } else {
+                color = "&a";
+
+            }
+
+            switch (expeditionDto.getExpeditionLevel()) {
+                case 1 -> level = "&aŁᴀᴛᴡʏ";
+                case 2 -> level = "&eśʀᴇᴅɴɪ";
+                case 3 -> level = "&4ᴛʀᴜᴅɴʏ";
+            }
+
+            player.sendMessage(ColorFixer.addColors("§7ᴇᴋꜱᴘᴇᴅʏᴄᴊᴀ ᴢᴏꜱᴛᴀłᴀ ᴡʏꜱłᴀɴᴀ!"));
+            player.sendMessage(ColorFixer.addColors("§7ᴄᴇʟ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: " + variant.getObjective().getName()));
+            player.sendMessage(ColorFixer.addColors("§7ᴘᴏᴢɪᴏᴍ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ: " + level));
+            player.sendMessage(ColorFixer.addColors("§7ꜱᴢᴀɴꜱᴀ ᴘᴏᴡᴏᴅᴢᴇɴɪᴀ: " + color + chance.get() + "&7%"));
+
+            player.sendMessage(" ");
+
+            player.sendMessage(ColorFixer.addColors("§7ᴀᴋᴛʏᴡɴᴇ ᴜʟᴇᴘꜱᴢᴇɴɪᴀ:"));
+
+            String toolSupply = expeditionDto.getToolsSuplied() == 0 ? "&c&l✗" : "&7ɴᴀʀᴢęᴅᴢɪᴀ " + MessageManager.getRomanNumerals(expeditionDto.getToolsSuplied()) + " &7ᴛɪᴇʀᴜ";
+            player.sendMessage(ColorFixer.addColors("§6• ɴᴀʀᴢęᴅᴢɪᴀ: " + toolSupply));
+
+            String foodSupply = expeditionDto.getToolsSuplied() == 0 ? "&c&l✗" : "&7ᴊᴇᴅᴢᴇɴɪᴇ " + MessageManager.getRomanNumerals(expeditionDto.getToolsSuplied()) + " &7ᴛɪᴇʀᴜ";
+            player.sendMessage(ColorFixer.addColors("§6• ᴊᴇᴅᴢᴇɴɪᴇ: " + foodSupply));
+
+            ExpeditionManager.addExpeditionDtoByPlayer(player, expeditionDto);
 
             gui.close(player);
         });
 
         List<VentureReward> rewards = expeditionRewards.getOrDefault(variant.getObjective(), new HashMap<>()).getOrDefault(variant.getLevel(), new ArrayList<>());
-        Bukkit.broadcastMessage("OBjectibe " + variant.getObjective());
-        Bukkit.broadcastMessage("Level " + variant.getLevel());
-        Bukkit.broadcastMessage("Rewards: " + rewards.size());
+
         for (int i = 5; i <=8; i++) {
             if(i-5 >= rewards.size()) break;
             ItemStack reward = rewards.get(i-5).getReward();
@@ -328,7 +347,7 @@ public class ExpeditionGui {
 
     private static void openCurrentExpeditionGui(Player player) {
 
-        ExpeditionDto expeditionDto = expeditionStatus.get(player);
+        ExpeditionDto expeditionDto = ExpeditionManager.getExpeditionDtoByPlayer(player);
         if(expeditionDto == null) return;
 
         Gui gui = Gui.gui()
@@ -361,6 +380,7 @@ public class ExpeditionGui {
                         expeditionDto.setForceFinish(true);
                         MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_FORCED, MessageType.CHAT);
                         openCurrentExpeditionGui(player);
+
                     }
                 }
             }
@@ -394,7 +414,7 @@ public class ExpeditionGui {
                 } else {
                     MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_FAILED, MessageType.CHAT);
                 }
-                expeditionStatus.remove(player);
+                ExpeditionManager.removePlayerExpeditionDTO(player);
                 gui.close(player);
 
             } else {

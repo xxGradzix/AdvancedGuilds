@@ -540,19 +540,7 @@ public class ItemManager {
         itemMeta.addItemFlags(ItemFlag.HIDE_DESTROYS);
         itemMeta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        String romeNum = "";
-        switch (num) {
-            case 1 -> romeNum = "ɪ";
-            case 2 -> romeNum = "ɪɪ";
-            case 3 -> romeNum = "ɪɪɪ";
-            case 4 -> romeNum = "ɪᴠ";
-            case 5 -> romeNum = "ᴠ";
-            case 6 -> romeNum = "ᴠɪ";
-            case 7 -> romeNum = "ᴠɪɪ";
-            case 8 -> romeNum = "ᴠɪɪɪ";
-            case 9 -> romeNum = "ɪx";
-            case 10 -> romeNum = "x";
-        }
+        String romeNum = MessageManager.getRomanNumerals(num);
         itemMeta.setDisplayName(ColorFixer.addColors("&7&lᴍᴀɢᴀᴢʏɴ #a18b3d" + romeNum));
 
         ArrayList<String> lore = new ArrayList<>();

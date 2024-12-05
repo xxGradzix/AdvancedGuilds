@@ -7,6 +7,8 @@ import eu.decentsoftware.holograms.event.HologramClickEvent;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
 import me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.Countdown;
+import me.xxgradzix.advancedclans.messages.MessageManager;
+import me.xxgradzix.advancedclans.messages.MessageType;
 import me.xxgradzix.advancedclans.utils.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -32,11 +34,11 @@ public class DHAPIHologramClickEvent implements Listener {
 
     // TODO Extract this method
 
-    private void fastForward(Countdown countdown, Player player) {
+    private void fastForward(Countdown countdown, Player player, String whatToFastForwardFormated) {
 
         ItemStack targetItem = ItemManager.getPremiumGuildCoin();
 
-        Gui gui = new Gui(3, "Przyspiesz");
+        Gui gui = new Gui(3, "ᴘʀᴢʏꜱᴘɪᴇꜱᴢ");
         gui.disableAllInteractions();
 
         GuiItem expeditionItem = new GuiItem(ItemManager.getCurrentCooldownItem(countdown.secondsLeft()));
@@ -48,7 +50,9 @@ public class DHAPIHologramClickEvent implements Listener {
             int currentAmount = ItemUtil.calcItemAmount(player, targetItem);
 
             if(currentAmount < requiredAmount) {
-                player.sendMessage("You need " + requiredAmount + " " + targetItem.getItemMeta().getDisplayName() + " to fast forward the countdown");
+
+                MessageManager.sendMessageFormated(player, "&7ᴘᴏᴛʀᴢᴇʙᴜᴊᴇꜱᴢ &a" + requiredAmount + " " + targetItem.getItemMeta().getDisplayName() + " &7ᴀʙʏ ᴘʀᴢʏꜱᴘɪᴇꜱᴢʏć " + whatToFastForwardFormated, MessageType.CHAT);
+
                 return;
             }
 

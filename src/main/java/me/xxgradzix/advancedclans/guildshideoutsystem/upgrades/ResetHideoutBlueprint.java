@@ -6,7 +6,7 @@ import org.bukkit.World;
 
 import java.io.File;
 
-public class ResetHideoutPattern implements UpgradePattern{
+public class ResetHideoutBlueprint implements UpgradeBlueprint {
     private static final File file = new File(AdvancedGuilds.instance.getDataFolder().getAbsolutePath() + "/guild.schem");
 
     @Override

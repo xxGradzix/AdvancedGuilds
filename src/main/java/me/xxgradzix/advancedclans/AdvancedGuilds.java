@@ -39,6 +39,7 @@ import me.xxgradzix.advancedclans.data.database.controllers.hideouts.GuildHideOu
 import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.UserController;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.placeholder.ClanPlaceholder;
+import me.xxgradzix.advancedclans.placeholder.VenturePlaceholder;
 import me.xxgradzix.advancedclans.scheduler.TopRankScheduler;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -140,6 +141,7 @@ public final class AdvancedGuilds extends JavaPlugin {
     }
 
     private ClanPlaceholder clanPlaceholder;
+    private VenturePlaceholder  venturePlaceholder;
 
     @Override
     public void onEnable() {
@@ -219,6 +221,8 @@ public final class AdvancedGuilds extends JavaPlugin {
 
         if(getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             clanPlaceholder = new ClanPlaceholder(this, userController, clansController, topRankScheduler);
+
+            venturePlaceholder = new VenturePlaceholder();
         }
 
         guildHideOutController.loadHideOuts();
@@ -234,7 +238,7 @@ public final class AdvancedGuilds extends JavaPlugin {
                 new HideOutUpgrade(guildHideOutController),
                 new HideoutTeleportBlockClick(guildHideOutController),
                 new HideoutOccupyBlockPlace(guildHideOutController),
-                new HideoutStorageChestClick(),
+//                new HideoutStorageChestClick(),
                 new InteractWithNpcEvent(),
                 new DHAPIHologramClickEvent()
         ).forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
@@ -248,10 +252,6 @@ public final class AdvancedGuilds extends JavaPlugin {
 
     }
     private boolean setupEconomy() {
-        Bukkit.broadcastMessage("rsfdsfseef fe   f e              fefefefefefefefefefefefefes");
-        for (@NotNull Plugin plugin : getServer().getPluginManager().getPlugins()) {
-            Bukkit.broadcastMessage("Rlo - " + plugin.getName());
-        }
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
             return false;
         }

@@ -37,7 +37,6 @@ import net.citizensnpcs.api.event.DespawnReason;
 import net.citizensnpcs.api.npc.MemoryNPCDataStore;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
-import net.citizensnpcs.trait.CommandTrait;
 import net.citizensnpcs.trait.LookClose;
 import net.citizensnpcs.trait.SkinTrait;
 import org.bukkit.Bukkit;
@@ -59,9 +58,9 @@ public class GuildHideOutController {
 
     private final AdvancedGuilds plugin;
 
-    public static final HashMap<GuildHideout.Upgrade, UpgradePattern> upgradePatterns = new HashMap<>();
+    public static final HashMap<GuildHideout.Upgrade, UpgradeBlueprint> upgradePatterns = new HashMap<>();
 
-    public UpgradePattern getUpgradePattern(GuildHideout.Upgrade upgrade) {
+    public UpgradeBlueprint getUpgradeBlueprint(GuildHideout.Upgrade upgrade) {
         return upgradePatterns.get(upgrade);
     }
 
@@ -70,28 +69,28 @@ public class GuildHideOutController {
         this.plugin = plugin;
 
         {
-            UpgradePattern stationHallUpgrade = new StationHallUpgradePattern(plugin);
+            UpgradeBlueprint stationHallUpgrade = new StationHallUpgradeBlueprint(plugin);
             upgradePatterns.put(GuildHideout.Upgrade.STATION_HALL, stationHallUpgrade);
 
-            UpgradePattern blacksmithUpgrade = new BlackSmithUpgradePattern(plugin);
+            UpgradeBlueprint blacksmithUpgrade = new BlackSmithUpgradeBlueprint(plugin);
             upgradePatterns.put(GuildHideout.Upgrade.BLACKSMITH, blacksmithUpgrade);
 
-            UpgradePattern resetPattern = new ResetHideoutPattern();
+            UpgradeBlueprint resetPattern = new ResetHideoutBlueprint();
             upgradePatterns.put(GuildHideout.Upgrade.RESET, resetPattern);
 
-            UpgradePattern venturePattern = new VentureUpgradePattern(plugin);
+            UpgradeBlueprint venturePattern = new VentureUpgradeBlueprint(plugin);
             upgradePatterns.put(GuildHideout.Upgrade.VENTURE, venturePattern);
 
-            UpgradePattern sorcererUpgradePattern = new SorcererUpgradePattern(plugin);
-            upgradePatterns.put(GuildHideout.Upgrade.SORCERER, sorcererUpgradePattern);
+            UpgradeBlueprint sorcererUpgradeBlueprint = new SorcererUpgradeBlueprint(plugin);
+            upgradePatterns.put(GuildHideout.Upgrade.SORCERER, sorcererUpgradeBlueprint);
 
-            UpgradePattern outpostPodest = new OutpostPodestPattern(plugin);
+            UpgradeBlueprint outpostPodest = new OutpostPodestBlueprint(plugin);
             upgradePatterns.put(GuildHideout.Upgrade.OUTPOST_PODEST, outpostPodest);
 
-            UpgradePattern outpostHut = new OutpostHutPattern(plugin);
+            UpgradeBlueprint outpostHut = new OutpostHutBlueprint(plugin);
             upgradePatterns.put(GuildHideout.Upgrade.OUTPOST_HUT, outpostHut);
 
-            UpgradePattern arenaUpgrade = new ArenaUpgradePattern(plugin);
+            UpgradeBlueprint arenaUpgrade = new ArenaUpgradeBlueprint(plugin);
             upgradePatterns.put(GuildHideout.Upgrade.ARENA, arenaUpgrade);
 
         }
@@ -152,6 +151,7 @@ public class GuildHideOutController {
         } catch (ClanDoesNotExistException | PlayerDoesNotBelongToClanException e) {
             MessageManager.sendMessageFormated(player, MessageManager.YOU_DONT_BELONG_TO_THIS_HIDEOUT, MessageType.CHAT);
         }
+
     }
 
     public GuildHideout getPlayerHideOut(Player player) {
@@ -162,7 +162,6 @@ public class GuildHideOutController {
         } catch (InvalidObjectException e) {
             throw new RuntimeException(e);
         }
-
 
         User user = optionalUser.get();
 
@@ -178,13 +177,14 @@ public class GuildHideOutController {
         World world = Bukkit.getWorld(worldName);
 
         if(world == null) throw new InvalidObjectException("World " + worldName + " does not exist");
+
         if(!world.getName().startsWith("guild_")) throw new InvalidHideoutWorldNameException();
 
         GuildHideout guildHideout = GuildHideOutDataManager.resetOrCreateHideOut(worldName);
 
         Location loc = new Location(world, 0, 100, 0);
 
-        UpgradePattern pattern = upgradePatterns.get(GuildHideout.Upgrade.RESET);
+        UpgradeBlueprint pattern = upgradePatterns.get(GuildHideout.Upgrade.RESET);
         paste(loc, pattern.getSchemFile());
         prepareHideOutHologramsAndNpcs(guildHideout);
     }
@@ -193,14 +193,14 @@ public class GuildHideOutController {
 
         UpgradeInfoHolder upgradeHolder = hideout.getUpgradeHolder(upgrade);
 
-        final UpgradePattern upgradePattern = upgradePatterns.get(upgrade);
+        final UpgradeBlueprint upgradeBlueprint = upgradePatterns.get(upgrade);
 
-        if(upgradePattern == null){
+        if(upgradeBlueprint == null){
             Bukkit.getLogger().log(Level.SEVERE, "Error: Upgrade pattern not found for upgrade: " + upgrade.name());
             return;
         }
 
-        final int upgradeTimeSeconds = upgradePattern.getCoolDown();
+        final int upgradeTimeSeconds = upgradeBlueprint.getCoolDown();
 
         if(upgradeHolder == null){
             upgradeHolder = new UpgradeInfoHolder( (System.currentTimeMillis() + 1000L * upgradeTimeSeconds), true);
@@ -238,18 +238,19 @@ public class GuildHideOutController {
             return;
         }
 
-        final UpgradePattern upgradePattern = upgradePatterns.get(upgrade);
+        final UpgradeBlueprint upgradeBlueprint = upgradePatterns.get(upgrade);
 
-        if(upgradePattern == null){
+        if(upgradeBlueprint == null){
             Bukkit.getLogger().log(Level.SEVERE, "Error: Upgrade pattern not found for upgrade: " + upgrade.name());
             return;
         }
 
-        Countdown countdown = new Countdown(plugin, Math.toIntExact(timeToCompletionSeconds)+1, upgradePattern.getHologramLocation(Bukkit.getWorld(hideout.getWorldName())), () -> {
+        Countdown countdown = new Countdown(plugin, Countdown.HologramType.GUILD_UPGRADE, Math.toIntExact(timeToCompletionSeconds)+1, upgradeBlueprint.getHologramLocation(Bukkit.getWorld(hideout.getWorldName())), () -> {
 
-            Bukkit.broadcastMessage("Zakupiono ulepszenie: " + upgrade.name()); // TODO CHANGE MESSAGE
+            Bukkit.broadcastMessage("Zakupiono ulepszenie: " + upgrade.name()); //  TODO CHANGE MESSAGE
+
             Location loc = new Location(Bukkit.getWorld(hideout.getWorldName()), 0, 100, 0);
-            paste(loc, upgradePattern.getSchemFile());
+            paste(loc, upgradeBlueprint.getSchemFile());
 
             upgradeHolder.setFinished();
 
@@ -443,6 +444,8 @@ public class GuildHideOutController {
             npc.getOrAddTrait(LookClose.class).setRange(35);
             npc.data().setPersistent(NPC.Metadata.ALWAYS_USE_NAME_HOLOGRAM, true);
             npc.scheduleUpdate(NPC.NPCUpdate.PACKET);
+            npc.setUseMinecraftAI(false);
+            npc.setProtected(true);
         }
 
         traderNPC.getOrAddTrait(SkinTrait.class).setSkinPersistent(traderDTO.skinName(), traderDTO.skinSignature(), traderDTO.skinValue());
@@ -455,9 +458,6 @@ public class GuildHideOutController {
         spawnArenaNPC.getOrAddTrait(SkinTrait.class).setSkinPersistent(spawnArenaNpcDTO.skinName(), spawnArenaNpcDTO.skinSignature(), spawnArenaNpcDTO.skinValue());
         bookMakerNPC.getOrAddTrait(SkinTrait.class).setSkinPersistent(bookMakerDTO.skinName(), bookMakerDTO.skinSignature(), bookMakerDTO.skinValue());
         arenaMasterNPC.getOrAddTrait(SkinTrait.class).setSkinPersistent(arenaMasterDTO.skinName(), arenaMasterDTO.skinSignature(), arenaMasterDTO.skinValue());
-
-//        traderNPC.getOrAddTrait(CommandTrait.class).addCommand(new CommandTrait.NPCCommandBuilder("open shop", CommandTrait.Hand.RIGHT));
-//        ventureNPC.getOrAddTrait(CommandTrait.class).addCommand(new CommandTrait.NPCCommandBuilder("stworzkryjowke 4 %player%", CommandTrait.Hand.RIGHT).player(true));
 
         traderNPC.spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), -7.5 , 97, -48.5));
         witchNPC.spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), 6.5 , 97, -49.5));

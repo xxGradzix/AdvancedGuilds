@@ -5,7 +5,7 @@ import org.bukkit.World;
 
 import java.io.File;
 
-public interface UpgradePattern {
+public interface UpgradeBlueprint {
 
     File getSchemFile();
 

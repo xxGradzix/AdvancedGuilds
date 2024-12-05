@@ -19,6 +19,7 @@ public class MessageManager extends OkaeriConfig {
 
     @Comment("Player not online")
     public static String PLAYER_NOT_ONLINE = "&7ɢʀᴀᴄᴢ ɴɪᴇ ᴊᴇsᴛ ᴏɴʟɪɴᴇ";
+
     @Comment("Clan not found message, argument: #a18b3d{clan}&7")
     public static String CLAN_NOT_FOUND = "&7ᴋʟᴀɴ #a18b3d{clan}&7 ɴɪᴇ ᴢᴏsᴛᴀʟ ᴢɴᴀʟᴇᴢɪᴏɴʏ";
 
@@ -302,6 +303,24 @@ public class MessageManager extends OkaeriConfig {
                 Bukkit.broadcastMessage(message);
                 break;
         }
+    }
+
+    public static String getRomanNumerals(int num) {
+        String romeNum = "";
+        switch (num) {
+            case 0 -> romeNum = "";
+            case 1 -> romeNum = "&7ɪ";
+            case 2 -> romeNum = "#877239ɪɪ";
+            case 3 -> romeNum = "#68c473ɪɪɪ";
+            case 4 -> romeNum = "#4c7ca1ɪᴠ";
+            case 5 -> romeNum = "#a30005ᴠ";
+            case 6 -> romeNum = "&fᴠɪ";
+            case 7 -> romeNum = "ᴠɪɪ";
+            case 8 -> romeNum = "ᴠɪɪɪ";
+            case 9 -> romeNum = "ɪx";
+            case 10 -> romeNum = "x";
+        }
+        return ColorFixer.addColors(romeNum);
     }
 
     public static String secondsToTimeFormat(int seconds) {

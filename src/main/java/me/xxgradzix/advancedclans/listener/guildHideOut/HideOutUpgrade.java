@@ -6,7 +6,7 @@ import eu.decentsoftware.holograms.api.DHAPI;
 import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideout;
 import me.xxgradzix.advancedclans.exceptions.hideOuts.UpgradeWasNotBoughtException;
 import me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager;
-import me.xxgradzix.advancedclans.guildshideoutsystem.upgrades.UpgradePattern;
+import me.xxgradzix.advancedclans.guildshideoutsystem.upgrades.UpgradeBlueprint;
 import me.xxgradzix.advancedclans.data.database.controllers.hideouts.GuildHideOutController;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.messages.MessageType;
@@ -64,7 +64,7 @@ public class HideOutUpgrade implements Listener {
                 .title(Component.text("Ulepszenia kryjowki")) //TODO Gui name
                 .create();
 
-        UpgradePattern upgradePattern = guildHideOutController.getUpgradePattern(GuildHideout.Upgrade.STATION_HALL);
+        UpgradeBlueprint upgradeBlueprint = guildHideOutController.getUpgradeBlueprint(GuildHideout.Upgrade.STATION_HALL);
 
         /** MAIN HALL UPGRADES **/
 
@@ -76,7 +76,7 @@ public class HideOutUpgrade implements Listener {
             timeToStationHallUpgradeCompletionSeconds = -1;
         }
 
-        GuiItem hallItem = new GuiItem(ItemManager.getMainHallUpgradeButton(upgradePattern.getPrice(), playerHideOut.hasBoughtUpgrade(stationHallUpgrade), playerHideOut.hasBoughtUpgrade(stationHallUpgrade), timeToStationHallUpgradeCompletionSeconds));
+        GuiItem hallItem = new GuiItem(ItemManager.getMainHallUpgradeButton(upgradeBlueprint.getPrice(), playerHideOut.hasBoughtUpgrade(stationHallUpgrade), playerHideOut.hasBoughtUpgrade(stationHallUpgrade), timeToStationHallUpgradeCompletionSeconds));
         hallItem.setAction(inventoryClickEvent -> {
             if(playerHideOut.hasBoughtUpgrade(stationHallUpgrade) && playerHideOut.hasFinishedUpgrade(stationHallUpgrade)) {
                 openMainHallUpgrades(player, playerHideOut);
@@ -102,7 +102,7 @@ public class HideOutUpgrade implements Listener {
         } catch (UpgradeWasNotBoughtException e) {
             timeToArenaUpgradeCompletionSeconds = -1;
         }
-        GuiItem arenaItem = new GuiItem(ItemManager.getArenaUpgradeButton(upgradePattern.getPrice(), playerHideOut.hasBoughtUpgrade(arenaUpgrade), playerHideOut.hasBoughtUpgrade(arenaUpgrade), timeToArenaUpgradeCompletionSeconds));
+        GuiItem arenaItem = new GuiItem(ItemManager.getArenaUpgradeButton(upgradeBlueprint.getPrice(), playerHideOut.hasBoughtUpgrade(arenaUpgrade), playerHideOut.hasBoughtUpgrade(arenaUpgrade), timeToArenaUpgradeCompletionSeconds));
         arenaItem.setAction(inventoryClickEvent -> {
             //TODO ARENA MANAGEMENT LOGIC
             if(playerHideOut.hasBoughtUpgrade(arenaUpgrade) && !playerHideOut.hasFinishedUpgrade(arenaUpgrade)) {
@@ -131,9 +131,9 @@ public class HideOutUpgrade implements Listener {
 
         for(GuildHideout.Upgrade upgrade : List.of(GuildHideout.Upgrade.BLACKSMITH, GuildHideout.Upgrade.VENTURE, GuildHideout.Upgrade.SORCERER)) {
 
-            UpgradePattern upgradePattern = guildHideOutController.getUpgradePattern(upgrade);
+            UpgradeBlueprint upgradeBlueprint = guildHideOutController.getUpgradeBlueprint(upgrade);
 
-            if(upgradePattern == null) {
+            if(upgradeBlueprint == null) {
                 Bukkit.getLogger().severe("Error: Upgrade pattern not found for upgrade: " + upgrade.name());
                 continue;
             }
@@ -145,7 +145,7 @@ public class HideOutUpgrade implements Listener {
                 timeToCompletionSeconds = -1;
             }
 
-            GuiItem upgradeButton = new GuiItem(ItemManager.getUpgradeButton(upgrade, upgradePattern.getPrice(), playerHideOut.hasBoughtUpgrade(upgrade), playerHideOut.hasFinishedUpgrade(upgrade), timeToCompletionSeconds));
+            GuiItem upgradeButton = new GuiItem(ItemManager.getUpgradeButton(upgrade, upgradeBlueprint.getPrice(), playerHideOut.hasBoughtUpgrade(upgrade), playerHideOut.hasFinishedUpgrade(upgrade), timeToCompletionSeconds));
 
             upgradeButton.setAction(inventoryClickEvent -> {
 

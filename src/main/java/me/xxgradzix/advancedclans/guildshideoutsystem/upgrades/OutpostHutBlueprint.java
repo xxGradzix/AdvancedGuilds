@@ -6,14 +6,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 
-public class OutpostHutPattern implements UpgradePattern {
+public class OutpostHutBlueprint implements UpgradeBlueprint {
 
     private final File schemFile;
     private final int coolDown;
 
     private final int price;
 
-    public OutpostHutPattern(JavaPlugin plugin) {
+    public OutpostHutBlueprint(JavaPlugin plugin) {
         this.schemFile = new File(plugin.getDataFolder().getAbsolutePath() + "/outpost-hut.schem");
         this.price = 0;
         this.coolDown = 0;

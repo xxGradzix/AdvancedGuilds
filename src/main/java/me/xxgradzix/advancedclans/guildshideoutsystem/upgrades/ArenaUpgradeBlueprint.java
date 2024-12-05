@@ -6,17 +6,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 
-public class SorcererUpgradePattern implements UpgradePattern {
+public class ArenaUpgradeBlueprint implements UpgradeBlueprint {
 
     private final File schemFile;
     private final int coolDown;
 
     private final int price;
 
-    public SorcererUpgradePattern(JavaPlugin plugin) {
-        this.schemFile = new File(plugin.getDataFolder().getAbsolutePath() + "/sorcery-station.schem");
+    public ArenaUpgradeBlueprint(JavaPlugin plugin) {
+        this.schemFile = new File(plugin.getDataFolder().getAbsolutePath() + "/upgrade-arena.schem");
         this.price = 1_000;
-        this.coolDown = 5 * 60 * 60;
+        this.coolDown = 20 * 60 * 60;
     }
 
     @Override
@@ -31,17 +31,17 @@ public class SorcererUpgradePattern implements UpgradePattern {
 
     @Override
     public double getHologramLocationX() {
-        return 26.0;
+        return 0.5;
     }
 
     @Override
     public double getHologramLocationY() {
-        return 95.5;
+        return 99.5;
     }
 
     @Override
     public double getHologramLocationZ() {
-        return -38.0;
+        return -54.5;
     }
 
     @Override

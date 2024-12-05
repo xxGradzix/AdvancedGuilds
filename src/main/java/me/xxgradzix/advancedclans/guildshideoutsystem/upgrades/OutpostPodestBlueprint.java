@@ -6,14 +6,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 
-public class OutpostPodestPattern implements UpgradePattern {
+public class OutpostPodestBlueprint implements UpgradeBlueprint {
 
     private final File schemFile;
     private final int coolDown;
 
     private final int price;
 
-    public OutpostPodestPattern(JavaPlugin plugin) {
+    public OutpostPodestBlueprint(JavaPlugin plugin) {
         this.schemFile = new File(plugin.getDataFolder().getAbsolutePath() + "/outpost-podest.schem");
         this.price = 0;
         this.coolDown = 0;

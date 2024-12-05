@@ -16,6 +16,7 @@ public class ExpeditionVariant{
         @Getter
         private final double baseChance;
 
+
         public ExpeditionVariant(ExpeditionDto.ExpeditionObjective objective, int level, long cooldownSeconds) {
             this.objective = objective;
             this.level = level;

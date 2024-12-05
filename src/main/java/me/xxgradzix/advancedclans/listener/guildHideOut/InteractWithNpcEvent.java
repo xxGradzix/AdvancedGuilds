@@ -57,7 +57,7 @@ public class InteractWithNpcEvent implements Listener {
             }
             case 5 -> {
 //                player.sendMessage("Zaklinacz - wkrótce ");
-                AdvancedGuilds.instance.getServer().dispatchCommand(AdvancedGuilds.instance.getServer().getConsoleSender(), "openReforgeGui " + player.getName() + " 1");
+                AdvancedGuilds.instance.getServer().dispatchCommand(AdvancedGuilds.instance.getServer().getConsoleSender(), "openEnchantGui " + player.getName());
 
             }
             case 6 -> {

@@ -2,17 +2,29 @@ package me.xxgradzix.advancedclans.guildshideoutsystem.managers;
 
 import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 public class Countdown extends BukkitRunnable {
+
+    public enum HologramType {
+
+        GUILD_UPGRADE, VENTURE
+
+    }
+
+    //////////////////////
 
     public static final HashMap<String, Countdown> countdowns = new HashMap<>();
 
@@ -26,29 +38,65 @@ public class Countdown extends BukkitRunnable {
 
     private final Action action;
 
+    private Player owner = null;
+    private HologramType hologramType;
+
     public int secondsLeft() {
         return this.secondsLeft;
     }
 
-    public Countdown(final JavaPlugin plugin, final int seconds, Location location, Action action) {
+    public Countdown(final JavaPlugin plugin, HologramType hologramType, final int seconds, Location location, Action action) {
+
 
         this.plugin = plugin;
         this.secondsLeft = seconds;
         this.action = action;
+        this.hologramType = hologramType;
 
-        String hologramName = "guild_" + location.getBlockX() + location.getBlockY() + location.getBlockZ();
+        String hologramName;
 
-        Hologram tempHol = DHAPI.getHologram(hologramName);
-        DHAPI.removeHologram(hologramName);
-        if(tempHol != null) tempHol.unregister();
+        switch (hologramType) {
 
+            case VENTURE -> {
 
-        this.hologram = DHAPI.createHologram(hologramName, location, Arrays.asList(" ", " "));
+                hologramName = "guild_venture_" + location.getBlockX() + location.getBlockY() + location.getBlockZ();
+
+                Hologram tempHol = DHAPI.getHologram(hologramName);
+                DHAPI.removeHologram(hologramName);
+
+                if(tempHol != null) tempHol.unregister();
+
+                this.hologram = DHAPI.createHologram(hologramName, location, Arrays.asList(" ", " "));
+
+            }
+
+            default -> {
+
+                hologramName = "guild_" + location.getBlockX() + location.getBlockY() + location.getBlockZ();
+
+                Hologram tempHol = DHAPI.getHologram(hologramName);
+                DHAPI.removeHologram(hologramName);
+
+                if(tempHol != null) tempHol.unregister();
+
+                this.hologram = DHAPI.createHologram(hologramName, location, Arrays.asList(" ", " "));
+
+            }
+
+        }
 
         countdowns.put(hologramName, this);
 
         hologram.register();
         hologram.showAll();
+    }
+
+    public Countdown(final JavaPlugin plugin, HologramType hologramType, final int seconds, Location location, Action action, List<Player> playersToShow) {
+
+        this(plugin, hologramType, seconds, location, action);
+
+        owner = playersToShow.getFirst();
+
     }
 
     public static String format(final long mills) {
@@ -84,8 +132,20 @@ public class Countdown extends BukkitRunnable {
             this.killTask();
             cancel();
         } else {
-            DHAPI.setHologramLine(this.hologram, 0, ChatColor.GRAY+ "ᴛᴏ ᴜʟᴇᴘꜱᴢᴇɴɪᴇ ᴢᴏꜱᴛᴀɴɪᴇ ᴜᴋᴏńᴄᴢᴏɴᴇ ᴢᴀ:");
-            DHAPI.setHologramLine(this.hologram, 1, ChatColor.GREEN + format(this.secondsLeft * 1000L));
+
+            switch (hologramType) {
+                case VENTURE -> {
+
+                    if(owner != null) {
+                        DHAPI.setHologramLine(this.hologram, 0, ChatColor.GRAY+ "ᴛᴡᴏᴊᴀ ᴇᴋꜱᴘᴇᴅʏᴄᴊᴀ");
+                        DHAPI.setHologramLine(this.hologram, 1, PlaceholderAPI.setPlaceholders(owner, "advancedguilds_expedition_expedition_objective"));
+                    }
+                }
+                default -> {
+                    DHAPI.setHologramLine(this.hologram, 0, ChatColor.GRAY+ "ᴛᴏ ᴜʟᴇᴘꜱᴢᴇɴɪᴇ ᴢᴏꜱᴛᴀɴɪᴇ ᴜᴋᴏńᴄᴢᴏɴᴇ ᴢᴀ:");
+                    DHAPI.setHologramLine(this.hologram, 1, ChatColor.GREEN + format(this.secondsLeft * 1000L));
+                }
+            }
 
             hologram.updateAll();
             --this.secondsLeft;

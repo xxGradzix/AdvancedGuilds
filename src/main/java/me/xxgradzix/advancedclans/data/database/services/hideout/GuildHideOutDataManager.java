@@ -9,7 +9,7 @@ import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDa
 import me.xxgradzix.advancedclans.exceptions.ClanDoesNotExistException;
 import me.xxgradzix.advancedclans.exceptions.PlayerDoesNotBelongToClanException;
 import me.xxgradzix.advancedclans.exceptions.hideOuts.HideOutDoesNotExistException;
-import me.xxgradzix.advancedclans.guildshideoutsystem.upgrades.UpgradePattern;
+import me.xxgradzix.advancedclans.guildshideoutsystem.upgrades.UpgradeBlueprint;
 import me.xxgradzix.advancedclans.utils.ColorFixer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -92,11 +92,11 @@ public class GuildHideOutDataManager {
 
         if(guildHideout.getClanTag() == null || guildHideout.getClanTag().isEmpty()) {
             DHAPI.createHologram(defaultHideoutHologram, location.clone().add(0.5, 2, 0.5), Arrays.asList(ColorFixer.addColors("#b59651&lᴋʀʏᴊóᴡᴋᴀ ɢɪʟᴅʏᴊɴᴀ"), ColorFixer.addColors("&7ᴘᴏᴌóż"), ColorFixer.addColors("#55875fᴢᴇꜱᴛᴀᴡ ᴅᴏ ᴛᴡᴏʀᴢᴇɴɪᴀ ɢɪʟᴅɪɪ"), ColorFixer.addColors("&7ᴀʙʏ ᴢᴀᴊąć ᴛą ᴋʀʏᴊóᴡᴋę")));
-            UpgradePattern pattern = upgradePatterns.get(GuildHideout.Upgrade.OUTPOST_PODEST);
+            UpgradeBlueprint pattern = upgradePatterns.get(GuildHideout.Upgrade.OUTPOST_PODEST);
             paste(location, pattern.getSchemFile());
         } else {
             DHAPI.createHologram(occupiedHideoutHologram, location.clone().add(0.5, 2, 0.5), Arrays.asList(ColorFixer.addColors("&7&lᴋʀʏᴊóᴡᴋᴀ ɢɪʟᴅɪɪ #b59651&l" + guildHideout.getClanTag()), ColorFixer.addColors("&7ᴋʟɪᴋɴɪᴊ ᴀʙʏ ᴢᴇᴊść ᴅᴏ ᴋʀʏᴊóᴡᴋɪ")));
-            UpgradePattern pattern = upgradePatterns.get(GuildHideout.Upgrade.OUTPOST_HUT);
+            UpgradeBlueprint pattern = upgradePatterns.get(GuildHideout.Upgrade.OUTPOST_HUT);
             paste(location, pattern.getSchemFile());
         }
     }

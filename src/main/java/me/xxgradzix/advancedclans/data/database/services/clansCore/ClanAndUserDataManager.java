@@ -8,6 +8,7 @@ import me.xxgradzix.advancedclans.data.database.repositories.clansCore.UserEntit
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class ClanAndUserDataManager {
@@ -34,6 +35,7 @@ public class ClanAndUserDataManager {
     }
 
     public static void updateClan(Clan clan) {
+
         try {
             clansData.put(clan.getTag().toUpperCase(), clan);
             clanEntityRepository.createOrUpdateEntity(clan);

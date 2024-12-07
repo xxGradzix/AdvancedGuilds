@@ -66,19 +66,23 @@ public class VenturePlaceholder extends PlaceholderExpansion {
 
             ExpeditionDto expeditionDto = ExpeditionManager.getExpeditionDtoByPlayer(player);
 
-            String objective = "N/A";
-            String chance = "N/A";
-            String timeLeft = "N/A";
+            String objective = "§7ᴏʙᴇᴄɴɪᴇ ɴɪᴇ ᴍᴀꜱᴢ ᴡʏᴘʀᴀᴡʏ";
+            String level = "§7ᴀʙʏ ʀᴏᴢᴘᴏᴄᴢᴀᴄ ᴡʏᴘʀᴀᴡę, ᴋʟɪᴋɴɪᴊ §8§lᴘᴘᴍ§r§7 ɴᴀ";
+            String literal = "§7ᴋᴀᴘɪᴛᴀɴᴀ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ";
+            String timeLeft = "";
 
             if(expeditionDto != null) {
                 haveExpeditionGoing = true;
                 boolean finished = expeditionDto.isFinished();
 
-                chance = ColorFixer.addColors("&7szansa powodzenia: " + ExpeditionManager.getChancePercentByChance(expeditionDto.getChance()) + "%");
-
                 objective = ColorFixer.addColors("&7ᴄᴇʟ: " + expeditionDto.getObjective().getName());
 
-                timeLeft = ColorFixer.addColors("&7ᴘᴏᴢᴏꜱᴛᴀłᴏ: ") + MessageManager.secondsToTimeFormat(expeditionDto.secondsToCompletion());
+                level = ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ: " + ExpeditionManager.getDiffLevelByLevel(expeditionDto.getExpeditionLevel()));
+
+                literal = ColorFixer.addColors("&7ᴘᴏᴢᴏꜱᴛᴀłᴏ: ");
+
+                timeLeft = MessageManager.secondsToTimeFormat(expeditionDto.secondsToCompletion());
+
                 if(finished) {
                     timeLeft = ColorFixer.addColors("&aɢᴏᴛᴏᴡᴇ ᴅᴏ ᴏᴅʙɪᴏʀᴜ");
                 }
@@ -93,8 +97,11 @@ public class VenturePlaceholder extends PlaceholderExpansion {
 
                     return objective;
 
-                case "expedition_chance":
-                    return chance;
+                case "expedition_difficulty":
+                    return level;
+
+                case "expedition_time_left_literal":
+                    return literal;
             }
             return null;
         }

@@ -28,7 +28,7 @@ public class DHAPIHologramClickEvent implements Listener {
         Countdown countdown = Countdown.countdowns.get(id);
         if(countdown == null) return;
 
-        fastForward(countdown, event.getPlayer());
+        fastForward(countdown, event.getPlayer(), "ʙᴜᴅᴏᴡę");
 
     }
 
@@ -65,6 +65,7 @@ public class DHAPIHologramClickEvent implements Listener {
         gui.setItem(13, expeditionItem);
 
         Bukkit.getScheduler().runTask(AdvancedGuilds.instance, () -> {
+
             gui.open(player);
 
         });

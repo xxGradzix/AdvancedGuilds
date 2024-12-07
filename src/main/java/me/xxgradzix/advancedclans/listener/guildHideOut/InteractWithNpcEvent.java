@@ -46,7 +46,8 @@ public class InteractWithNpcEvent implements Listener {
                 player.sendMessage("Sprzedawca - wkrótce ");
             }
             case 2 -> {
-                player.sendMessage("Wiedźma - wkrótce ");
+                AdvancedGuilds.instance.getServer().dispatchCommand(AdvancedGuilds.instance.getServer().getConsoleSender(), "openWitchGui " + player.getName());
+
             }
             case 3 -> {
                 ExpeditionGui.openExpeditionGui(player);

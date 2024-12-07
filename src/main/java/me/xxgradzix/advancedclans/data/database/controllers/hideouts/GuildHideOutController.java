@@ -13,6 +13,7 @@ import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.util.SideEffectSet;
 import eu.decentsoftware.holograms.api.DHAPI;
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.UserController;
 import me.xxgradzix.advancedclans.data.database.controllers.dtos.SkinPersistentDTO;
@@ -322,8 +323,11 @@ public class GuildHideOutController {
     public static final String STATION_HALL = "hideout_station_hall";
     public static final String HIDEOUT_WITCH = "hideout_witch";
     public static final String HIDEOUT_TELEPORT = "hideout_teleport";
-
     public static final String ARENA_UPGRADE = "arena_upgrade";
+
+    public static final String HIDEOUT_VENTURE = "hideout_venture";
+    public static final String HIDEOUT_BLACKSMITH = "hideout_blacksmith";
+    public static final String HIDEOUT_ENCHANTER = "hideout_enchanter";
 
     private void prepareHideOutHologramsAndNpcs(@NotNull GuildHideout guildHideout) throws InvalidObjectException {
 
@@ -339,6 +343,10 @@ public class GuildHideOutController {
         final String bookMaker = guildHideout.getWorldName() + ARENA_UPGRADE + "_book_maker";
         final String arenaMaster = guildHideout.getWorldName() + ARENA_UPGRADE + "_arena_master";
 
+        final String boughtVenture = guildHideout.getWorldName() + "_bought_" + HIDEOUT_VENTURE;
+        final String hideoutVenture = guildHideout.getWorldName() + HIDEOUT_VENTURE;
+        final String hideoutBlackSmith = guildHideout.getWorldName() + HIDEOUT_BLACKSMITH;
+        final String hideoutEnchanter = guildHideout.getWorldName() + HIDEOUT_ENCHANTER;
 
         DHAPI.removeHologram(hideoutPanel);
         DHAPI.removeHologram(mainStorage);
@@ -364,9 +372,30 @@ public class GuildHideOutController {
         DHAPI.createHologram(witch, new Location(world, 5.5 , 100.5, -48.5), Arrays.asList(ColorFixer.addColors("#7830ab&lᴡɪᴇᴅźᴍᴀ ɢɪʟᴅʏᴊɴᴀ"), ColorFixer.addColors("&7ᴋʟɪɴɪᴊ, ᴀʙʏ ᴜᴢᴜᴘᴇᴌɴɪć ᴍɪᴋꜱᴛᴜʀʏ")));
         DHAPI.createHologram(teleport, new Location(world, -7.5 , 102.5, -10.0), Arrays.asList(ColorFixer.addColors("#35543b&lᴡᴏźɴɪᴄᴀ ɢɪʟᴅʏᴊɴʏ"), ColorFixer.addColors("&7ᴋʟɪɴɪᴊ, ᴀʙʏ ᴏᴛᴡᴏʀᴢʏć ᴍᴇɴᴜ ᴍᴏżʟɪᴡʏᴄʜ ᴅᴇꜱᴛʏɴᴀᴄᴊɪ")));
 
+
         if(!guildHideout.hasBoughtUpgrade(GuildHideout.Upgrade.STATION_HALL)) {
             DHAPI.createHologram(stationHall, new Location(world, 12.5 , 99.5, -43.5), Arrays.asList(ColorFixer.addColors("#61edba&lʀᴏᴢʙᴜᴅᴏᴡᴀ ᴋʀʏᴊóᴡᴋɪ #b59651#1"), "&7ᴀʙʏ ᴛᴀᴍ ᴘʀᴢᴇᴊść ᴋᴜᴘ ᴜʟᴇᴘꜱᴢᴇɴɪᴇ ᴡ ᴘᴀɴᴇʟᴜ"));
+
+        } else {
+
+            if(guildHideout.hasBoughtUpgrade(GuildHideout.Upgrade.VENTURE)) {
+                DHAPI.createHologram(boughtVenture, new Location(world, 37 , 97, -39), Arrays.asList(ColorFixer.addColors("&a&lᴇᴋꜱᴘᴇᴅʏᴄᴊᴀ"), "%advancedguilds_expedition_objective%", ColorFixer.addColors("%advancedguilds_expedition_difficulty%"), "%advancedguilds_expedition_time_left_literal%", "%advancedguilds_expedition_time_left%"));
+            } else {
+                DHAPI.createHologram(hideoutVenture, new Location(world, 22.5 , 95.5, -41.5), Arrays.asList(ColorFixer.addColors("&lEkspedycje"), "&7ᴛᴜ ᴡʏꜱᴛᴀᴡɪꜱᴢ ᴘʀᴢᴇᴅᴍɪᴏᴛʏ ɴᴀ ᴀᴜᴋᴄᴊᴇ"));
+            }
+
+            if(!guildHideout.hasBoughtUpgrade(GuildHideout.Upgrade.BLACKSMITH)) {
+                DHAPI.createHologram(hideoutBlackSmith, new Location(world, 22.5 , 9.5, -45.5), Arrays.asList(ColorFixer.addColors("&lKOWAL"), "&7ᴛᴜ ᴡʏꜱᴛᴀᴡɪꜱᴢ ᴘʀᴢᴇᴅᴍɪᴏᴛʏ ɴᴀ ᴀᴜᴋᴄᴊᴇ"));
+            }
+
+            if(!guildHideout.hasBoughtUpgrade(GuildHideout.Upgrade.SORCERER)) {
+                DHAPI.createHologram(hideoutEnchanter, new Location(world, 22.5 , 95.5, -43.5), Arrays.asList(ColorFixer.addColors("&lZAKLINACZ"), "&7ᴛᴜ ᴡʏꜱᴛᴀᴡɪꜱᴢ ᴘʀᴢᴇᴅᴍɪᴏᴛʏ ɴᴀ ᴀᴜᴋᴄᴊᴇ"));
+            }
+
+
+
         }
+
         if(!guildHideout.hasBoughtUpgrade(GuildHideout.Upgrade.ARENA)) {
             DHAPI.createHologram(arenaUpgrade, new Location(world, 0.5 , 99.5, -51), Arrays.asList(ColorFixer.addColors("#61edba&lʀᴏᴢʙᴜᴅᴏᴡᴀ ᴋʀʏᴊóᴡᴋɪ #b59651#2"), "&7ᴀʙʏ ᴛᴀᴍ ᴘʀᴢᴇᴊść ᴋᴜᴘ ᴜʟᴇᴘꜱᴢᴇɴɪᴇ ᴡ ᴘᴀɴᴇʟᴜ"));
         } else {
@@ -387,6 +416,7 @@ public class GuildHideOutController {
     private static final SkinPersistentDTO bookMakerDTO;
     private static final SkinPersistentDTO arenaMasterDTO;
     private static final SkinPersistentDTO spawnArenaNpcDTO;
+
 
 
     static {

@@ -92,6 +92,10 @@ public class HideOutAdminCommands implements CommandExecutor {
                 player.getInventory().addItem(ItemManager.toolTier3);
                 player.getInventory().addItem(ItemManager.getPremiumGuildCoin());
             }
+            case "7" -> {
+                ExpeditionGui.openExpeditionGui(player);
+
+            }
         }
         return false;
     }

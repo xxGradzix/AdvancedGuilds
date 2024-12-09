@@ -85,7 +85,8 @@ public class Countdown extends BukkitRunnable {
 
         }
 
-        countdowns.put(hologramName, this);
+//        countdowns.put(hologramName, this);
+        countdowns.put(hologram.getId(), this);
 
         hologram.register();
         hologram.showAll();
@@ -158,7 +159,8 @@ public class Countdown extends BukkitRunnable {
 
     public void killTask() {
 
-        countdowns.remove(this.hologram.getName());
+//        countdowns.remove(this.hologram.getName());
+        countdowns.remove(this.hologram.getId());
 
         hologram.getLocation().getWorld().spawnParticle(Particle.CLOUD, hologram.getLocation(), 120, 2, 2 ,2, 0.005);
         hologram.destroy();

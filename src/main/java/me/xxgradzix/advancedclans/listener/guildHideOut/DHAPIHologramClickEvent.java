@@ -5,6 +5,7 @@ import dev.triumphteam.gui.guis.GuiItem;
 import eu.decentsoftware.holograms.api.actions.ClickType;
 import eu.decentsoftware.holograms.event.HologramClickEvent;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
+import me.xxgradzix.advancedclans.data.database.controllers.hideouts.GuildHideOutController;
 import me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.Countdown;
 import me.xxgradzix.advancedclans.messages.MessageManager;
@@ -16,6 +17,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
+import static me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition.ExpeditionGui.openCurrentExpeditionGui;
+
 public class DHAPIHologramClickEvent implements Listener {
 
     @EventHandler
@@ -26,9 +29,18 @@ public class DHAPIHologramClickEvent implements Listener {
         String id = event.getHologram().getId();
 
         Countdown countdown = Countdown.countdowns.get(id);
-        if(countdown == null) return;
+        if(countdown != null) {
+            fastForward(countdown, event.getPlayer(), "ʙᴜᴅᴏᴡę");
+            return;
+        }
 
-        fastForward(countdown, event.getPlayer(), "ʙᴜᴅᴏᴡę");
+        if(id.endsWith(GuildHideOutController.HIDEOUT_BOUGHT_VENTURE)) {
+            Bukkit.getScheduler().runTask(AdvancedGuilds.instance, () -> {
+                openCurrentExpeditionGui(event.getPlayer());
+            });
+            return;
+        }
+
 
     }
 

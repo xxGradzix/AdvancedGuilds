@@ -6,7 +6,7 @@
 /Users/jakubgrad/Desktop/AdvancedGuilds/src/main/java/me/xxgradzix/advancedclans/config/Config.java
 /Users/jakubgrad/Desktop/AdvancedGuilds/src/main/java/me/xxgradzix/advancedclans/data/database/controllers/clansCOre/ClanController.java
 /Users/jakubgrad/Desktop/AdvancedGuilds/src/main/java/me/xxgradzix/advancedclans/data/database/controllers/clansCOre/UserController.java
-/Users/jakubgrad/Desktop/AdvancedGuilds/src/main/java/me/xxgradzix/advancedclans/data/database/controllers/dtos/SkinPersistentDTO.java
+/Users/jakubgrad/Desktop/AdvancedGuilds/src/main/java/me/xxgradzix/advancedclans/data/database/controllers/dtos/NpcNameAndSkinPersistentDTO.java
 /Users/jakubgrad/Desktop/AdvancedGuilds/src/main/java/me/xxgradzix/advancedclans/data/database/controllers/hideouts/GuildHideOutController.java
 /Users/jakubgrad/Desktop/AdvancedGuilds/src/main/java/me/xxgradzix/advancedclans/data/database/controllers/hideouts/VentureRewardController.java
 /Users/jakubgrad/Desktop/AdvancedGuilds/src/main/java/me/xxgradzix/advancedclans/data/database/entities/Clan.java

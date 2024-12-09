@@ -238,7 +238,7 @@ public final class AdvancedGuilds extends JavaPlugin {
                 new HideOutUpgrade(guildHideOutController),
                 new HideoutTeleportBlockClick(guildHideOutController),
                 new HideoutOccupyBlockPlace(guildHideOutController),
-//                new HideoutStorageChestClick(),
+                new HideoutStorageChestClick(),
                 new InteractWithNpcEvent(),
                 new DHAPIHologramClickEvent()
         ).forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));

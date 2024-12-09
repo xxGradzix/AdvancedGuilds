@@ -3,6 +3,7 @@ me/xxgradzix/advancedclans/guildshideoutsystem/upgrades/StationHallUpgradeBluepr
 me/xxgradzix/advancedclans/guildshideoutsystem/upgrades/BlackSmithUpgradeBlueprint.class
 me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/expedition/ExpeditionManager.class
 me/xxgradzix/advancedclans/guildshideoutsystem/managers/Countdown$HologramType.class
+me/xxgradzix/advancedclans/data/database/controllers/dtos/NpcNameAndSkinPersistentDTO.class
 me/xxgradzix/advancedclans/guildshideoutsystem/upgrades/OutpostHutBlueprint.class
 me/xxgradzix/advancedclans/placeholder/VenturePlaceholder.class
 me/xxgradzix/advancedclans/guildshideoutsystem/upgrades/ResetHideoutBlueprint.class

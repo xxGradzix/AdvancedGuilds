@@ -67,21 +67,29 @@ public class VenturePlaceholder extends PlaceholderExpansion {
             ExpeditionDto expeditionDto = ExpeditionManager.getExpeditionDtoByPlayer(player);
 
             String objective = "§7ᴏʙᴇᴄɴɪᴇ ɴɪᴇ ᴍᴀꜱᴢ ᴡʏᴘʀᴀᴡʏ";
-            String level = "§7ᴀʙʏ ʀᴏᴢᴘᴏᴄᴢᴀᴄ ᴡʏᴘʀᴀᴡę, ᴋʟɪᴋɴɪᴊ §8§lᴘᴘᴍ§r§7 ɴᴀ";
-            String literal = "§7ᴋᴀᴘɪᴛᴀɴᴀ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ";
-            String timeLeft = "";
+            String level = "";
+
+            String objectiveAndLevel = objective + " " + level;
+
+            String literal = "§7ᴀʙʏ ʀᴏᴢᴘᴏᴄᴢᴀᴄ ᴡʏᴘʀᴀᴡę, ᴋʟɪᴋɴɪᴊ §a§lᴘᴘᴍ§r§7 ɴᴀ";
+            String timeLeft = "§7ᴋᴀᴘɪᴛᴀɴᴀ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ";
+            String speedUp = "";
 
             if(expeditionDto != null) {
                 haveExpeditionGoing = true;
                 boolean finished = expeditionDto.isFinished();
 
                 objective = ColorFixer.addColors("&7ᴄᴇʟ: " + expeditionDto.getObjective().getName());
-
                 level = ColorFixer.addColors("&7ᴘᴏᴢɪᴏᴍ: " + ExpeditionManager.getDiffLevelByLevel(expeditionDto.getExpeditionLevel()));
 
-                literal = ColorFixer.addColors("&7ᴘᴏᴢᴏꜱᴛᴀłᴏ: ");
+                objectiveAndLevel = ColorFixer.addColors(objective + " &8| &r" + level);
 
+                literal = ColorFixer.addColors("&7ᴇᴋꜱᴘᴇᴅʏᴄᴊᴀ ᴜᴋᴏńᴄᴢʏ ꜱɪę ᴢᴀ: ");
                 timeLeft = MessageManager.secondsToTimeFormat(expeditionDto.secondsToCompletion());
+
+                int requiredCoins = expeditionDto.secondsToCompletion() / (60 * 30);
+
+                speedUp = ColorFixer.addColors("&8[§a§lᴘᴘᴍ§r&8] &aᴘʀᴢʏꜱᴘɪᴇꜱᴢ &8(&6" + requiredCoins + " ᴍᴏɴᴇᴛ ᴘʀᴇᴍɪᴜᴍ&8)");
 
                 if(finished) {
                     timeLeft = ColorFixer.addColors("&aɢᴏᴛᴏᴡᴇ ᴅᴏ ᴏᴅʙɪᴏʀᴜ");
@@ -94,11 +102,16 @@ public class VenturePlaceholder extends PlaceholderExpansion {
                     return timeLeft;
 
                 case "expedition_objective":
-
                     return objective;
+
+                case "expedition_objective_and_level":
+                    return objectiveAndLevel;
 
                 case "expedition_difficulty":
                     return level;
+
+                case "expedition_speed_up":
+                    return speedUp;
 
                 case "expedition_time_left_literal":
                     return literal;

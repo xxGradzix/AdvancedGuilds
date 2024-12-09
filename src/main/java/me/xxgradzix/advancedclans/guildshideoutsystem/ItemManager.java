@@ -632,7 +632,7 @@ public class ItemManager {
 
         if(!isFinished) {
             lore.add(" ");
-            lore.add(ColorFixer.addColors("&7ᴋʟɪᴋɴɪᴊ ᴘᴘᴍ ᴀʙʏ ᴘᴏᴍɪɴąć ᴄᴢᴀꜱ ᴏᴄᴢᴇᴋɪᴡᴀɴɪᴀ" + MessageManager.secondsToTimeFormatSkipSeconds(secondsToComplete)));
+            lore.add(ColorFixer.addColors("&7ᴋʟɪᴋɴɪᴊ ᴘᴘᴍ ᴀʙʏ ᴘᴏᴍɪɴąć ᴄᴢᴀꜱ ᴏᴄᴢᴇᴋɪᴡᴀɴɪᴀ" ));
 
             int price = secondsToComplete /(60 * 30);
             lore.add(ColorFixer.addColors("&7ᴄᴇɴᴀ: &6" + price + " ᴍᴏɴᴇᴛ ᴘʀᴇᴍɪᴜᴍ"));

@@ -345,7 +345,7 @@ public class ExpeditionGui {
         return cooldownSec;
     }
 
-    private static void openCurrentExpeditionGui(Player player) {
+    public static void openCurrentExpeditionGui(Player player) {
 
         ExpeditionDto expeditionDto = ExpeditionManager.getExpeditionDtoByPlayer(player);
         if(expeditionDto == null) return;

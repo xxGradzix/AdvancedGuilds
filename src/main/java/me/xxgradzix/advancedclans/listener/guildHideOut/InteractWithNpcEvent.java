@@ -47,19 +47,15 @@ public class InteractWithNpcEvent implements Listener {
             }
             case 2 -> {
                 AdvancedGuilds.instance.getServer().dispatchCommand(AdvancedGuilds.instance.getServer().getConsoleSender(), "openWitchGui " + player.getName());
-
             }
             case 3 -> {
                 ExpeditionGui.openExpeditionGui(player);
-
             }
             case 4 -> {
                 AdvancedGuilds.instance.getServer().dispatchCommand(AdvancedGuilds.instance.getServer().getConsoleSender(), "openupgradegui " + player.getName() + " 1");
             }
             case 5 -> {
-//                player.sendMessage("Zaklinacz - wkrótce ");
                 AdvancedGuilds.instance.getServer().dispatchCommand(AdvancedGuilds.instance.getServer().getConsoleSender(), "openEnchantGui " + player.getName());
-
             }
             case 6 -> {
                 player.sendMessage("przewoźnik - wkrótce ");

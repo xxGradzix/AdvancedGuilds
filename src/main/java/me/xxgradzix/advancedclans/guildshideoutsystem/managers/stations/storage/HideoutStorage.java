@@ -135,7 +135,9 @@ public class HideoutStorage {
 
         StorageGui gui = personalGuis.get(player.getUniqueId());
         if(gui == null) {
-            gui = Gui.storage().title(Component.text("Personal Storage")).rows(5).create();
+            gui = Gui.storage().title(
+                    Component.text("testtesttesttesttesttesttesttesttesttesttesttesttest||七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七EloEloelo"))
+                    .rows(5).create();
             personalGuis.put(player.getUniqueId(), gui);
         }
         gui.open(player);

@@ -12,6 +12,8 @@ import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideout;
 import me.xxgradzix.advancedclans.data.database.entities.User;
 import me.xxgradzix.advancedclans.data.database.entities.hideout.venture.VentureReward;
 import me.xxgradzix.advancedclans.data.database.services.hideout.VentureRewardDataManager;
+import me.xxgradzix.advancedclans.globalGuis.ClickAction;
+import me.xxgradzix.advancedclans.globalGuis.FastForwardGui;
 import me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.messages.MessageType;
@@ -21,6 +23,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -349,6 +352,20 @@ public class ExpeditionGui {
 
         ExpeditionDto expeditionDto = ExpeditionManager.getExpeditionDtoByPlayer(player);
         if(expeditionDto == null) return;
+
+        // New
+
+        FastForwardGui fastForwardGui = new FastForwardGui(
+                player,
+                new ClickAction() {
+                    @Override
+                    public void onClick(InventoryAction action) {
+
+                    }
+                }
+        );
+
+        /// //
 
         Gui gui = Gui.gui()
                 .type(GuiType.CHEST)

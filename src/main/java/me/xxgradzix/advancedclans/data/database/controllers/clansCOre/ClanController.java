@@ -290,6 +290,8 @@ public class ClanController {
             clan.joinUser(user);
             ClanAndUserDataManager.updateClan(clan);
             ClanAndUserDataManager.updateUser(user);
+            player.getEffectivePermissions().remove("guild.");
+
             MessageManager.sendMessageFormated(player, MessageManager.CLAN_INVITE_ACCEPTED, MessageType.CHAT);
         }
     }

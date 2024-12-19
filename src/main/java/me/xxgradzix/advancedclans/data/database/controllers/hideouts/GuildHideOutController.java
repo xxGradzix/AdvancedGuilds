@@ -384,7 +384,7 @@ public class GuildHideOutController {
         } else {
 
             if(guildHideout.hasBoughtUpgrade(GuildHideout.Upgrade.VENTURE)) {
-                DHAPI.createHologram(boughtVenture, new Location(world, 38 , 96, -40), Arrays.asList(ColorFixer.addColors("&a&lᴇᴋꜱᴘᴇᴅʏᴄᴊᴀ"), "%advancedguilds_expedition_objective_and_level%", "%advancedguilds_expedition_time_left_literal%", "%advancedguilds_expedition_time_left%", "%advancedguilds_expedition_speed_up%"));
+                DHAPI.createHologram(boughtVenture, new Location(world, 38 , 96, -41), Arrays.asList(ColorFixer.addColors("#b59651&lᴇᴋꜱᴘᴇᴅʏᴄᴊᴀ"), "%advancedguilds_expedition_objective_and_level%", "%advancedguilds_expedition_time_left_literal%", "%advancedguilds_expedition_time_left%", "%advancedguilds_expedition_speed_up%"));
             } else {
                 DHAPI.createHologram(hideoutVenture, new Location(world, 22.5 , 95.5, -41.5), Arrays.asList(ColorFixer.addColors("&lEkspedycje"), "&7ᴛᴜ ᴡʏꜱᴛᴀᴡɪꜱᴢ ᴘʀᴢᴇᴅᴍɪᴏᴛʏ ɴᴀ ᴀᴜᴋᴄᴊᴇ"));
             }
@@ -423,8 +423,6 @@ public class GuildHideOutController {
     private static final NpcNameAndSkinPersistentDTO arenaMasterDTO;
     private static final NpcNameAndSkinPersistentDTO spawnArenaNpcDTO;
 
-
-
     static {
         traderDTO = new NpcNameAndSkinPersistentDTO("&#098A8A&lʜ&#19AAA5&lᴀ&#28C9C1&lɴ&#38E9DC&lᴅ&#64E9DF&lʟ&#91E9E3&lᴀ&#BDE9E6&lʀ&#E9E9E9&lᴢ", "ddd87d9e", "irpVrcqKWn35YcwRTt4B1+S/fvXtnUlj121Lu6uCRTK6AdAaPapfHuWkxL5v49RwuP0rqZA/d8HK+bpLtLGL9q20SNff0W2mpJu9gj4xn5hv6v1mFmSuobpfrNuTYHfZcHUla2qiEPYdv56z6fxw/CGMyqwCc9MIj+PCB82BwtR0+t049zeFJjV1cJJcZSpKerA9nN5uzfsIcLpYpbOnL/16VmNZIY6lWnwQ8cTmbuYcwLekBs2F59ackBTUH3SHxOjDlYBCYPTiULvsnZjfZjKeal9O1ckp+gEWvy83Z6cTYuegIAlt/B4tFfzP0CQbTA2qEKip++AWHIEszcvXU3m9uhHFSoKlLdW5ukBGWzIyQWuYl8RCn/hYjZEOr0Lr/tUN6Qcz+6QLNGFYssm15QnA1xMzTA5XoWtQ6ACeoyz0b0x0WZcN1H53gYN3s39Be75QEIKz+QxlQlPl64PMFLPfCT44c4Y6VQnFVEE7GNvnQNDHxIjlt2GY9oQfUK+TVxMK+kbcqBLkl+QyZGT8dz+3fZvL5impI/cRfYmfvpDtg51InxEJahMQN1cc4HxtsIpVbf4uZScpBWu0NM64iPyEMSnVWKDqjx3VlWns4kDScJ79Mv57f7sdbORbzZDIGAU/6B2gsBBs9FL+O43uv/HHJULWx44tPK4e+cHO0PU=","ewogICJ0aW1lc3RhbXAiIDogMTY0MjY5Mzk5OTM2MywKICAicHJvZmlsZUlkIiA6ICJhYTZhNzUwNWVkYmU0NjNiYjk1NWYyMWY0MjNiYTM1NCIsCiAgInByb2ZpbGVOYW1lIiA6ICJub3RhbmR5d2FyaG9sIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2FiMDQxMTQ1NjhkMmI5NzczYjI5OTc5YWQ1NzZkM2M4YmY1Yjg3NDA1NGE0YjQyMjFjOGJiY2M3YTgyMDMwMmIiCiAgICB9CiAgfQp9");
         witchDTO = new NpcNameAndSkinPersistentDTO("&#7B1EBE&lᴡ&#802CB6&lɪ&#8539AF&lᴇ&#8A47A7&lᴅ&#8E559F&lź&#936298&lᴍ&#987090&lᴀ", "", "", "");
@@ -438,8 +436,6 @@ public class GuildHideOutController {
         arenaMasterDTO = new NpcNameAndSkinPersistentDTO("&#FA0000&lᴍ&#ED0000&lɪ&#DF0000&lꜱ&#D20000&lᴛ&#C40000&lʀ&#B70000&lᴢ &#9C0000&lᴀ&#8E0000&lʀ&#810000&lᴇ&#730000&lɴ&#660000&lʏ", "338f8012", "e/6VycZ9E6BIJzir553LdxFgnfIo7qSLkk3TJ4q+tfiN0cArWBNbnBehol3WYOHkuQzZCgsul2LMujk7PtsTsEyyRvnMmoWdX22xQqyAKLLoh/MoXNcxkWFbOgfS9209gFjDr+tse1FDmgnXhtpTli4ZZXl9V2wH+HdtTuvUcCOSTMlAfW8bpei4dZU9XTsznZQngdZRFJ4q3XGaiG+hNJGvUYEpVVxr8ASMgukVrO516uO6etdlCZOWOZty0RBysUwBw92jRK43nl1Ns+sc2789Pv16QXqdS/MXIa6LN77fZXkRd/G8+byHzH65IAw8MYxL0Yzokwvb7Lqij3wlDFylXbuZVL3iAuBNhlrkwVuOBVIctqGXhur3u7nEfEFvqnGA/qc58+4xGF+d3bIncE+R7w95gSK1tIJMMQV8WJCbUNME2SVjubf4wxUnzPQp6LGYJFy2a5werDMcw5vU6XAqdAnqzw89TSrB99ksp+tIvy89Er7A+A4W5lcc7zy7euZRPX+p9pLRh4/tJyNQLFoPEIHhtJ51BNfoLvQh2sly52y9XceqYfzeDXadpbwBAgvAGaoFuPa4BpT9ZBwuzZWK0UlopgI2erO1EoXVCJPYKMfbcYWZ8/z8UfRJbuks7n6OZUhpud6yvO6+gRTW98G/uF1S22lnJhMuaAQp3Yw=", "ewogICJ0aW1lc3RhbXAiIDogMTY2OTg3NjM3OTAxMywKICAicHJvZmlsZUlkIiA6ICI3YzI2YTAxY2U4NjU0NDkzOTA3NzA2OGQxZTA5ZjE5MiIsCiAgInByb2ZpbGVOYW1lIiA6ICJodG93ZXI4IiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzM2MTRhMjY4NWRjZTRlNTkyMWY2MmM2ZDk2ZjlmMjRlNTk5NjI4YzliNTU4NWUyZTllOGM0YzQ5MTU5NTU0ZmYiCiAgICB9CiAgfQp9");
         spawnArenaNpcDTO = new NpcNameAndSkinPersistentDTO("&#4F2000&lᴘ&#512607&lʀ&#542C0F&lᴢ&#563216&lᴇ&#58381D&lᴡ&#5B3D25&lᴏ&#5D432C&lź&#5F4933&lɴ&#624F3B&lɪ&#645542&lᴋ", "498afcab", "yTyaTlyHbZruHT0/06fCHEfwtf7QRmbQAOFeSmqQ5QFWKikrwTXEFq7+62pBM9aFmDzGVNIZ2b5wNd9ZVxKNhkfjKck9SHl3UiI5AvQNfbp6OXNNPeKArdLYvcgRzcddTbHe2yKVRpFVG4UUysCnl1oyk3frWAKTbUBaUwlWDg9HnAeXIVoaXqlNI6stdPwbrUczW/zh6Nb//+HHCEipbdGbU35EB0O3Vp6AlzeV3jn5wT/j8kItQU/m27TwtPA+6Urx8ypzNuTMmUipEMhfnRayqxgPEnssP82Nk02b7yno5vBtLjOU0O7JWLwwTkC2bE6OKXEu46Ul9Vuqwj0OrJDvC9LYn+t74spINNqV1pWCx5z7/LUO2NAyjyoxUjIbRO3NK/BnhtXAycOoKa0Rx6EThcgPeEGiLDaAOu5WNM/BMqYqmTqc9BNdZzzEwKv0Mbyth2XkRuw6sBdKijN+TnegQh1/PkD26+xEscvuC7dWKK0RLD1FxZKhI6j0dNhvq7aEKYuEV7nAvnZyOhrmPGJ4t3G6hJ8uTwxlRORatQUJ7CHlvw3U/Ee/JfdIBjxhDdEcqkoBEqPIP9Dr6ZNqu/06HRGgroDqES3kdTRQTkBWkrmgLShi23V/YE0HKZUdrKe9TfEFXFekSkmoSHlAjrP73b7Torjrk8kNVf1D++8=","eyJ0aW1lc3RhbXAiOjE1ODcxNzI2NTc2NTcsInByb2ZpbGVJZCI6ImIwZDczMmZlMDBmNzQwN2U5ZTdmNzQ2MzAxY2Q5OGNhIiwicHJvZmlsZU5hbWUiOiJPUHBscyIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDU4NWRhNjA2Yzc5NTZmNmE4YjI0NzRjYTM5N2UwZTFlMTg1NTc0YjYyMmY5YTJlNzFlZjIzOWI4NDliNDVhYyIsIm1ldGFkYXRhIjp7Im1vZGVsIjoic2xpbSJ9fX19");
     }
-
-
 
     public void resetNpcsForHideOut(GuildHideout guildHideout) {
 
@@ -466,78 +462,42 @@ public class GuildHideOutController {
 
             npcHashMap.put(dto, npc);
 
+
+            npc.data().setPersistent(NPC.Metadata.ALWAYS_USE_NAME_HOLOGRAM, true);
+            npc.data().setPersistent(NPC.Metadata.AMBIENT_SOUND, "null");
+            npc.data().setPersistent(NPC.Metadata.DEATH_SOUND, "null");
+            npc.data().setPersistent(NPC.Metadata.HURT_SOUND, "null");
+
             npc.getOrAddTrait(LookClose.class).lookClose(true);
             npc.getOrAddTrait(LookClose.class).setRange(35);
-            npc.data().setPersistent(NPC.Metadata.ALWAYS_USE_NAME_HOLOGRAM, true);
             npc.scheduleUpdate(NPC.NPCUpdate.PACKET);
             npc.setUseMinecraftAI(false);
             npc.setProtected(true);
 
             id++;
         }
-//
-//        NPC traderNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, UUID.randomUUID(), 1, hideoutTrader);
-//        NPC witchNPC = NPC_REGISTRY.createNPC(EntityType.WITCH, UUID.randomUUID(), 2, witch);
-//        NPC ventureNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, UUID.randomUUID(), 3, venture);
-//        NPC blacksmithNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, UUID.randomUUID(), 4, blacksmith);
-//        NPC sorcererNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, UUID.randomUUID(), 5, sorcerer);
-//        NPC teleportNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, UUID.randomUUID(), 6, teleport);
-//        NPC blackMarketDealerNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, UUID.randomUUID(), 7, blackMarketDealer);
-//        NPC spawnArenaNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, UUID.randomUUID(), 8, spawnArena);
-//        NPC bookMakerNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, UUID.randomUUID(), 9, bookMaker);
-//        NPC arenaMasterNPC = NPC_REGISTRY.createNPC(EntityType.PLAYER, UUID.randomUUID(), 10, arenaMaster);
-
-//        for (NPC npc : NPC_REGISTRY) {
-//            npc.getOrAddTrait(LookClose.class).lookClose(true);
-//            npc.getOrAddTrait(LookClose.class).setRange(35);
-//            npc.data().setPersistent(NPC.Metadata.ALWAYS_USE_NAME_HOLOGRAM, true);
-//            npc.scheduleUpdate(NPC.NPCUpdate.PACKET);
-//            npc.setUseMinecraftAI(false);
-//            npc.setProtected(true);
-//        }
-
-//        traderNPC.getOrAddTrait(SkinTrait.class).setSkinPersistent(traderDTO.skinName(), traderDTO.skinSignature(), traderDTO.skinValue());
-//        ventureNPC.getOrAddTrait(SkinTrait.class).setSkinPersistent(ventureDTO.skinName(), ventureDTO.skinSignature(), ventureDTO.skinValue());
-//        blacksmithNPC.getOrAddTrait(SkinTrait.class).setSkinPersistent(blacksmithDTO.skinName(), blacksmithDTO.skinSignature(), blacksmithDTO.skinValue());
-//        sorcererNPC.getOrAddTrait(SkinTrait.class).setSkinPersistent(sorcererDTO.skinName(), sorcererDTO.skinSignature(), sorcererDTO.skinValue());
-//        teleportNPC.getOrAddTrait(SkinTrait.class).setSkinPersistent(teleportDTO.skinName(), teleportDTO.skinSignature(), teleportDTO.skinValue());
-//
-//        blackMarketDealerNPC.getOrAddTrait(SkinTrait.class).setSkinPersistent(blackMarketDealerDTO.skinName(), blackMarketDealerDTO.skinSignature(), blackMarketDealerDTO.skinValue());
-//        spawnArenaNPC.getOrAddTrait(SkinTrait.class).setSkinPersistent(spawnArenaNpcDTO.skinName(), spawnArenaNpcDTO.skinSignature(), spawnArenaNpcDTO.skinValue());
-//        bookMakerNPC.getOrAddTrait(SkinTrait.class).setSkinPersistent(bookMakerDTO.skinName(), bookMakerDTO.skinSignature(), bookMakerDTO.skinValue());
-//        arenaMasterNPC.getOrAddTrait(SkinTrait.class).setSkinPersistent(arenaMasterDTO.skinName(), arenaMasterDTO.skinSignature(), arenaMasterDTO.skinValue());
-
         npcHashMap.get(traderDTO).spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), -7.5 , 97, -48.5));
         npcHashMap.get(witchDTO).spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), 6.5 , 97, -49.5));
-//        traderNPC.spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), -7.5 , 97, -48.5));
-//        witchNPC.spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), 6.5 , 97, -49.5));
 
         if(guildHideout.hasFinishedUpgrade(GuildHideout.Upgrade.BLACKSMITH)) {
             npcHashMap.get(blacksmithDTO).spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), 26.5 , 93, -50.5));
-//            blacksmithNPC.spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), 26.5 , 93, -50.5));
         }
+
         if(guildHideout.hasFinishedUpgrade(GuildHideout.Upgrade.VENTURE)) {
             npcHashMap.get(ventureDTO).spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), 34.5 , 93, -38.5));
-//            ventureNPC.spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), 34.5 , 93, -38.5));
-
         }
+
         if(guildHideout.hasFinishedUpgrade(GuildHideout.Upgrade.SORCERER)) {
             npcHashMap.get(sorcererDTO).spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), 25.5 , 93, -37.5));
-//            sorcererNPC.spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), 25.5 , 93, -37.5));
         }
+
         npcHashMap.get(teleportDTO).spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), -8.5 , 99, -10.5));
-//        teleportNPC.spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), -8.5 , 99, -10.5));
 
         if(guildHideout.hasFinishedUpgrade(GuildHideout.Upgrade.ARENA)) {
             npcHashMap.get(blackMarketDealerDTO).spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), 8.5 , 92, -63.5));
             npcHashMap.get(spawnArenaNpcDTO).spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), 7.5 , 91, -76.5));
             npcHashMap.get(bookMakerDTO).spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), -13.5 , 92, -85.5));
             npcHashMap.get(arenaMasterDTO).spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), 11 , 92, -86.5));
-
-//            blackMarketDealerNPC.spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), 8.5 , 92, -63.5));
-//            spawnArenaNPC.spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), 7.5 , 91, -76.5));
-//            bookMakerNPC.spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), -13.5 , 92, -85.5));
-//            arenaMasterNPC.spawn(new Location(Bukkit.getWorld(guildHideout.getWorldName()), 11 , 92, -86.5));
         }
     }
 

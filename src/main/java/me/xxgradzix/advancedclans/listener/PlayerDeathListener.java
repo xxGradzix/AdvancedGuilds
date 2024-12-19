@@ -7,6 +7,9 @@ import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDa
 import me.xxgradzix.advancedclans.entities.AntySystemRank;
 import me.xxgradzix.advancedclans.events.PointsChangeUserEvent;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.UserController;
+import me.xxgradzix.advancedclans.messages.MessageManager;
+import me.xxgradzix.advancedclans.messages.MessageType;
+import me.xxgradzix.advancedclans.utils.ColorFixer;
 import me.xxgradzix.advancedclans.utils.SystemPoint;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -22,18 +25,14 @@ import java.util.UUID;
 public class PlayerDeathListener implements Listener {
 
     private final AdvancedGuilds plugin;
-//    private LangMessage lang;
-//    private Config config;
-
     private final UserController userController;
     private HashMap<UUID, AntySystemRank> antySystem = new HashMap<>();
-    public PlayerDeathListener(AdvancedGuilds plugin, UserController userController)
-    {
+
+    public PlayerDeathListener(AdvancedGuilds plugin, UserController userController) {
         this.plugin = plugin;
-//        this.config = plugin.getConfigPlugin();
-//        this.lang = plugin.lang;
         this.userController = userController;
     }
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onDeath(PlayerDeathEvent event)
     {
@@ -113,13 +112,17 @@ public class PlayerDeathListener implements Listener {
             return;
 
         // TODO send message to all players about death and points change
+
+        MessageManager.broadcastMessageFormated(MessageManager.BROADCAST_DEATH_MESSAGE, MessageType.CHAT);
+
 //        MessageUtil.broadcast(
-//                ColorFixer.addColors(
+//
+//                ColorFixer.add(
 //                        lang.langBroadcastDeathInfo
 //                                .replace("{victim}", player.getName())
 //                                .replace("{killer}", killer.getName())
-//                                .replace("{victim-points}", String.valueOf(pointsChangeUserEvent.getPointVictim()))
-//                                .replace("{killer-points}", String.valueOf(pointsChangeUserEvent.getPointKiller()))
+//                                .replace("{victim-points-change}", String.valueOf(pointsChangeUserEvent.getPointVictim()))
+//                                .replace("{killer-points-change}", String.valueOf(pointsChangeUserEvent.getPointKiller()))
 //                )
 //        );
     }

@@ -6,6 +6,7 @@ import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDa
 import me.xxgradzix.advancedclans.data.database.services.hideout.GuildHideOutDataManager;
 import me.xxgradzix.advancedclans.exceptions.hideOuts.HideOutDoesNotExistException;
 import me.xxgradzix.advancedclans.exceptions.hideOuts.InvalidHideoutWorldNameException;
+import me.xxgradzix.advancedclans.globalGuis.PlayerGuiGui;
 import me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition.ExpeditionGui;
 import me.xxgradzix.advancedclans.messages.MessageManager;
@@ -95,6 +96,10 @@ public class HideOutAdminCommands implements CommandExecutor {
             case "7" -> {
                 ExpeditionGui.openExpeditionGui(player);
 
+            }
+
+            case "8" -> {
+                new PlayerGuiGui(player);
             }
         }
         return false;

@@ -71,8 +71,8 @@ public class VenturePlaceholder extends PlaceholderExpansion {
 
             String objectiveAndLevel = objective + " " + level;
 
-            String literal = "§7ᴀʙʏ ʀᴏᴢᴘᴏᴄᴢᴀᴄ ᴡʏᴘʀᴀᴡę, ᴋʟɪᴋɴɪᴊ §a§lᴘᴘᴍ§r§7 ɴᴀ";
-            String timeLeft = "§7ᴋᴀᴘɪᴛᴀɴᴀ ᴇᴋꜱᴘᴇᴅʏᴄᴊɪ";
+            String literal = ColorFixer.addColors("§7ᴀʙʏ ʀᴏᴢᴘᴏᴄᴢᴀᴄ ᴡʏᴘʀᴀᴡę, ᴋʟɪᴋɴɪᴊ #b59651&lᴘᴘᴍ§r§7 ɴᴀ");
+            String timeLeft = "&#004A6E&lᴋ&#004D75&lᴀ&#00507D&lᴘ&#005284&lɪ&#00558C&lᴛ&#005893&lᴀ&#005B9A&lɴᴀ &#0060A9&lᴇ&#0063B1&lᴋ&#0066B8&lꜱ&#0068C0&lᴘ&#006BC7&lᴇ&#006ECE&lᴅ&#0071D6&lʏ&#0073DD&lᴄ&#0076E5&lᴊ&#0079EC&lɪ";
             String speedUp = "";
 
             if(expeditionDto != null) {
@@ -89,7 +89,7 @@ public class VenturePlaceholder extends PlaceholderExpansion {
 
                 int requiredCoins = expeditionDto.secondsToCompletion() / (60 * 30);
 
-                speedUp = ColorFixer.addColors("&8[§a§lᴘᴘᴍ§r&8] &aᴘʀᴢʏꜱᴘɪᴇꜱᴢ &8(&6" + requiredCoins + " ᴍᴏɴᴇᴛ ᴘʀᴇᴍɪᴜᴍ&8)");
+                speedUp = ColorFixer.addColors("&8&l[§e§lᴘᴘᴍ§r&8&l] &#FFDB41&l⚡ &#FCDF52&lᴘ&#FBE25A&lʀ&#FAE462&lᴢ&#F9E66B&lʏ&#F7E873&lꜱ&#F6EA7C&lᴘ&#F5EC84&lɪ&#F4EF8C&lᴇ&#F2F195&lꜱ&#F1F39D&lᴢ &8&l(&6&l" + requiredCoins + " ᴍᴏɴᴇᴛ ᴘʀᴇᴍɪᴜᴍ&8&l)");
 
                 if(finished) {
                     timeLeft = ColorFixer.addColors("&aɢᴏᴛᴏᴡᴇ ᴅᴏ ᴏᴅʙɪᴏʀᴜ");

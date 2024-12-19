@@ -12,15 +12,16 @@ import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Trident;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.Optional;
 
 public class InteractWithNpcEvent implements Listener {
-
-
 
     @EventHandler
     public void onCitizensNPCClick(NPCRightClickEvent event) {

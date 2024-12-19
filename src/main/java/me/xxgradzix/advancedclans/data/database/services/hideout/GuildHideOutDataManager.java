@@ -1,5 +1,20 @@
 package me.xxgradzix.advancedclans.data.database.services.hideout;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3Imp;
+import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.util.Direction;
+import com.sk89q.worldedit.util.gson.BlockVectorAdapter;
+import com.sk89q.worldedit.world.weather.WeatherType;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.flags.*;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.managers.storage.StorageException;
+import com.sk89q.worldguard.protection.regions.GlobalProtectedRegion;
+import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import com.sk89q.worldguard.session.Session;
+import com.sk89q.worldguard.session.handler.GreetingFlag;
 import eu.decentsoftware.holograms.api.DHAPI;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
 import me.xxgradzix.advancedclans.data.database.entities.Clan;
@@ -10,18 +25,19 @@ import me.xxgradzix.advancedclans.exceptions.ClanDoesNotExistException;
 import me.xxgradzix.advancedclans.exceptions.PlayerDoesNotBelongToClanException;
 import me.xxgradzix.advancedclans.exceptions.hideOuts.HideOutDoesNotExistException;
 import me.xxgradzix.advancedclans.guildshideoutsystem.upgrades.UpgradeBlueprint;
+import me.xxgradzix.advancedclans.messages.MessageManager;
+import me.xxgradzix.advancedclans.messages.MessageType;
 import me.xxgradzix.advancedclans.utils.ColorFixer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import static com.sk89q.worldguard.protection.flags.Flags.*;
 import static me.xxgradzix.advancedclans.data.database.controllers.hideouts.GuildHideOutController.*;
 
 public class GuildHideOutDataManager {
@@ -58,12 +74,76 @@ public class GuildHideOutDataManager {
         guildHideoutEntries.remove(guildHideout);
         refreshHideoutOutpostHolograms(guildHideout, guildHideout.getEntryBlockLocation());
         try {
+            refreshRegion(guildHideout);
+        } catch (InvalidFlagFormat e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
             guildHideouts.put(hideOutWorldName, guildHideout);
             guildHideoutEntityRepository.createOrUpdateEntity(guildHideout);
             return guildHideout;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static final WorldGuard WORLD_GUARD = WorldGuard.getInstance();
+
+    private static void refreshRegion(GuildHideout guildHideout) throws InvalidFlagFormat {
+
+        World bukkkitWorld = Bukkit.getWorld(guildHideout.getWorldName());
+
+        if(bukkkitWorld == null) return;
+
+        com.sk89q.worldedit.world.World adapt = BukkitAdapter.adapt(bukkkitWorld);
+
+        RegionManager regionManager = WORLD_GUARD.getPlatform().getRegionContainer().get(adapt);
+
+//        String worldName = guildHideout.getWorldName() + "_global";
+        String worldName = "__global__";
+
+        regionManager.removeRegion(worldName);
+
+        ProtectedRegion region = new GlobalProtectedRegion(worldName);
+
+        region.setFlag(Flags.INVINCIBILITY, StateFlag.State.ALLOW);
+
+        region.setFlag(Flags.BUILD, StateFlag.State.DENY);
+
+        region.setFlag(Flags.PVP, StateFlag.State.DENY);
+
+        region.setFlag(Flags.ENTITY_ITEM_FRAME_DESTROY, StateFlag.State.DENY);
+
+        region.setFlag(Flags.WIND_CHARGE_BURST, StateFlag.State.DENY);
+
+        region.setFlag(Flags.MOB_SPAWNING, StateFlag.State.DENY);
+
+        region.setFlag(Flags.WEATHER_LOCK, WEATHER_LOCK.parseInput(FlagContext.create().setInput("clear").build()));
+
+        region.setFlag(TIME_LOCK, TIME_LOCK.parseInput(FlagContext.create().setInput("day").build()));
+
+        region.setFlag(ENTRY, StateFlag.State.DENY);
+        region.setFlag(Flags.ENTRY.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
+
+        region.setFlag(Flags.CHEST_ACCESS, StateFlag.State.DENY);
+        region.setFlag(Flags.CHEST_ACCESS.getRegionGroupFlag(), RegionGroup.NON_MEMBERS);
+
+        region.setFlag(GREET_MESSAGE, GREET_MESSAGE.parseInput(FlagContext.create().setInput(MessageManager.HIDEOUT_INFO_MESSAGE).build()));
+        region.setFlag(GREET_TITLE, GREET_TITLE.parseInput(FlagContext.create().setInput("§7ᴡɪᴛᴀᴊ ᴡ ᴋʀʏᴊóᴡᴄᴇ").build()));
+
+        region.setFlag(Flags.INTERACT, StateFlag.State.DENY);
+
+        region.setPriority(10);
+
+        regionManager.addRegion(region);
+
+        try {
+            regionManager.save();
+        } catch (StorageException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public static void setHideOutOperatingLocation(GuildHideout guildHideout, Location location) {
@@ -77,6 +157,12 @@ public class GuildHideOutDataManager {
         guildHideoutEntries.put(guildHideout, location);
 
         refreshHideoutOutpostHolograms(guildHideout, location);
+        try {
+            refreshRegion(guildHideout);
+        } catch (InvalidFlagFormat e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public static void refreshHideoutOutpostHolograms(GuildHideout guildHideout, Location location) {
@@ -158,6 +244,12 @@ public class GuildHideOutDataManager {
 
         updateHideOut(hideout);
         refreshHideoutOutpostHolograms(hideout, hideout.getEntryBlockLocation());
+        try {
+            refreshRegion(hideout);
+        } catch (InvalidFlagFormat e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 
@@ -165,6 +257,7 @@ public class GuildHideOutDataManager {
         try {
             guildHideoutEntityRepository.createOrUpdateEntity(hideout);
             guildHideouts.put(hideout.getWorldName(), hideout);
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -178,6 +271,12 @@ public class GuildHideOutDataManager {
                 if(hideout.getEntryBlockLocation() != null) {
                     guildHideoutEntries.put(hideout, hideout.getEntryBlockLocation());
                     refreshHideoutOutpostHolograms(hideout, hideout.getEntryBlockLocation());
+                    try {
+                        refreshRegion(hideout);
+                    } catch (InvalidFlagFormat e) {
+                        throw new RuntimeException(e);
+                    }
+
                 }
             }
             return allEntities;

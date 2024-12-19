@@ -21,14 +21,16 @@ public class ColorFixer {
         }
         return input;
     }
-    public static String addColors(String text)
-    {
+
+    public static String addColors(String text) {
+        text = text.replace("&#", "#");
         for (Matcher matcher = pattern.matcher(text); matcher.find(); matcher = pattern.matcher(text)) {
             String color = text.substring(matcher.start(), matcher.end());
             text = text.replace(color, ChatColor.of(color) + "");
         }
         return ChatColor.translateAlternateColorCodes('&', text);
     }
+
     public static String hsvGradient(String str, Color from, Color to) {
         final float[] hsvFrom = Color.RGBtoHSB(from.getRed(), from.getGreen(), from.getBlue(), null);
         final float[] hsvTo = Color.RGBtoHSB(to.getRed(), to.getGreen(), to.getBlue(), null);

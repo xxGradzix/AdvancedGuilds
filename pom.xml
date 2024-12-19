@@ -111,6 +111,8 @@
           <url>https://maven.citizensnpcs.co/repo</url>
       </repository>
   </repositories>
+
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -122,6 +124,8 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+
   <dependencies>
       <dependency>
           <groupId>com.j256.ormlite</groupId>
@@ -147,12 +151,12 @@
           <version>5.0.3</version>
       </dependency>
 
-
       <dependency>
           <groupId>org.projectlombok</groupId>
           <artifactId>lombok</artifactId>
           <version>1.18.30</version> <!-- Added -->
       </dependency>
+
 <!--      <dependency>-->
 <!--          <groupId>com.fastasyncworldedit</groupId>-->
 <!--          <artifactId>FastAsyncWorldEdit-Core</artifactId>-->
@@ -163,8 +167,6 @@
       <dependency>
           <groupId>com.fastasyncworldedit</groupId>
           <artifactId>FastAsyncWorldEdit-Core</artifactId>
-<!--          <version>2.11.0</version>-->
-
           <scope>provided</scope>
       </dependency>
 
@@ -180,6 +182,13 @@
                   <groupId>*</groupId>
               </exclusion>
           </exclusions>
+      </dependency>
+
+      <dependency>
+          <groupId>com.sk89q.worldguard</groupId>
+          <artifactId>worldguard-bukkit</artifactId>
+          <version>7.0.12</version>
+          <scope>provided</scope>
       </dependency>
 
       <dependency>
@@ -226,12 +235,6 @@
           <version>1.7.1</version>
           <scope>provided</scope>
       </dependency>
-<!--      <dependency>-->
-<!--          <groupId>com.destroystokyo.paper</groupId>-->
-<!--          <artifactId>paper-api</artifactId>-->
-<!--          <version>1.16.5-R0.1-SNAPSHOT</version>-->
-<!--          <scope>provided</scope>-->
-<!--      </dependency>-->
       <dependency>
           <groupId>io.papermc.paper</groupId>
           <artifactId>paper-api</artifactId>

@@ -265,6 +265,17 @@ public class MessageManager extends OkaeriConfig {
     @Comment("Expedition forced")
     public static String EXPEDITION_FORCED = "&7ᴘʀᴢʏꜱᴘɪᴇꜱᴢʏᴌᴇś ᴇᴋꜱᴘᴇᴅʏᴄᴊę ᴢᴀ ᴡᴀʟᴜᴛᴇ ᴘʀᴇᴍɪᴜᴍ";
 
+    // BROADCAST MESSAGES
+
+    @Comment("Broadcast message when player is Killed by another player, arguments {killer}, {victim}, {killer-points-change}, {victim-points-change}")
+    public static String BROADCAST_DEATH_MESSAGE = "&7ɢʀᴀᴄᴢ #a18b3d{victim}&7 &c{victim-points-change}&7 ᴢᴏꜱᴛᴀł ᴢᴀʙɪᴛʏ ᴘʀᴢᴇᴢ ɢʀᴀᴄᴢᴀ #a18b3d{killer}&7 &a+{killer-points-change}&7";
+
+    @Comment("Hideout welcome message")
+    public static String HIDEOUT_INFO_MESSAGE = """
+            &8|&7 ᴋʀʏᴊóᴡᴋᴀ ɢɪʟᴅɪɪ\s
+            &8|&7 ᴡᴇᴊᴅź ᴅᴏ ᴘᴀɴᴇʟᴜ ᴀʙʏ ꜱᴘʀᴀᴡᴅᴢɪć ᴜꜱᴛᴀᴡɪᴇɴɪᴀ ɢɪʟᴅɪɪ\s
+            """;
+
     public static void sendMessageFormated(Player player, String message, MessageType type) {
         message = ColorFixer.addColors(message);
         switch (type) {

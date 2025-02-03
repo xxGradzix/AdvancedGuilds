@@ -4,11 +4,11 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.clip.placeholderapi.expansion.Relational;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
 import me.xxgradzix.advancedclans.config.Config;
-import me.xxgradzix.advancedclans.data.database.entities.Clan;
-import me.xxgradzix.advancedclans.data.database.entities.User;
-import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataManager;
-import me.xxgradzix.advancedclans.entities.PlayerStat;
-import me.xxgradzix.advancedclans.entities.RankType;
+import me.xxgradzix.advancedclans.data.database.entities.clan.Clan;
+import me.xxgradzix.advancedclans.data.database.entities.clan.User;
+import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataService;
+import me.xxgradzix.advancedclans.entities.clans.PlayerStat;
+import me.xxgradzix.advancedclans.entities.clans.RankType;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.ClanController;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.UserController;
 import me.xxgradzix.advancedclans.scheduler.TopRankScheduler;
@@ -81,7 +81,7 @@ public class ClanPlaceholder extends PlaceholderExpansion implements Relational 
 
         }
         if (identifier.startsWith("user")) {
-            User user = ClanAndUserDataManager.getCachedUser(player.getUniqueId());
+            User user = ClanAndUserDataService.getCachedUser(player.getUniqueId());
             if (user == null) {
                 return "";
             }
@@ -100,7 +100,7 @@ public class ClanPlaceholder extends PlaceholderExpansion implements Relational 
             return null;
         }
         if (identifier.startsWith("clan")) {
-            User user = ClanAndUserDataManager.getCachedUser(player.getUniqueId());
+            User user = ClanAndUserDataService.getCachedUser(player.getUniqueId());
             if (user == null) {
                 return "";
             }
@@ -112,22 +112,22 @@ public class ClanPlaceholder extends PlaceholderExpansion implements Relational 
 //                            averagePoints
                     );
                 case "clan_format_tag":
-                    if (ClanAndUserDataManager.getCachedClan(user.getClanTag()) == null) return "config.noneTag";
+                    if (ClanAndUserDataService.getCachedClan(user.getClanTag()) == null) return "config.noneTag";
                     return ColorFixer.addColors(
-                            Config.formatTag.replace("{tag}", ClanAndUserDataManager.getCachedClan(user.getClanTag()).getTag())
+                            Config.formatTag.replace("{tag}", ClanAndUserDataService.getCachedClan(user.getClanTag()).getTag())
                     );
                 case "clan_points":
-                    if (ClanAndUserDataManager.getCachedClan(user.getClanTag()) == null) return "";
+                    if (ClanAndUserDataService.getCachedClan(user.getClanTag()) == null) return "";
                     return clanController.getAveragePoint(player);
                 case "clan_tag":
-                    if (ClanAndUserDataManager.getCachedClan(user.getClanTag()) == null) return "";
-                    return ClanAndUserDataManager.getCachedClan(user.getClanTag()).getTag();
+                    if (ClanAndUserDataService.getCachedClan(user.getClanTag()) == null) return "";
+                    return ClanAndUserDataService.getCachedClan(user.getClanTag()).getTag();
                 case "clan_members_size":
-                    if (ClanAndUserDataManager.getCachedClan(user.getClanTag()) == null) return "0";
-                    return String.valueOf(ClanAndUserDataManager.getCachedClan(user.getClanTag()).getMembers().size());
+                    if (ClanAndUserDataService.getCachedClan(user.getClanTag()) == null) return "0";
+                    return String.valueOf(ClanAndUserDataService.getCachedClan(user.getClanTag()).getMembers().size());
                 case "clan_members_online":
-                    if (ClanAndUserDataManager.getCachedClan(user.getClanTag()) == null) return "0";
-                    return String.valueOf(clanController.countOnlineMember(ClanAndUserDataManager.getCachedClan(user.getClanTag())));
+                    if (ClanAndUserDataService.getCachedClan(user.getClanTag()) == null) return "0";
+                    return String.valueOf(clanController.countOnlineMember(ClanAndUserDataService.getCachedClan(user.getClanTag())));
             }
             return null;
         }
@@ -139,12 +139,12 @@ public class ClanPlaceholder extends PlaceholderExpansion implements Relational 
         if (first == null || second == null) return null;
 
         if (identifier.equalsIgnoreCase("tag")) {
-            User user1 = ClanAndUserDataManager.getCachedUser(first.getUniqueId());
-            User user2 = ClanAndUserDataManager.getCachedUser(second.getUniqueId());
+            User user1 = ClanAndUserDataService.getCachedUser(first.getUniqueId());
+            User user2 = ClanAndUserDataService.getCachedUser(second.getUniqueId());
 
             if (user1 == null || user2 == null) return null;
 
-            Clan clan1 = ClanAndUserDataManager.getCachedClan(user2.getClanTag());
+            Clan clan1 = ClanAndUserDataService.getCachedClan(user2.getClanTag());
             if (clan1 == null) return "";
 
             String tag = clan1.getTag();
@@ -153,7 +153,7 @@ public class ClanPlaceholder extends PlaceholderExpansion implements Relational 
                 return ColorFixer.addColors(Config.formatMember.replace("{tag}", String.valueOf(tag)));
             }
 
-            Clan clan2 = ClanAndUserDataManager.getCachedClan(user1.getClanTag());
+            Clan clan2 = ClanAndUserDataService.getCachedClan(user1.getClanTag());
             if (clan2 != null && clan1.isAlliance(clan2.getTag())) {
                 return ColorFixer.addColors(Config.formatAlliance.replace("{tag}", String.valueOf(tag)));
             }

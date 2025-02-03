@@ -1,10 +1,10 @@
 package me.xxgradzix.advancedclans.scheduler;
 
-import me.xxgradzix.advancedclans.data.database.entities.Clan;
-import me.xxgradzix.advancedclans.data.database.entities.User;
-import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataManager;
-import me.xxgradzix.advancedclans.entities.PlayerStat;
-import me.xxgradzix.advancedclans.entities.RankType;
+import me.xxgradzix.advancedclans.data.database.entities.clan.Clan;
+import me.xxgradzix.advancedclans.data.database.entities.clan.User;
+import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataService;
+import me.xxgradzix.advancedclans.entities.clans.PlayerStat;
+import me.xxgradzix.advancedclans.entities.clans.RankType;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.ClanController;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.UserController;
 import org.bukkit.Bukkit;
@@ -35,7 +35,7 @@ public class TopRankScheduler extends BukkitRunnable {
     }
 
     private void implementsClan() {
-        Queue<Clan> clanQueue = new LinkedList<>(ClanAndUserDataManager.getAllCachedClans());
+        Queue<Clan> clanQueue = new LinkedList<>(ClanAndUserDataService.getAllCachedClans());
         int size = clanQueue.size();
         for (int i = 0; i < size; i++) {
             Clan clan = clanQueue.poll();
@@ -50,7 +50,7 @@ public class TopRankScheduler extends BukkitRunnable {
         rankData.put(RankType.CLAN_POINTS, new PriorityQueue<>(comparator));
     }
     private void implementsUser() {
-        Queue<User> userQueue = new LinkedList<>(ClanAndUserDataManager.getAllCachedUsers());
+        Queue<User> userQueue = new LinkedList<>(ClanAndUserDataService.getAllCachedUsers());
         int queueSize = userQueue.size();
         for (int i = 0; i < queueSize; i++) {
             User user = userQueue.poll();

@@ -1,27 +1,15 @@
 package me.xxgradzix.advancedclans.placeholder;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.clip.placeholderapi.expansion.Relational;
-import me.xxgradzix.advancedclans.AdvancedGuilds;
-import me.xxgradzix.advancedclans.config.Config;
-import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.ClanController;
-import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.UserController;
-import me.xxgradzix.advancedclans.data.database.entities.Clan;
-import me.xxgradzix.advancedclans.data.database.entities.User;
-import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataManager;
-import me.xxgradzix.advancedclans.data.database.services.hideout.VentureRewardDataManager;
-import me.xxgradzix.advancedclans.entities.PlayerStat;
-import me.xxgradzix.advancedclans.entities.RankType;
+import me.xxgradzix.advancedclans.data.database.entities.clan.User;
+import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataService;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition.ExpeditionDto;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition.ExpeditionManager;
 import me.xxgradzix.advancedclans.messages.MessageManager;
-import me.xxgradzix.advancedclans.scheduler.TopRankScheduler;
 import me.xxgradzix.advancedclans.utils.ColorFixer;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Optional;
 
 
 public class VenturePlaceholder extends PlaceholderExpansion {
@@ -57,7 +45,7 @@ public class VenturePlaceholder extends PlaceholderExpansion {
         Player player = offlinePlayer.getPlayer();
 
         if (identifier.startsWith("expedition")) {
-            User user = ClanAndUserDataManager.getCachedUser(player.getUniqueId());
+            User user = ClanAndUserDataService.getCachedUser(player.getUniqueId());
             if (user == null) {
                 return "";
             }
@@ -85,9 +73,9 @@ public class VenturePlaceholder extends PlaceholderExpansion {
                 objectiveAndLevel = ColorFixer.addColors(objective + " &8| &r" + level);
 
                 literal = ColorFixer.addColors("&7ᴇᴋꜱᴘᴇᴅʏᴄᴊᴀ ᴜᴋᴏńᴄᴢʏ ꜱɪę ᴢᴀ: ");
-                timeLeft = MessageManager.secondsToTimeFormat(expeditionDto.secondsToCompletion());
+                timeLeft = MessageManager.secondsToTimeFormat(expeditionDto.secondsLeft());
 
-                int requiredCoins = expeditionDto.secondsToCompletion() / (60 * 30);
+                int requiredCoins = expeditionDto.secondsLeft() / (60 * 30);
 
                 speedUp = ColorFixer.addColors("&8&l[§e§lᴘᴘᴍ§r&8&l] &#FFDB41&l⚡ &#FCDF52&lᴘ&#FBE25A&lʀ&#FAE462&lᴢ&#F9E66B&lʏ&#F7E873&lꜱ&#F6EA7C&lᴘ&#F5EC84&lɪ&#F4EF8C&lᴇ&#F2F195&lꜱ&#F1F39D&lᴢ &8&l(&6&l" + requiredCoins + " ᴍᴏɴᴇᴛ ᴘʀᴇᴍɪᴜᴍ&8&l)");
 

@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 
 public class MessageManager extends OkaeriConfig {
 
+
     @Comment("Messages")
     @Comment("Only for players message")
     public static String ONLY_FOR_PLAYERS = "&7ᴛʏʟᴋᴏ ɢʀᴀᴄᴢ ᴍᴏᴢᴇ ᴜᴢʏᴄ ᴛᴇᴊ ᴋᴏᴍᴇɴᴅʏ";
@@ -264,17 +265,34 @@ public class MessageManager extends OkaeriConfig {
     public static String EXPEDITION_NOT_ENOUGH_PREMIUM_MONEY = "&7ɴɪᴇ ᴍᴀꜱᴢ ᴡʏꜱᴛᴀʀᴄᴢᴀᴊąᴄᴏ ᴡᴀʟᴜᴛʏ ᴘʀᴇᴍɪᴜᴍ";
     @Comment("Expedition forced")
     public static String EXPEDITION_FORCED = "&7ᴘʀᴢʏꜱᴘɪᴇꜱᴢʏᴌᴇś ᴇᴋꜱᴘᴇᴅʏᴄᴊę ᴢᴀ ᴡᴀʟᴜᴛᴇ ᴘʀᴇᴍɪᴜᴍ";
+    @Comment("Upgrade ready, param {upgrade}")
+    public static String UPGRADE_READY = "&7ᴜʟᴇᴘꜱᴢᴇɴɪᴇ {upgrade} &7ᴊᴇꜱᴛ ɢᴏᴛᴏᴡᴇ";
 
     // BROADCAST MESSAGES
 
     @Comment("Broadcast message when player is Killed by another player, arguments {killer}, {victim}, {killer-points-change}, {victim-points-change}")
     public static String BROADCAST_DEATH_MESSAGE = "&7ɢʀᴀᴄᴢ #a18b3d{victim}&7 &c{victim-points-change}&7 ᴢᴏꜱᴛᴀł ᴢᴀʙɪᴛʏ ᴘʀᴢᴇᴢ ɢʀᴀᴄᴢᴀ #a18b3d{killer}&7 &a+{killer-points-change}&7";
 
+    @Comment("Broadcast message when player is Killed by another player, arguments {killer}, {victim}, {killer-points-change}, {victim-points-change}")
+    public static String BROADCAST_DEATH_MESSAGE_NO_KILLER = "&7ɢʀᴀᴄᴢ #a18b3d{victim}&7 ᴢɢɪɴął";
+
+    @Comment("Kill cooldown message, arguments {time}")
+    public static String MESSAGE_COOLDOWN_KILL = "&7ɴɪᴇᴡᴀᴅᴡɴᴏ ᴢᴀʙɪłᴇś ᴛᴇɢᴏ ɢʀᴀᴄᴢᴀ, ᴍᴜꜱɪꜱᴢ ᴏᴅᴄᴢᴇᴋᴀć #a18b3d{time} ꜱᴇᴋᴜɴᴅ &7ᴢᴀɴɪᴍ ʙęᴅᴢɪᴇꜱᴢ ᴍóɢł ᴜᴢʏꜱᴋᴀć ᴢ ɴɪᴇɢᴏ ʀᴀɴᴋɪɴɢ";
+
     @Comment("Hideout welcome message")
     public static String HIDEOUT_INFO_MESSAGE = """
+            &8|\s
             &8|&7 ᴋʀʏᴊóᴡᴋᴀ ɢɪʟᴅɪɪ\s
             &8|&7 ᴡᴇᴊᴅź ᴅᴏ ᴘᴀɴᴇʟᴜ ᴀʙʏ ꜱᴘʀᴀᴡᴅᴢɪć ᴜꜱᴛᴀᴡɪᴇɴɪᴀ ɢɪʟᴅɪɪ\s
+            &8|\s
             """;
+
+    @Comment("Alliance message")
+    public static String ALLIANCE_CHAT_FORMAT = "&3ᴄᴢᴀᴛ ꜱᴏᴊᴜꜱᴢᴜ &7{tag} &b{player}&7: &c{message}";
+
+
+    @Comment("Clan message")
+    public static String CLAN_CHAT_FORMAT = "&4ᴄᴢᴀᴛ ᴋʟᴀɴᴜ &7{tag} &b{player}&7: &c{message}";
 
     public static void sendMessageFormated(Player player, String message, MessageType type) {
         message = ColorFixer.addColors(message);

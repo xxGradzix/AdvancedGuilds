@@ -5,10 +5,10 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import eu.okaeri.configs.ConfigManager;
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
-import me.xxgradzix.advancedclans.commands.ClanCommand;
-import me.xxgradzix.advancedclans.commands.HideOutAdminCommands;
-import me.xxgradzix.advancedclans.commands.PlayerCommand;
-import me.xxgradzix.advancedclans.commands.VentureRewardCommands;
+import me.xxgradzix.advancedclans.commands.clan.ClanCommand;
+import me.xxgradzix.advancedclans.commands.hideout.HideOutAdminCommands;
+import me.xxgradzix.advancedclans.commands.clan.PlayerCommand;
+import me.xxgradzix.advancedclans.commands.hideout.VentureRewardCommands;
 import me.xxgradzix.advancedclans.config.Config;
 import me.xxgradzix.advancedclans.data.database.controllers.hideouts.VentureRewardController;
 import me.xxgradzix.advancedclans.data.database.entities.hideout.storage.GuildlStorageEntity;
@@ -17,22 +17,22 @@ import me.xxgradzix.advancedclans.data.database.entities.hideout.venture.Venture
 import me.xxgradzix.advancedclans.data.database.repositories.hideout.storage.HideoutStorageRepository;
 import me.xxgradzix.advancedclans.data.database.repositories.hideout.storage.PersonalStorageRepository;
 import me.xxgradzix.advancedclans.data.database.repositories.hideout.venture.VentureRewardRepository;
-import me.xxgradzix.advancedclans.data.database.services.hideout.GuildHideOutDataManager;
-import me.xxgradzix.advancedclans.data.database.entities.Clan;
+import me.xxgradzix.advancedclans.data.database.services.hideout.GuildHideOutDataService;
+import me.xxgradzix.advancedclans.data.database.entities.clan.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideout;
-import me.xxgradzix.advancedclans.data.database.entities.User;
-import me.xxgradzix.advancedclans.data.database.repositories.clansCore.ClanEntityRepository;
-import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataManager;
+import me.xxgradzix.advancedclans.data.database.entities.clan.User;
+import me.xxgradzix.advancedclans.data.database.repositories.clans.ClanEntityRepository;
+import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataService;
 import me.xxgradzix.advancedclans.data.database.repositories.hideout.GuildHideoutEntityRepository;
-import me.xxgradzix.advancedclans.data.database.repositories.clansCore.UserEntityRepository;
-import me.xxgradzix.advancedclans.data.database.services.hideout.StorageEntityDataManager;
-import me.xxgradzix.advancedclans.data.database.services.hideout.VentureRewardDataManager;
+import me.xxgradzix.advancedclans.data.database.repositories.clans.UserEntityRepository;
+import me.xxgradzix.advancedclans.data.database.services.hideout.StorageEntityDataService;
+import me.xxgradzix.advancedclans.data.database.services.hideout.VentureRewardDataService;
 import me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition.ExpeditionDto;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition.ExpeditionGui;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.storage.HideoutStorage;
-import me.xxgradzix.advancedclans.listener.*;
-import me.xxgradzix.advancedclans.listener.guildHideOut.*;
+import me.xxgradzix.advancedclans.listener.clan.*;
+import me.xxgradzix.advancedclans.listener.hideout.*;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.ClanController;
 import me.xxgradzix.advancedclans.manager.CooldownManager;
 import me.xxgradzix.advancedclans.data.database.controllers.hideouts.GuildHideOutController;
@@ -42,11 +42,8 @@ import me.xxgradzix.advancedclans.placeholder.ClanPlaceholder;
 import me.xxgradzix.advancedclans.placeholder.VenturePlaceholder;
 import me.xxgradzix.advancedclans.scheduler.TopRankScheduler;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,10 +72,10 @@ public final class AdvancedGuilds extends JavaPlugin {
 
     /** SERVICES **/
 
-    private ClanAndUserDataManager clanAndUserDataManager;
-    private GuildHideOutDataManager guildHideOutDataManager;
-    private StorageEntityDataManager storageEntityDataManager;
-    private VentureRewardDataManager ventureRewardDataManager;
+    private ClanAndUserDataService clanAndUserDataService;
+    private GuildHideOutDataService guildHideOutDataService;
+    private StorageEntityDataService storageEntityDataService;
+    private VentureRewardDataService ventureRewardDataService;
 
     /** CONTROLLERS **/
 
@@ -157,6 +154,7 @@ public final class AdvancedGuilds extends JavaPlugin {
 
         ItemManager.init();
 
+
         try {
             configureDB();
         } catch (SQLException | IOException e) {
@@ -187,18 +185,34 @@ public final class AdvancedGuilds extends JavaPlugin {
         }
 
         /** SERVICES **/
-
-        clanAndUserDataManager = new ClanAndUserDataManager(clanEntityRepository, userEntityRepository);
-        guildHideOutDataManager = new GuildHideOutDataManager(guildHideoutEntityRepository);
-        ventureRewardDataManager = new VentureRewardDataManager(ventureRewardRepository);
-        storageEntityDataManager = new StorageEntityDataManager(personalStorageRepository, hideoutStorageRepository);
+/**
+ *
+ * DB
+ *
+ * Repository
+ *
+ * service
+ *
+ * controller
+ *
+ *
+ */
+        clanAndUserDataService = new ClanAndUserDataService(clanEntityRepository, userEntityRepository);
+        guildHideOutDataService = new GuildHideOutDataService(guildHideoutEntityRepository);
+        ventureRewardDataService = new VentureRewardDataService(ventureRewardRepository);
+        storageEntityDataService = new StorageEntityDataService(personalStorageRepository, hideoutStorageRepository);
 
         /** CONTROLLERS **/
 
         userController = new UserController();
-        clansController = new ClanController(this, clanAndUserDataManager);
-        guildHideOutController = new GuildHideOutController(userController, this);
+
+        clansController = new ClanController(this, clanAndUserDataService);
+
+        guildHideOutController = new GuildHideOutController(userController, guildHideOutDataService);
+
         ventureRewardController = new VentureRewardController();
+
+
 
         new ExpeditionGui(guildHideOutController, clansController);
         for (ExpeditionDto.ExpeditionObjective objective : ExpeditionDto.ExpeditionObjective.values()) {
@@ -225,9 +239,9 @@ public final class AdvancedGuilds extends JavaPlugin {
             venturePlaceholder = new VenturePlaceholder();
         }
 
-        guildHideOutController.loadHideOuts();
         clansController.loadAllClans();
         userController.loadAllUsers();
+        GuildHideOutController.loadHideOuts();
 
         Stream.of(
                 new PlayerConnectionListener(this, cooldownManager, userController),

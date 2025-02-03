@@ -6,11 +6,11 @@ import dev.triumphteam.gui.guis.StorageGui;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.ClanController;
 import me.xxgradzix.advancedclans.data.database.controllers.hideouts.GuildHideOutController;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.UserController;
-import me.xxgradzix.advancedclans.data.database.entities.Clan;
+import me.xxgradzix.advancedclans.data.database.entities.clan.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideout;
 import me.xxgradzix.advancedclans.data.database.entities.hideout.storage.GuildlStorageEntity;
 import me.xxgradzix.advancedclans.data.database.entities.hideout.storage.PersonalStorageEntity;
-import me.xxgradzix.advancedclans.data.database.services.hideout.StorageEntityDataManager;
+import me.xxgradzix.advancedclans.data.database.services.hideout.StorageEntityDataService;
 import me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.messages.MessageType;
@@ -35,11 +35,11 @@ public class HideoutStorage {
 
     private static class HideoutGuis {
 
-        private final StorageGui gui1 = Gui.storage().title(Component.text("Skrzynia 1")).rows(5).create();
-        private final StorageGui gui2 = Gui.storage().title(Component.text("Skrzynia 2")).rows(5).create();
-        private final StorageGui gui3 = Gui.storage().title(Component.text("Skrzynia 3")).rows(5).create();
-        private final StorageGui gui4 = Gui.storage().title(Component.text("Skrzynia 4")).rows(5).create();
-        private final StorageGui gui5 = Gui.storage().title(Component.text("Skrzynia 5")).rows(5).create();
+        private final StorageGui gui1 = Gui.storage().title(Component.text("ꜱᴋʀᴢʏɴɪᴀ 1")).rows(5).create();
+        private final StorageGui gui2 = Gui.storage().title(Component.text("ꜱᴋʀᴢʏɴɪᴀ 2")).rows(5).create();
+        private final StorageGui gui3 = Gui.storage().title(Component.text("ꜱᴋʀᴢʏɴɪᴀ 3")).rows(5).create();
+        private final StorageGui gui4 = Gui.storage().title(Component.text("ꜱᴋʀᴢʏɴɪᴀ 4")).rows(5).create();
+        private final StorageGui gui5 = Gui.storage().title(Component.text("ꜱᴋʀᴢʏɴɪᴀ 5")).rows(5).create();
 
         private final Set<UUID> gui1permissions = new HashSet<>();
         private final Set<UUID> gui2permissions = new HashSet<>();
@@ -136,7 +136,8 @@ public class HideoutStorage {
         StorageGui gui = personalGuis.get(player.getUniqueId());
         if(gui == null) {
             gui = Gui.storage().title(
-                    Component.text("testtesttesttesttesttesttesttesttesttesttesttesttest||七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七EloEloelo"))
+//                    Component.text("testtesttesttesttesttesttesttesttesttesttesttesttest||七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七七EloEloelo"))
+                    Component.text("ᴘʀʏᴡᴀᴛɴʏ ᴍᴀɢᴀᴢʏɴ"))
                     .rows(5).create();
             personalGuis.put(player.getUniqueId(), gui);
         }
@@ -158,9 +159,7 @@ public class HideoutStorage {
 
         boolean isOwner = clan.getOwnerUUID().equals(player.getUniqueId());
 
-
-
-        Gui gui = Gui.gui().rows(3).disableAllInteractions().title(Component.text("Guild Storage")).create();
+        Gui gui = Gui.gui().rows(3).disableAllInteractions().title(Component.text("&f七七七七七七七七≦".replace("&", "§"))).create();
 
         GuiItem personalStorage = new GuiItem(ItemManager.getPersonalStorageItem());
         personalStorage.setAction(e -> openPersonalStorageGui(player));
@@ -183,7 +182,7 @@ public class HideoutStorage {
                     if(e.getClick().isLeftClick()) {
                         openSharedGui(player, playerHideOut, finalI + 1);
                     }else if(e.getClick().isRightClick()) {
-                        openPermissionGui(player, playerHideOut, finalI + 1);
+                        openPermissionGui(player, playerHideOut, finalI + 1, 1);
                     }
                 } else {
                     openSharedGui(player, playerHideOut, finalI + 1);
@@ -195,13 +194,13 @@ public class HideoutStorage {
         gui.open(player);
     }
 
-    private static void openPermissionGui(Player player, GuildHideout playerHideOut, int guiNum) {
+    private static void openPermissionGui(Player player, GuildHideout playerHideOut, int guiNum, int page) {
 
         Clan clan = clanController.getClan(playerHideOut.getClanTag());
 
         final HideoutGuis hideoutGuis = getOrCreateHideoutGuis(playerHideOut);
 
-        Gui gui = Gui.gui().rows(6).disableAllInteractions().title(Component.text("Permission")).create();
+        Gui gui = Gui.gui().rows(4).disableAllInteractions().title(Component.text("&f七七七七七七七七≧".replace("&", "§"))).create();
 
         Set<UUID> permittedPlayers = hideoutGuis.getPermissionsByNum(guiNum);
 
@@ -209,14 +208,19 @@ public class HideoutStorage {
         clanMembers.remove(clan.getOwnerUUID());
 
         gui.setCloseGuiAction(e -> {
-//            hideoutGuis.getPermissionsByNum(guiNum).clear();
-//            hideoutGuis.getPermissionsByNum(guiNum).addAll(permittedPlayers);
             MessageManager.sendMessageFormated(player, MessageManager.PERMISSIONS_UPDATED, MessageType.CHAT);
         });
 
-        for(UUID uuid : clanMembers) {
+        int slot = 2;
 
-            GuiItem playerItem = new GuiItem(ItemManager.getPermissionItem(uuid, permittedPlayers.contains(uuid)));
+//        int page = 1;
+
+        for (int i = (7 * (page - 1)); i < (7 * (page - 1)) + Math.min(7, (clanMembers.size()%7)); i++) {
+
+            UUID uuid = clanMembers.get(i);
+
+            GuiItem playerHeadItem = new GuiItem(ItemManager.getPermissionItem(StoragePermissionSlotType.HEAD, uuid, permittedPlayers.contains(uuid)));
+            GuiItem playerItem = new GuiItem(ItemManager.getPermissionItem(StoragePermissionSlotType.CHECK_BOX, uuid, permittedPlayers.contains(uuid)));
 
             playerItem.setAction(e -> {
                 if(permittedPlayers.contains(uuid)) {
@@ -224,10 +228,35 @@ public class HideoutStorage {
                 } else {
                     permittedPlayers.add(uuid);
                 }
-                gui.updateItem(e.getSlot(), ItemManager.getPermissionItem(uuid, permittedPlayers.contains(uuid)));
+                gui.updateItem(e.getSlot(), ItemManager.getPermissionItem(StoragePermissionSlotType.CHECK_BOX, uuid, permittedPlayers.contains(uuid)));
             });
 
-            gui.addItem(playerItem);
+//            gui.addItem(playerItem);
+            gui.setItem(2, slot%7, playerHeadItem);
+            gui.setItem(2, slot%7, playerItem);
+            slot++;// todo pages
+        }
+
+        gui.open(player);
+
+        for(UUID uuid : clanMembers) {
+
+            GuiItem playerHeadItem = new GuiItem(ItemManager.getPermissionItem(StoragePermissionSlotType.HEAD, uuid, permittedPlayers.contains(uuid)));
+            GuiItem playerItem = new GuiItem(ItemManager.getPermissionItem(StoragePermissionSlotType.CHECK_BOX, uuid, permittedPlayers.contains(uuid)));
+
+            playerItem.setAction(e -> {
+                if(permittedPlayers.contains(uuid)) {
+                    permittedPlayers.remove(uuid);
+                } else {
+                    permittedPlayers.add(uuid);
+                }
+                gui.updateItem(e.getSlot(), ItemManager.getPermissionItem(StoragePermissionSlotType.CHECK_BOX, uuid, permittedPlayers.contains(uuid)));
+            });
+
+//            gui.addItem(playerItem);
+            gui.setItem(2, slot%7, playerHeadItem);
+            gui.setItem(2, slot%7, playerItem);
+            slot++;// todo pages
         }
 
         gui.open(player);
@@ -235,10 +264,10 @@ public class HideoutStorage {
     }
 
     private static HideoutGuis getOrCreateHideoutGuis(GuildHideout playerHideOut) {
-        HideoutGuis hideoutGuis = hideoutGuisMap.get(playerHideOut.getWorldName());
+        HideoutGuis hideoutGuis = hideoutGuisMap.get(playerHideOut.getHideoutID());
         if(hideoutGuis == null) {
             hideoutGuis = new HideoutGuis();
-            hideoutGuisMap.put(playerHideOut.getWorldName(), hideoutGuis);
+            hideoutGuisMap.put(playerHideOut.getHideoutID(), hideoutGuis);
         }
         return hideoutGuis;
     }
@@ -260,8 +289,8 @@ public class HideoutStorage {
 
     public static void saveGuis() {
 
-        personalGuis.forEach((uuid, gui) -> StorageEntityDataManager.createOrUpdatePersonalStorageEntity(new PersonalStorageEntity(uuid, gui.getInventory().getContents())));
-        hideoutGuisMap.forEach((hideoutName, hideoutGuis) -> StorageEntityDataManager.createOrUpdateGuildStorageEntity(new GuildlStorageEntity(
+        personalGuis.forEach((uuid, gui) -> StorageEntityDataService.createOrUpdatePersonalStorageEntity(new PersonalStorageEntity(uuid, gui.getInventory().getContents())));
+        hideoutGuisMap.forEach((hideoutName, hideoutGuis) -> StorageEntityDataService.createOrUpdateGuildStorageEntity(new GuildlStorageEntity(
                 hideoutName,
                 hideoutGuis.gui1.getInventory().getContents(),
                 hideoutGuis.gui2.getInventory().getContents(),
@@ -277,7 +306,7 @@ public class HideoutStorage {
     }
 
     public static void loadPersonalGuis() {
-        StorageEntityDataManager.getAllPersonalStorageEntities().forEach(storageEntity -> {
+        StorageEntityDataService.getAllPersonalStorageEntities().forEach(storageEntity -> {
             StorageGui gui = Gui.storage().title(Component.text("Personal Storage")).rows(5).create();
             gui.getInventory().setContents(storageEntity.getInventory());
             personalGuis.put(storageEntity.getId(), gui);
@@ -285,7 +314,7 @@ public class HideoutStorage {
     }
 
     public static void loadGuildGuis() {
-        StorageEntityDataManager.getAllGuildStorageEntities().forEach(storageEntity -> {
+        StorageEntityDataService.getAllGuildStorageEntities().forEach(storageEntity -> {
 
             HideoutGuis hideoutGuis = new HideoutGuis();
             hideoutGuis.gui1.getInventory().setContents(storageEntity.getInventory1());

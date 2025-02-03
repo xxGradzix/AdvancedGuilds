@@ -2,8 +2,8 @@ package me.xxgradzix.advancedclans.data.database.controllers.clansCOre;
 
 import lombok.Setter;
 import me.xxgradzix.advancedclans.config.Config;
-import me.xxgradzix.advancedclans.data.database.entities.User;
-import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataManager;
+import me.xxgradzix.advancedclans.data.database.entities.clan.User;
+import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataService;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.messages.MessageType;
 import me.xxgradzix.advancedclans.scheduler.TopRankScheduler;
@@ -24,12 +24,12 @@ public class UserController {
 
     public void loadUser(Player player)
     {
-        User user = ClanAndUserDataManager.getCachedUser(player.getUniqueId());
+        User user = ClanAndUserDataService.getCachedUser(player.getUniqueId());
         if(user==null)
         {
             user = new User(player, Config.defaultPoints);
             topRankScheduler.addUser(user);
-            ClanAndUserDataManager.updateUser(user);
+            ClanAndUserDataService.updateUser(user);
         }
     }
 
@@ -38,21 +38,21 @@ public class UserController {
         user.resetKill();
         user.resetDeath();
 
-        ClanAndUserDataManager.updateUser(user);
+        ClanAndUserDataService.updateUser(user);
     }
     public void resetPoints(User user) {
         user.setPoints(Config.defaultPoints);
-        ClanAndUserDataManager.updateUser(user);
+        ClanAndUserDataService.updateUser(user);
     }
 
     public void resetKill(User user) {
         user.resetKill();
-        ClanAndUserDataManager.updateUser(user);
+        ClanAndUserDataService.updateUser(user);
     }
 
     public void resetDeath(User user) {
         user.resetDeath();
-        ClanAndUserDataManager.updateUser(user);
+        ClanAndUserDataService.updateUser(user);
     }
 
 
@@ -65,11 +65,11 @@ public class UserController {
         if(clanRankIndexByTag.isPresent())
             index = clanRankIndexByTag.getAsInt()+1;
 
-        String clan = (!user.hasClan()) ? "config.noneTag" : ColorFixer.addColors("config.formatTag.replace({tag}, user.getClan().getTag())");
+        String clan = (!user.hasClan()) ? "config.noneTag" : ColorFixer.addColors("config.formatTag.replace({tag}, " + user.getClanTag());
 
         String infoMessage = MessageManager.PLAYER_INFO;
 
-        infoMessage = infoMessage.replace("{name}", Objects.requireNonNull(offlinePlayer.getName()))
+        infoMessage = infoMessage.replace("{player}", Objects.requireNonNull(offlinePlayer.getName()))
                 .replace("{kills}", String.valueOf(user.getKills()))
                 .replace("{deaths}", String.valueOf(user.getDeath()))
                 .replace("{points}", String.valueOf(user.getPoints()))
@@ -82,10 +82,10 @@ public class UserController {
     }
 
     public static Optional<User> findUserByUUID(UUID uuid) {
-        return Optional.ofNullable(ClanAndUserDataManager.getCachedUser(uuid));
+        return Optional.ofNullable(ClanAndUserDataService.getCachedUser(uuid));
     }
     public static void updateUser(User user) {
-        ClanAndUserDataManager.updateUser(user);
+        ClanAndUserDataService.updateUser(user);
     }
 
     public Optional<User> findUserByPlayer(Player player) {
@@ -93,6 +93,6 @@ public class UserController {
     }
 
     public void loadAllUsers() {
-        ClanAndUserDataManager.loadAllUsers();
+        ClanAndUserDataService.loadAllUsers();
     }
 }

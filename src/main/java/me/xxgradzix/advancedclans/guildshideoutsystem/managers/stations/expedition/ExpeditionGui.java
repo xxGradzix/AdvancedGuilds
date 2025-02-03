@@ -7,12 +7,11 @@ import me.xxgradzix.advancedclans.AdvancedGuilds;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.ClanController;
 import me.xxgradzix.advancedclans.data.database.controllers.hideouts.GuildHideOutController;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCOre.UserController;
-import me.xxgradzix.advancedclans.data.database.entities.Clan;
+import me.xxgradzix.advancedclans.data.database.entities.clan.Clan;
 import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideout;
-import me.xxgradzix.advancedclans.data.database.entities.User;
+import me.xxgradzix.advancedclans.data.database.entities.clan.User;
 import me.xxgradzix.advancedclans.data.database.entities.hideout.venture.VentureReward;
-import me.xxgradzix.advancedclans.data.database.services.hideout.VentureRewardDataManager;
-import me.xxgradzix.advancedclans.globalGuis.ClickAction;
+import me.xxgradzix.advancedclans.data.database.services.hideout.VentureRewardDataService;
 import me.xxgradzix.advancedclans.globalGuis.FastForwardGui;
 import me.xxgradzix.advancedclans.guildshideoutsystem.ItemManager;
 import me.xxgradzix.advancedclans.messages.MessageManager;
@@ -21,9 +20,7 @@ import me.xxgradzix.advancedclans.utils.ColorFixer;
 import me.xxgradzix.advancedclans.utils.ItemUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -35,10 +32,23 @@ import static me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.e
 
 public class ExpeditionGui {
 
+    /** INSTANCE VARS AND CONSTRUCTORS */
+
+    private static GuildHideOutController hideOutController;
+    private static ClanController clanController;
+
+    public ExpeditionGui(GuildHideOutController hideOutController, ClanController clanController) {
+        ExpeditionGui.hideOutController = hideOutController;
+        ExpeditionGui.clanController = clanController;
+    }
+
+
+
+    /** EXPEDITION REWARD VARIANTS SHUFFLE METHOD */
+
     private static final List<ExpeditionVariant> variants = new ArrayList<>();
 
     public static void shuffleExpeditions() {
-
         variants.clear();
         while (variants.size() < 10){
             int randomObjectiveIndex = new Random().nextInt(0, ExpeditionDto.ExpeditionObjective.values().length);
@@ -53,13 +63,6 @@ public class ExpeditionGui {
         variants.sort(Comparator.comparingInt(ExpeditionVariant::getLevel));
     }
 
-    private static GuildHideOutController hideOutController;
-    private static ClanController clanController;
-
-    public ExpeditionGui(GuildHideOutController hideOutController, ClanController clanController) {
-        ExpeditionGui.hideOutController = hideOutController;
-        ExpeditionGui.clanController = clanController;
-    }
 
 
     public static void openExpeditionGui(Player player) {
@@ -77,8 +80,8 @@ public class ExpeditionGui {
             Bukkit.getLogger().warning("User " + player.getName() + " tried to open expedition gui with wrong clan");
             return;
         }
-        GuildHideout hideout = hideOutController.getPlayerHideOut(player);
 
+        GuildHideout hideout = hideOutController.getPlayerHideOut(player);
 
         if (hideout == null) {
             MessageManager.sendMessageFormated(player, MessageManager.YOU_DONT_BELONG_TO_THIS_HIDEOUT, MessageType.CHAT);
@@ -98,6 +101,7 @@ public class ExpeditionGui {
             openCurrentExpeditionGui(player);
             return;
         }
+
         ventureChooseGui(player);
     }
 
@@ -353,17 +357,41 @@ public class ExpeditionGui {
         ExpeditionDto expeditionDto = ExpeditionManager.getExpeditionDtoByPlayer(player);
         if(expeditionDto == null) return;
 
+        if(!expeditionDto.isFinished()) {
+            new FastForwardGui(player, expeditionDto, "ᴇᴋꜱᴘᴇᴅʏᴄᴊę", event -> {
+                openCurrentExpeditionGui(player);
+            }, true);
+        }
+
         // New
 
-        FastForwardGui fastForwardGui = new FastForwardGui(
-                player,
-                new ClickAction() {
-                    @Override
-                    public void onClick(InventoryAction action) {
+//        Countdown countdown = Countdown.countdowns.get(player.getName() + "_expedition");
+//
+//        if(countdown != null) {
+//            new FastForwardGui(player, event1 -> {
+//
+//                ItemStack targetItem = ItemManager.getPremiumGuildCoin();
+//
+//                int requiredAmount = countdown.secondsLeft() / (60 * 30);
+//
+//
+//                int currentAmount = ItemUtil.calcItemAmount(player, targetItem);
+//
+//                if(currentAmount < requiredAmount) {
+//                    MessageManager.sendMessageFormated(player, "&7ᴘᴏᴛʀᴢᴇʙᴜᴊᴇꜱᴢ &a" + requiredAmount + " " + targetItem.getItemMeta().getDisplayName() + " &7ᴀʙʏ ᴘʀᴢʏꜱᴘɪᴇꜱᴢʏć ᴇᴋꜱᴘᴇᴅʏᴄᴊᴇ" , MessageType.CHAT);
+//                    return;
+//                }
+//
+//                ItemUtil.removeItems(player, targetItem, requiredAmount);
+//                countdown.fastForward();
+//
+//                player.closeInventory();
+//            });
 
-                    }
-                }
-        );
+
+
+//            return;
+//        }
 
         /// //
 
@@ -374,7 +402,7 @@ public class ExpeditionGui {
                 .disableAllInteractions()
                 .create();
 
-        GuiItem expeditionItem = new GuiItem(ItemManager.getCurrentExpeditionItem(expeditionDto.getObjective(), expeditionDto.isFinished(), expeditionDto.getExpeditionLevel(), expeditionDto.secondsToCompletion()));
+        GuiItem expeditionItem = new GuiItem(ItemManager.getCurrentExpeditionItem(expeditionDto.getObjective(), expeditionDto.isFinished(), expeditionDto.getExpeditionLevel(), expeditionDto.secondsLeft()));
 
         expeditionItem.setAction((e) -> {
 
@@ -385,7 +413,7 @@ public class ExpeditionGui {
 
                     ItemStack targetItem = ItemManager.getPremiumGuildCoin();
 
-                    int requiredCoins = expeditionDto.secondsToCompletion() / (60 * 30);
+                    int requiredCoins = expeditionDto.secondsLeft() / (60 * 30);
 
                     int i = ItemUtil.calcItemAmount(player, targetItem);
 
@@ -437,7 +465,7 @@ public class ExpeditionGui {
             } else {
                 gui.close(player);
                 MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_PENDING, MessageType.CHAT);
-                MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_WILL_END_IN.replace("{timeleft}", MessageManager.secondsToTimeFormat(expeditionDto.secondsToCompletion())), MessageType.CHAT);
+                MessageManager.sendMessageFormated(player, MessageManager.EXPEDITION_WILL_END_IN.replace("{timeleft}", MessageManager.secondsToTimeFormat(expeditionDto.secondsLeft())), MessageType.CHAT);
             }
 
         });
@@ -453,7 +481,7 @@ public class ExpeditionGui {
         for (ExpeditionDto.ExpeditionObjective objective : ExpeditionDto.ExpeditionObjective.values()) {
             HashMap<Integer, List<VentureReward>> rewards = new HashMap<>();
             for (int i = 1; i <= 3; i++) {
-                List<VentureReward> allByObjectiveAndLevel = VentureRewardDataManager.getAllByObjectiveAndLevel(objective, i);
+                List<VentureReward> allByObjectiveAndLevel = VentureRewardDataService.getAllByObjectiveAndLevel(objective, i);
                 rewards.put(i, allByObjectiveAndLevel);
             }
             expeditionRewards.put(objective, rewards);
@@ -465,7 +493,7 @@ public class ExpeditionGui {
             refreshAllExpeditionRewards();
             return;
         }
-        List<VentureReward> allByObjectiveAndLevel = VentureRewardDataManager.getAllByObjectiveAndLevel(objective, level);
+        List<VentureReward> allByObjectiveAndLevel = VentureRewardDataService.getAllByObjectiveAndLevel(objective, level);
 
         HashMap<Integer, List<VentureReward>> integerListHashMap = expeditionRewards.getOrDefault(objective, new HashMap<>());
         integerListHashMap.put(level, allByObjectiveAndLevel);

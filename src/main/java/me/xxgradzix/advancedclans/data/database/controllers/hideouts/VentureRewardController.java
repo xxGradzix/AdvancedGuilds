@@ -1,7 +1,7 @@
 package me.xxgradzix.advancedclans.data.database.controllers.hideouts;
 
 import me.xxgradzix.advancedclans.data.database.entities.hideout.venture.VentureReward;
-import me.xxgradzix.advancedclans.data.database.services.hideout.VentureRewardDataManager;
+import me.xxgradzix.advancedclans.data.database.services.hideout.VentureRewardDataService;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition.ExpeditionDto;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -28,11 +28,11 @@ public class VentureRewardController {
 
         VentureReward ventureReward = new VentureReward(objective, reward, level, minAmount, maxAmount);
 
-        VentureRewardDataManager.addVentureReward(ventureReward);
+        VentureRewardDataService.addVentureReward(ventureReward);
     }
 
     public List<VentureReward> getAllByObjectiveAndLevel(ExpeditionDto.ExpeditionObjective objective, int level) {
-        return VentureRewardDataManager.getAllByObjectiveAndLevel(objective, level);
+        return VentureRewardDataService.getAllByObjectiveAndLevel(objective, level);
     }
 
 

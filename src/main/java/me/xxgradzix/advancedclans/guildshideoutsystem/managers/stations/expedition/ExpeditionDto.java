@@ -2,9 +2,10 @@ package me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedit
 
 import lombok.Getter;
 import lombok.Setter;
+import me.xxgradzix.advancedclans.guildshideoutsystem.managers.utills.HideoutTimeEvent;
 import me.xxgradzix.advancedclans.utils.ColorFixer;
 
-public class ExpeditionDto {
+public class ExpeditionDto implements HideoutTimeEvent {
 
     public enum ExpeditionObjective {
 
@@ -45,7 +46,6 @@ public class ExpeditionDto {
     @Getter
     private final int foodSuplied;
 
-    private final long cooldownTimeSeconds;
 
     private final long timeOfCompletionMills;
 
@@ -57,7 +57,6 @@ public class ExpeditionDto {
         this.forceFinish = false;
         this.expeditionLevel = expeditionLevel;
         this.objective = objective;
-        this.cooldownTimeSeconds = cooldownTimeSeconds;
         this.timeOfCompletionMills = System.currentTimeMillis() + 1000L *cooldownTimeSeconds;
     }
 
@@ -67,11 +66,18 @@ public class ExpeditionDto {
 
     public boolean isSuccessful() {
             return Math.random() <= chance;
-        }
+    }
 
-        public int secondsToCompletion() {
+    public int secondsLeft() {
+        if(isFinished()) return 0;
+
         long secsToCompletion = (timeOfCompletionMills - System.currentTimeMillis())/1000;
         return (int) secsToCompletion;
+    }
+
+    @Override
+    public void fastForward() {
+        setForceFinish(true);
     }
 
 }

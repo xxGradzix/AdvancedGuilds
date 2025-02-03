@@ -6,8 +6,6 @@ import com.j256.ormlite.table.DatabaseTable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import me.xxgradzix.advancedclans.data.database.persister.Inventory2;
-import me.xxgradzix.advancedclans.data.database.persister.InventoryPersister;
 import me.xxgradzix.advancedclans.data.database.persister.ItemStackArrayPersister;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;

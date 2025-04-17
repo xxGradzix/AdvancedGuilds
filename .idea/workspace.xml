@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="babedae8-3259-4559-b2a0-cd1022b7c244" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/api/src/main/java/com.xxgradzix.advancedguildsapi/events/clan/TestEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/entities/hideout/GuildHideout.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/entities/hideout/fields/Upgrade.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/events/clan/CreateClanEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/events/clan/PointsChangeUserEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/HideoutGeneralItemManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/expedition/ExpeditionItemManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/storage/StorageItemManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/itemShop/command/ItemShopCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/itemShop/command/ItemShopConfigCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/itemShop/data/ShopService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/itemShop/data/database/entities/ItemShopCategoryEntity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/itemShop/data/database/entities/ItemShopProductPriceType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/itemShop/data/database/enums/ShopType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/itemShop/data/database/managers/ItemShopProductPriceTypeRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/itemShop/guis/AdminShopGui.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/itemShop/guis/ItemShopGui.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/itemShop/items/ItemManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/items/ItemManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/listener/TestListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/utils/transaction/TransactionUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/utils/transaction/buyProduct/TransactionActionProduct.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/utils/transaction/buyProduct/TransactionItemsProduct.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/utils/transaction/buyProduct/TransactionProduct.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/utils/transaction/priceType/TransactionCustomCurrencyPriceType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/utils/transaction/priceType/TransactionEconomyPriceType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/utils/transaction/priceType/TransactionItemPriceType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/utils/transaction/priceType/TransactionPriceType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plugin/src/main/resources/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdvancedClans.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dependency-reduced-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/dependency-reduced-pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/AdvancedGuilds.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/AdvancedGuilds.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/commands/clan/ClanCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/commands/clan/ClanCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/commands/clan/PlayerCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/commands/clan/PlayerCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/commands/hideout/HideOutAdminCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/commands/hideout/HideOutAdminCommands.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/commands/hideout/VentureRewardCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/commands/hideout/VentureRewardCommands.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/config/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/config/Config.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/controllers/clansCOre/ClanController.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/controllers/clansCore/ClanController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/controllers/clansCOre/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/controllers/clansCore/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/controllers/dtos/NpcNameAndSkinPersistentDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/controllers/dtos/NpcNameAndSkinPersistentDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/controllers/hideouts/GuildHideOutController.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/controllers/hideouts/GuildHideOutController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/controllers/hideouts/VentureRewardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/controllers/hideouts/VentureRewardController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/entities/clan/Clan.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/entities/clan/Clan.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/entities/clan/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/entities/clan/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/entities/hideout/GuildHideout.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/entities/hideout/fields/UpgradeInfoHolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/entities/hideout/fields/UpgradeInfoHolder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/entities/hideout/storage/GuildlStorageEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/entities/hideout/storage/GuildlStorageEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/entities/hideout/storage/PersonalStorageEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/entities/hideout/storage/PersonalStorageEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/entities/hideout/venture/VentureReward.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/entities/hideout/venture/VentureReward.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/persister/InventoryUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/persister/InventoryUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/persister/ItemStackArrayPersister.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/persister/ItemStackArrayPersister.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/persister/ItemStackPersister.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/persister/ItemStackPersister.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/persister/LocalDateTimeClassPersister.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/persister/LocalDateTimeClassPersister.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/persister/LocationPersister.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/persister/LocationPersister.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/persister/StringListPersister.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/persister/StringListPersister.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/persister/UUIDListPersister.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/persister/UUIDListPersister.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/persister/UUIDSetPersister.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/persister/UUIDSetPersister.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/persister/UpgradeInfoHolderPersisterMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/persister/UpgradeInfoHolderPersisterMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/repositories/EntityRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/repositories/EntityRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/repositories/clans/ClanEntityRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/repositories/clans/ClanEntityRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/repositories/clans/UserEntityRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/repositories/clans/UserEntityRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/repositories/hideout/GuildHideoutEntityRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/repositories/hideout/GuildHideoutEntityRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/repositories/hideout/storage/HideoutStorageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/repositories/hideout/storage/HideoutStorageRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/repositories/hideout/storage/PersonalStorageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/repositories/hideout/storage/PersonalStorageRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/repositories/hideout/venture/VentureRewardRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/repositories/hideout/venture/VentureRewardRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/services/clansCore/ClanAndUserDataService.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/services/clansCore/ClanAndUserDataService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/services/hideout/GuildHideOutDataService.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/services/hideout/GuildHideOutDataService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/services/hideout/StorageEntityDataService.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/services/hideout/StorageEntityDataService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/data/database/services/hideout/VentureRewardDataService.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/services/hideout/VentureRewardDataService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/entities/clans/AntySystemRank.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/entities/clans/AntySystemRank.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/entities/clans/PlayerStat.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/entities/clans/PlayerStat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/entities/clans/RankType.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/data/database/entities/clans/RankType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/events/clan/CancelInviteClanEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/events/clan/CancelInviteClanEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/events/clan/ChangeOwnerClanEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/events/clan/ChangeOwnerClanEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/events/clan/CreateAllianceEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/events/clan/CreateAllianceEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/events/clan/CreateClanEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com.xxgradzix.advancedguildsapi/events/clan/CreateClanEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/events/clan/DeleteClanEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/events/clan/DeleteClanEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/events/clan/DeleteDeputyEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/events/clan/DeleteDeputyEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/events/clan/DeputyChangeClanEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/events/clan/DeputyChangeClanEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/events/clan/DisbandAllianceEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/events/clan/DisbandAllianceEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/events/clan/InviteClanEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/events/clan/InviteClanEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/events/clan/JoinClanEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/events/clan/JoinClanEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/events/clan/LeaveClanEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/events/clan/LeaveClanEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/events/clan/PlayerKickClanEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/events/clan/PlayerKickClanEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/events/clan/PointsChangeUserEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/api/src/main/java/com.xxgradzix.advancedguildsapi/events/clan/PointsChangeUserEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/events/hideout/HideoutLevelChangeEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/events/hideout/HideoutLevelChangeEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/events/hideout/HideoutPointsChangeEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/events/hideout/HideoutPointsChangeEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/exceptions/clan/ClanDoesNotExistException.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/exceptions/clan/ClanDoesNotExistException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/exceptions/clan/PlayerDoesNotBelongToClanException.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/exceptions/clan/PlayerDoesNotBelongToClanException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/exceptions/hideOuts/HideOutDoesNotExistException.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/exceptions/hideOuts/HideOutDoesNotExistException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/exceptions/hideOuts/HideOutUpgradeAlreadyBoughtException.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/exceptions/hideOuts/HideOutUpgradeAlreadyBoughtException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/exceptions/hideOuts/InvalidHideoutWorldNameException.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/exceptions/hideOuts/InvalidHideoutWorldNameException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/exceptions/hideOuts/UpgradeWasNotBoughtException.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/exceptions/hideOuts/UpgradeWasNotBoughtException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/globalGuis/ClickAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/globalGuis/ClickAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/globalGuis/FastForwardGui.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/globalGuis/FastForwardGui.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/ItemManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/GuildPanel/GuildPanelItemManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/HideoutQuestsManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/HideoutQuestsManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/countdown/Action.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/countdown/Action.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/countdown/Countdown.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/countdown/Countdown.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/countdown/CountdownOwner.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/countdown/CountdownOwner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/GuildPanel/GideoutGui.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/GuildPanel/GideoutGui.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/expedition/ExpeditionDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/expedition/ExpeditionDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/expedition/ExpeditionGui.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/expedition/ExpeditionGui.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/expedition/ExpeditionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/expedition/ExpeditionManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/expedition/ExpeditionVariant.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/expedition/ExpeditionVariant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/storage/HideoutStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/storage/HideoutStorage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/storage/StoragePermissionSlotType.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/storage/StoragePermissionSlotType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/utills/HideoutTimeEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/guildshideoutsystem/managers/utills/HideoutTimeEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/itemShop/ItemShop.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/itemShop/ItemShop.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/itemShop/command/ItemShopBalanceCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/itemShop/command/ItemShopBalanceCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/itemShop/command/ItemShopCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/itemShop/command/ItemShopConfigCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/itemShop/data/DataManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/itemShop/data/database/entities/ItemShopCategoryEntity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/itemShop/data/database/entities/ItemShopPlayerBalanceEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/itemShop/data/database/entities/ItemShopPlayerBalanceEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/itemShop/data/database/entities/ItemShopProductEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/itemShop/data/database/entities/ItemShopProductEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/itemShop/data/database/enums/ShopType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/itemShop/data/database/managers/ItemShopCategoryEntityManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/itemShop/data/database/managers/ItemShopCategoryRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/itemShop/data/database/managers/ItemShopPlayerBalanceEntityManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/itemShop/data/database/managers/ItemShopPlayerBalanceEntityRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/itemShop/data/database/managers/ItemShopProductEntityManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/itemShop/data/database/managers/ItemShopProductEntityRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/itemShop/data/database/persisters/ItemStackPersister.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/itemShop/data/database/persisters/ItemStackPersister.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/itemShop/items/ItemManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/itemShop/listeners/OnPlayerJoinCreateBalanceEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/itemShop/listeners/OnPlayerJoinCreateBalanceEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/itemShop/listeners/OnPlayerKillAddPoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/itemShop/listeners/OnPlayerKillAddPoint.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/listener/clan/AsyncPlayerChatListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/listener/clan/AsyncPlayerChatListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/listener/clan/EntityDamageListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/listener/clan/EntityDamageListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/listener/clan/PlayerConnectionListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/listener/clan/PlayerConnectionListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/listener/clan/PlayerDeathListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/listener/clan/PlayerDeathListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/listener/clan/PlayerInteractionEntityListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/listener/clan/PlayerInteractionEntityListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/listener/hideout/DHAPIHologramClickEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/listener/hideout/DHAPIHologramClickEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/listener/hideout/HideOutUpgrade.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/listener/hideout/HideOutUpgrade.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/listener/hideout/HideoutOccupyBlockPlace.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/listener/hideout/HideoutOccupyBlockPlace.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/listener/hideout/HideoutStorageChestClick.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/listener/hideout/HideoutStorageChestClick.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/listener/hideout/HideoutTeleportBlockClick.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/listener/hideout/HideoutTeleportBlockClick.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/listener/hideout/InteractWithNpcEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/listener/hideout/InteractWithNpcEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/manager/CooldownManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/manager/CooldownManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/messages/MessageManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/messages/MessageManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/messages/MessageType.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/messages/MessageType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/placeholder/ClanPlaceholder.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/placeholder/ClanPlaceholder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/placeholder/VenturePlaceholder.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/placeholder/VenturePlaceholder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/scheduler/TopRankScheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/scheduler/TopRankScheduler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/utils/ColorFixer.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/utils/ColorFixer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/utils/ConsoleColor.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/utils/ConsoleColor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/utils/ItemUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/utils/ItemUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/utils/SystemPoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans/utils/SystemPoint.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/AdvancedClans-1.0-SNAPSHOT.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/AdvancedGuilds.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/commands/ClanCommand$SubCommands.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/commands/ClanCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/commands/HideOutAdminCommands.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/commands/PlayerCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/commands/VentureRewardCommands.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/config/Config.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/controllers/clansCOre/ClanController$CostType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/controllers/clansCOre/ClanController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/controllers/clansCOre/UserController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/controllers/dtos/SkinPersistentDTO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/controllers/hideouts/GuildHideOutController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/controllers/hideouts/VentureRewardController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/entities/Clan.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/entities/User.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/entities/fields/UpgradeInfoHolder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/entities/hideout/GuildHideout$Upgrade.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/entities/hideout/GuildHideout.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/entities/hideout/storage/GuildlStorageEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/entities/hideout/storage/PersonalStorageEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/entities/hideout/venture/VentureReward.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/persister/Inventory2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/persister/InventoryPersister.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/persister/InventoryUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/persister/ItemStackArrayPersister.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/persister/ItemStackPersister.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/persister/LocationPersister.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/persister/StringListPersister.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/persister/UUIDListPersister.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/persister/UUIDSetPersister.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/persister/UpgradeInfoHolderPersisterMap.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/repositories/EntityRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/repositories/clansCore/ClanEntityRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/repositories/clansCore/UserEntityRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/repositories/hideout/GuildHideoutEntityRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/repositories/hideout/storage/HideoutStorageRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/repositories/hideout/storage/PersonalStorageRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/repositories/hideout/venture/VentureRewardRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/services/clansCore/ClanAndUserDataManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/services/hideout/GuildHideOutDataManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/services/hideout/StorageEntityDataManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/data/database/services/hideout/VentureRewardDataManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/entities/AntySystemRank.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/entities/PlayerStat.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/entities/RankType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/events/CancelInviteClanEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/events/ChangeOwnerClanEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/events/CreateAllianceEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/events/CreateClanEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/events/DeleteClanEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/events/DeleteDeputyEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/events/DeputyChangeClanEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/events/DisbandAllianceEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/events/InviteClanEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/events/JoinClanEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/events/LeaveClanEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/events/PlayerKickClanEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/events/PointsChangeUserEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/exceptions/ClanDoesNotExistException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/exceptions/PlayerDoesNotBelongToClanException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/exceptions/hideOuts/HideOutDoesNotExistException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/exceptions/hideOuts/HideOutUpgradeAlreadyBoughtException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/exceptions/hideOuts/InvalidHideoutWorldNameException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/exceptions/hideOuts/UpgradeWasNotBoughtException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/guildshideoutsystem/ItemManager$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/guildshideoutsystem/ItemManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/guildshideoutsystem/managers/Action.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/guildshideoutsystem/managers/Countdown.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/expedition/ExpeditionDto$ExpeditionObjective.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/expedition/ExpeditionDto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/expedition/ExpeditionGui$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/expedition/ExpeditionGui.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/expedition/ExpeditionVariant.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/storage/HideoutStorage$HideoutGuis.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/guildshideoutsystem/managers/stations/storage/HideoutStorage.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/guildshideoutsystem/upgrades/ArenaUpgradePattern.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/guildshideoutsystem/upgrades/BlackSmithUpgradePattern.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/guildshideoutsystem/upgrades/OutpostHutPattern.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/guildshideoutsystem/upgrades/OutpostPodestPattern.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/guildshideoutsystem/upgrades/ResetHideoutPattern.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/guildshideoutsystem/upgrades/SorcererUpgradePattern.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/guildshideoutsystem/upgrades/StationHallUpgradePattern.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/guildshideoutsystem/upgrades/UpgradePattern.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/guildshideoutsystem/upgrades/VentureUpgradePattern.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/listener/AsyncPlayerChatListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/listener/EntityDamageListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/listener/PlayerConnectionListener$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/listener/PlayerConnectionListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/listener/PlayerDeathListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/listener/PlayerInteractionEntityListener.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/listener/guildHideOut/DHAPIHologramClickEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/listener/guildHideOut/HideOutUpgrade$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/listener/guildHideOut/HideOutUpgrade.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/listener/guildHideOut/HideoutOccupyBlockPlace.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/listener/guildHideOut/HideoutStorageChestClick.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/listener/guildHideOut/HideoutTeleportBlockClick.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/listener/guildHideOut/InteractWithNpcEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/manager/CooldownManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/messages/MessageManager$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/messages/MessageManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/messages/MessageType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/placeholder/ClanPlaceholder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/scheduler/TopRankScheduler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/utils/ColorFixer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/utils/ConsoleColor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/utils/ItemUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/me/xxgradzix/advancedclans/utils/SystemPoint.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/plugin.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Exception" />
+        <option value="Interface" />
+        <option value="Record" />
+        <option value="Enum" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;xxGradzix&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/xxGradzix/AdvancedGuilds.git&quot;,
+    &quot;accountId&quot;: &quot;7283d822-d67e-455f-8124-160d41401d2c&quot;
+  }
+}</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$MAVEN_REPOSITORY$/io/papermc/paper/paper-api/1.21.1-R0.1-SNAPSHOT/paper-api-1.21.1-R0.1-20241121.101634-127.jar!/org/bukkit/inventory/ItemStack.class" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2ovcWH73sAhJHxiXBdCxp639S1P" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Maven.AdvancedClans [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.AdvancedClans [site].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.AdvancedGuilds [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.AdvancedGuilds [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.AdvancedGuildsM [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.api [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.api [install].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;guild__system&quot;,
+    &quot;jdk.selected.JDK&quot;: &quot;corretto-21&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/jakubgrad/IdeaProjects/AdvancedGuilds/plugin/src/main/java/me/xxgradzix/advancedclans&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;bigdataide_conn_settings&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
+    ],
+    &quot;jdk.preference.JDK&quot;: [
+      &quot;22=/Users/jakubgrad/Library/Java/JavaVirtualMachines/openjdk-22.0.2/Contents/Home&quot;
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.storage" />
+      <recent name="me.xxgradzix.advancedclans.guildshideoutsystem.managers" />
+      <recent name="me.xxgradzix.advancedclans.guildshideoutsystem" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/plugin/src/main/java/me/xxgradzix/advancedclans" />
+      <recent name="$PROJECT_DIR$/api/src" />
+      <recent name="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans" />
+      <recent name="$PROJECT_DIR$/src/main/java/me/xxgradzix/advancedclans/utils/transaction/priceType" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/api/src/main/java/com.xxgradzix.advancedguildsapi" />
+      <recent name="$PROJECT_DIR$/plugin" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.xxgradzix.advancedguildsapi.events.clan" />
+      <recent name="me.xxgradzix.advancedclans.data.database.entities" />
+      <recent name="me.xxgradzix.advancedclans.villagerUpgradeShop.commands" />
+      <recent name="me.xxgradzix.advancedclans.villagerUpgradeShop" />
+      <recent name="me.xxgradzix.advancedclans.itemShop.guis" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="AdvancedClans [install]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
+      <target name="@@@LOCAL@@@" />
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings">
+          <MavenRunnerSettings>
+            <option name="delegateBuildToMaven" value="false" />
+            <option name="environmentProperties">
+              <map />
+            </option>
+            <option name="jreName" value="corretto-21" />
+            <option name="mavenProperties">
+              <map />
+            </option>
+            <option name="passParentEnv" value="true" />
+            <option name="runMavenInBackground" value="true" />
+            <option name="skipTests" value="false" />
+            <option name="vmOptions" value="" />
+          </MavenRunnerSettings>
+        </option>
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="cmdOptions" />
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="install" />
+              </list>
+            </option>
+            <option name="multimoduleDir" />
+            <option name="pomFileName" value="pom.xml" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="projectsCmdOptionValues">
+              <list />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.21565.193" />
+        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-IU-243.21565.193" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="babedae8-3259-4559-b2a0-cd1022b7c244" name="Changes" comment="" />
+      <created>1731753520097</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1731753520097</updated>
+      <workItem from="1731753521139" duration="527000" />
+      <workItem from="1732775326123" duration="27819000" />
+      <workItem from="1733600157982" duration="11596000" />
+      <workItem from="1733776819305" duration="43003000" />
+      <workItem from="1734550430501" duration="1937000" />
+      <workItem from="1734552606363" duration="841000" />
+      <workItem from="1734553450584" duration="121000" />
+      <workItem from="1734553677303" duration="64678000" />
+      <workItem from="1736013819060" duration="67003000" />
+      <workItem from="1736802783127" duration="60000" />
+      <workItem from="1736802853523" duration="37000" />
+      <workItem from="1736802921177" duration="6631000" />
+      <workItem from="1736878553094" duration="56657000" />
+      <workItem from="1737308508731" duration="25071000" />
+      <workItem from="1737709647195" duration="692000" />
+      <workItem from="1737970928800" duration="128000" />
+      <workItem from="1737987996656" duration="22186000" />
+      <workItem from="1738355400101" duration="4973000" />
+      <workItem from="1738596006237" duration="37757000" />
+      <workItem from="1738844497012" duration="71578000" />
+      <workItem from="1739453741954" duration="24905000" />
+      <workItem from="1739571243663" duration="23783000" />
+      <workItem from="1739990903556" duration="3069000" />
+      <workItem from="1740059118080" duration="4472000" />
+      <workItem from="1740696449948" duration="15565000" />
+      <workItem from="1744039941417" duration="1881000" />
+      <workItem from="1744308550559" duration="949000" />
+      <workItem from="1744897090863" duration="6224000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

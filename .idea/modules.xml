@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AdvancedClans.iml" filepath="$PROJECT_DIR$/AdvancedClans.iml" />
       <module fileurl="file://$PROJECT_DIR$/plugin/AdvancedClans (1).iml" filepath="$PROJECT_DIR$/plugin/AdvancedClans (1).iml" />
-      <module fileurl="file://$PROJECT_DIR$/AdvancedGuilds-API/api.iml" filepath="$PROJECT_DIR$/AdvancedGuilds-API/api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AdvancedGuilds-API/advanced-guild-api.iml" filepath="$PROJECT_DIR$/AdvancedGuilds-API/advanced-guild-api.iml" />
     </modules>
   </component>
 </project>

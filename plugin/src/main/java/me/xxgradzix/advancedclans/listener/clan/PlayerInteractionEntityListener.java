@@ -1,6 +1,7 @@
 package me.xxgradzix.advancedclans.listener.clan;
 
-import me.xxgradzix.advancedclans.data.database.entities.clan.User;
+import entities.User;
+import me.xxgradzix.advancedclans.data.database.entities.clan.UserImpl;
 import me.xxgradzix.advancedclans.manager.CooldownManager;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCore.UserController;
 import me.xxgradzix.advancedclans.messages.MessageManager;
@@ -45,9 +46,9 @@ public class PlayerInteractionEntityListener implements Listener {
             // find clicked user data
             Optional<User> userByPlayer = userController.findUserByPlayer(clickPlayer);
             if(userByPlayer.isPresent()) {
-                User user = userByPlayer.get();
+                User userImpl = userByPlayer.get();
                 // send player message about clicked user
-                userController.infoPlayer(player, user);
+                userController.infoPlayer(player, userImpl);
             }
 
         }

@@ -1,7 +1,8 @@
 package me.xxgradzix.advancedclans.placeholder;
 
+import entities.User;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.xxgradzix.advancedclans.data.database.entities.clan.User;
+import me.xxgradzix.advancedclans.data.database.entities.clan.UserImpl;
 import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataService;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition.ExpeditionDto;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition.ExpeditionManager;
@@ -45,8 +46,8 @@ public class VenturePlaceholder extends PlaceholderExpansion {
         Player player = offlinePlayer.getPlayer();
 
         if (identifier.startsWith("expedition")) {
-            User user = ClanAndUserDataService.getCachedUser(player.getUniqueId());
-            if (user == null) {
+            User userImpl = ClanAndUserDataService.getCachedUser(player.getUniqueId());
+            if (userImpl == null) {
                 return "";
             }
 

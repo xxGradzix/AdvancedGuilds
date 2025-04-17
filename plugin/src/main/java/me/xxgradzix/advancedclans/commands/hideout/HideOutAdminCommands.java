@@ -1,11 +1,13 @@
 package me.xxgradzix.advancedclans.commands.hideout;
 
+import entities.GuildHideout;
+import entities.User;
 import me.xxgradzix.advancedclans.data.database.controllers.hideouts.GuildHideOutController;
-import me.xxgradzix.advancedclans.data.database.entities.clan.User;
-import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideout;
+import me.xxgradzix.advancedclans.data.database.entities.clan.UserImpl;
+import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideoutImpl;
 import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataService;
-import me.xxgradzix.advancedclans.exceptions.hideOuts.HideOutDoesNotExistException;
-import me.xxgradzix.advancedclans.exceptions.hideOuts.InvalidHideoutWorldNameException;
+import com.xxgradzix.advancedguildsapi.exceptions.hideOuts.HideOutDoesNotExistException;
+import com.xxgradzix.advancedguildsapi.exceptions.hideOuts.InvalidHideoutWorldNameException;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.GuildPanel.GideoutGui;
 import me.xxgradzix.advancedclans.guildshideoutsystem.HideoutGeneralItemManager;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition.ExpeditionGui;
@@ -61,9 +63,9 @@ public class HideOutAdminCommands implements CommandExecutor {
                 }
             }
             case "2" -> {
-                User cachedUser = ClanAndUserDataService.getCachedUser(player.getUniqueId());
+                User cachedUserImpl = ClanAndUserDataService.getCachedUser(player.getUniqueId());
                 try {
-                    GuildHideOutController.occupyHideOut(world.getName(), ClanAndUserDataService.getCachedClan(cachedUser.getClanTag()));
+                    GuildHideOutController.occupyHideOut(world.getName(), ClanAndUserDataService.getCachedClan(cachedUserImpl.getClanTag()));
                 } catch (HideOutDoesNotExistException e) {
                     player.sendMessage(MessageManager.HIDEOUT_DOES_NOT_EXIST);
                 }

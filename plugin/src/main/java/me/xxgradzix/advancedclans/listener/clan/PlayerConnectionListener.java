@@ -1,8 +1,10 @@
 package me.xxgradzix.advancedclans.listener.clan;
 
+import entities.Clan;
+import entities.User;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
-import me.xxgradzix.advancedclans.data.database.entities.clan.Clan;
-import me.xxgradzix.advancedclans.data.database.entities.clan.User;
+import me.xxgradzix.advancedclans.data.database.entities.clan.ClanImpl;
+import me.xxgradzix.advancedclans.data.database.entities.clan.UserImpl;
 import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataService;
 import me.xxgradzix.advancedclans.manager.CooldownManager;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCore.UserController;
@@ -55,14 +57,14 @@ public class PlayerConnectionListener implements Listener {
         if(userByPlayer.isEmpty())
             return;
 
-        User user = userByPlayer.get();
-        if(!user.hasClan())
+        User userImpl = userByPlayer.get();
+        if(!userImpl.hasClan())
             return;
 
-        Clan clan = ClanAndUserDataService.getCachedClan(user.getClanTag());
-        boolean owner = clan.isOwner(player.getUniqueId());
+        Clan clanImpl = ClanAndUserDataService.getCachedClan(userImpl.getClanTag());
+        boolean owner = clanImpl.isOwner(player.getUniqueId());
         if(owner)
-            clan.resetInvite();
+            clanImpl.resetInvite();
 
     }
 }

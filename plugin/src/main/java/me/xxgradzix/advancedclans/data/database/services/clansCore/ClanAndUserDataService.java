@@ -1,7 +1,9 @@
 package me.xxgradzix.advancedclans.data.database.services.clansCore;
 
-import me.xxgradzix.advancedclans.data.database.entities.clan.Clan;
-import me.xxgradzix.advancedclans.data.database.entities.clan.User;
+import entities.Clan;
+import entities.User;
+import me.xxgradzix.advancedclans.data.database.entities.clan.ClanImpl;
+import me.xxgradzix.advancedclans.data.database.entities.clan.UserImpl;
 import me.xxgradzix.advancedclans.data.database.repositories.clans.ClanEntityRepository;
 import me.xxgradzix.advancedclans.data.database.repositories.clans.UserEntityRepository;
 
@@ -33,30 +35,30 @@ public class ClanAndUserDataService {
             return clansData.get(tag.toUpperCase());
     }
 
-    public static void updateClan(Clan clan) {
+    public static void updateClan(Clan clanImpl) {
 
         try {
-            clansData.put(clan.getTag().toUpperCase(), clan);
-            clanEntityRepository.createOrUpdateEntity(clan);
+            clansData.put(clanImpl.getTag().toUpperCase(), clanImpl);
+            clanEntityRepository.createOrUpdateEntity(clanImpl);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static void updateUser(User user) {
+    public static void updateUser(User userImpl) {
         try {
-            userEntityRepository.createOrUpdateEntity(user);
-            userData.put(user.getUuid(), user);
+            userEntityRepository.createOrUpdateEntity(userImpl);
+            userData.put(userImpl.getUuid(), userImpl);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static void deleteClan(Clan clan) {
+    public static void deleteClan(Clan clanImpl) {
         try {
-            clanEntityRepository.deleteEntity(clan);
-            clansData.remove(clan.getTag().toUpperCase());
+            clanEntityRepository.deleteEntity(clanImpl);
+            clansData.remove(clanImpl.getTag().toUpperCase());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -65,8 +67,8 @@ public class ClanAndUserDataService {
 
     public static void loadAllClans() {
         try {
-            for(Clan clan : clanEntityRepository.getAllEntities()) {
-                clansData.put(clan.getTag().toUpperCase(), clan);
+            for(Clan clanImpl : clanEntityRepository.getAllEntities()) {
+                clansData.put(clanImpl.getTag().toUpperCase(), clanImpl);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -76,8 +78,8 @@ public class ClanAndUserDataService {
 
     public static void loadAllUsers() {
         try {
-            for (User user : userEntityRepository.getAllEntities()) {
-                userData.put(user.getUuid(), user);
+            for (User userImpl : userEntityRepository.getAllEntities()) {
+                userData.put(userImpl.getUuid(), userImpl);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

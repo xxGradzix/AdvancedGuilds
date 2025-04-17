@@ -1,7 +1,8 @@
 package me.xxgradzix.advancedclans.data.database.repositories.clans;
 
 import com.j256.ormlite.support.ConnectionSource;
-import me.xxgradzix.advancedclans.data.database.entities.clan.User;
+import entities.User;
+import me.xxgradzix.advancedclans.data.database.entities.clan.UserImpl;
 import me.xxgradzix.advancedclans.data.database.repositories.EntityRepository;
 
 import java.util.UUID;

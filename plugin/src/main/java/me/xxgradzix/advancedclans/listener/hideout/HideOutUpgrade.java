@@ -1,6 +1,7 @@
 package me.xxgradzix.advancedclans.listener.hideout;
 
-import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideout;
+import entities.GuildHideout;
+import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideoutImpl;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.GuildPanel.GideoutGui;
 import me.xxgradzix.advancedclans.data.database.controllers.hideouts.GuildHideOutController;
 import me.xxgradzix.advancedclans.messages.MessageManager;

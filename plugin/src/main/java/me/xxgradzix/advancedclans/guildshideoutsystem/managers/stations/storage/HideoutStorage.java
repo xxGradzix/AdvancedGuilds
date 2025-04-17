@@ -3,12 +3,14 @@ package me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.storage
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
 import dev.triumphteam.gui.guis.StorageGui;
+import entities.Clan;
+import entities.GuildHideout;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCore.ClanController;
 import me.xxgradzix.advancedclans.data.database.controllers.hideouts.GuildHideOutController;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCore.UserController;
-import me.xxgradzix.advancedclans.data.database.entities.clan.Clan;
-import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideout;
-import me.xxgradzix.advancedclans.data.database.entities.hideout.fields.Upgrade;
+import me.xxgradzix.advancedclans.data.database.entities.clan.ClanImpl;
+import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideoutImpl;
+import me.xxgradzix.advancedclans.data.database.entities.hideout.fields.UpgradeImpl;
 import me.xxgradzix.advancedclans.data.database.entities.hideout.storage.GuildlStorageEntity;
 import me.xxgradzix.advancedclans.data.database.entities.hideout.storage.PersonalStorageEntity;
 import me.xxgradzix.advancedclans.data.database.services.hideout.StorageEntityDataService;
@@ -155,9 +157,9 @@ public class HideoutStorage {
             return;
         }
 
-        Clan clan = clanController.getClan(playerHideOut.getClanTag());
+        Clan clanImpl = clanController.getClan(playerHideOut.getClanTag());
 
-        boolean isOwner = clan.getOwnerUUID().equals(player.getUniqueId());
+        boolean isOwner = clanImpl.getOwnerUUID().equals(player.getUniqueId());
 
         Gui gui = Gui.gui().rows(3).disableAllInteractions().title(Component.text("&f七七七七七七七七≦".replace("&", "§"))).create();
 
@@ -172,9 +174,9 @@ public class HideoutStorage {
 
             boolean isUnlocked = true;
 
-            if(i + 1 == 3) isUnlocked = playerHideOut.getUpgradeHolder(Upgrade.STORAGE_1).isFinished();
-            if(i + 1 == 4) isUnlocked = playerHideOut.getUpgradeHolder(Upgrade.STORAGE_2).isFinished();
-            if(i + 1 == 5) isUnlocked = playerHideOut.getUpgradeHolder(Upgrade.STORAGE_3).isFinished();
+            if(i + 1 == 3) isUnlocked = playerHideOut.getUpgradeHolder(UpgradeImpl.STORAGE_1).isFinished();
+            if(i + 1 == 4) isUnlocked = playerHideOut.getUpgradeHolder(UpgradeImpl.STORAGE_2).isFinished();
+            if(i + 1 == 5) isUnlocked = playerHideOut.getUpgradeHolder(UpgradeImpl.STORAGE_3).isFinished();
 
             GuiItem expeditionStorage = new GuiItem(StorageItemManager.getStorageItem(i+1, isOwner, hasAccess, isUnlocked));
 
@@ -212,7 +214,7 @@ public class HideoutStorage {
 
     private static void openPermissionGui(Player player, GuildHideout playerHideOut, int guiNum, int page) {
 
-        Clan clan = clanController.getClan(playerHideOut.getClanTag());
+        Clan clanImpl = clanController.getClan(playerHideOut.getClanTag());
 
         final HideoutGuis hideoutGuis = getOrCreateHideoutGuis(playerHideOut);
 
@@ -220,8 +222,8 @@ public class HideoutStorage {
 
         Set<UUID> permittedPlayers = hideoutGuis.getPermissionsByNum(guiNum);
 
-        List<UUID> clanMembers = clan.getMembers();
-        clanMembers.remove(clan.getOwnerUUID());
+        List<UUID> clanMembers = clanImpl.getMembers();
+        clanMembers.remove(clanImpl.getOwnerUUID());
 
         gui.setCloseGuiAction(e -> {
             MessageManager.sendMessageFormated(player, MessageManager.PERMISSIONS_UPDATED, MessageType.CHAT);
@@ -305,12 +307,12 @@ public class HideoutStorage {
         return hideoutGuis;
     }
 
-    private static void openSharedGui(Player player, GuildHideout guildHideout, int guiNum) {
-        if(guildHideout == null) {
+    private static void openSharedGui(Player player, GuildHideout guildHideoutImpl, int guiNum) {
+        if(guildHideoutImpl == null) {
             MessageManager.sendMessageFormated(player, MessageManager.YOU_DONT_BELONG_TO_THIS_HIDEOUT, MessageType.CHAT);
             return;
         }
-        HideoutGuis hideoutGuis = getOrCreateHideoutGuis(guildHideout);
+        HideoutGuis hideoutGuis = getOrCreateHideoutGuis(guildHideoutImpl);
         try {
             StorageGui gui = hideoutGuis.getGuiByNum(guiNum);
             gui.open(player);

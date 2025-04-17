@@ -1,7 +1,8 @@
 package me.xxgradzix.advancedclans.data.database.repositories.clans;
 
 import com.j256.ormlite.support.ConnectionSource;
-import me.xxgradzix.advancedclans.data.database.entities.clan.Clan;
+import entities.Clan;
+import me.xxgradzix.advancedclans.data.database.entities.clan.ClanImpl;
 import me.xxgradzix.advancedclans.data.database.repositories.EntityRepository;
 
 public class ClanEntityRepository extends EntityRepository<Clan, String> {

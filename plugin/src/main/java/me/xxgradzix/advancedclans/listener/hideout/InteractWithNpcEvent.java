@@ -1,9 +1,11 @@
 package me.xxgradzix.advancedclans.listener.hideout;
 
+import entities.Clan;
+import entities.User;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCore.UserController;
-import me.xxgradzix.advancedclans.data.database.entities.clan.Clan;
-import me.xxgradzix.advancedclans.data.database.entities.clan.User;
+import me.xxgradzix.advancedclans.data.database.entities.clan.ClanImpl;
+import me.xxgradzix.advancedclans.data.database.entities.clan.UserImpl;
 import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataService;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedition.ExpeditionGui;
 import me.xxgradzix.advancedclans.itemShop.guis.ItemShopGui;
@@ -26,10 +28,10 @@ public class InteractWithNpcEvent implements Listener {
 
         Optional<User> optionalUser = UserController.findUserByUUID(player.getUniqueId());
         if(optionalUser.isEmpty()) return;
-        User user = optionalUser.get();
+        User userImpl = optionalUser.get();
 
-        Clan clan = ClanAndUserDataService.getCachedClan(user.getClanTag());
-        String hideoutId = clan.getHideoutId();
+        Clan clanImpl = ClanAndUserDataService.getCachedClan(userImpl.getClanTag());
+        String hideoutId = clanImpl.getHideoutId();
         if(hideoutId == null || hideoutId.isEmpty()) return;
 
         NPCRegistry registry = npc.getOwningRegistry();

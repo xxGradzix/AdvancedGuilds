@@ -8,21 +8,26 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.managers.storage.StorageException;
 import com.sk89q.worldguard.protection.regions.GlobalProtectedRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import entities.Clan;
+import entities.GuildHideout;
+import entities.fields.Upgrade;
+import entities.fields.UpgradeInfoHolder;
 import eu.decentsoftware.holograms.api.DHAPI;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
 import me.xxgradzix.advancedclans.data.database.controllers.dtos.NpcNameAndSkinPersistentDTO;
-import me.xxgradzix.advancedclans.data.database.entities.clan.Clan;
-import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideout;
-import me.xxgradzix.advancedclans.data.database.entities.hideout.fields.Upgrade;
-import me.xxgradzix.advancedclans.data.database.entities.hideout.fields.UpgradeInfoHolder;
+import me.xxgradzix.advancedclans.data.database.entities.clan.ClanImpl;
+import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideoutImpl;
+import me.xxgradzix.advancedclans.data.database.entities.hideout.fields.UpgradeImpl;
+import me.xxgradzix.advancedclans.data.database.entities.hideout.fields.UpgradeInfoHolderImpl;
 import me.xxgradzix.advancedclans.data.database.repositories.hideout.GuildHideoutEntityRepository;
 import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataService;
-import me.xxgradzix.advancedclans.exceptions.clan.ClanDoesNotExistException;
-import me.xxgradzix.advancedclans.exceptions.clan.PlayerDoesNotBelongToClanException;
-import me.xxgradzix.advancedclans.exceptions.hideOuts.HideOutDoesNotExistException;
-import me.xxgradzix.advancedclans.exceptions.hideOuts.InvalidHideoutWorldNameException;
-import me.xxgradzix.advancedclans.exceptions.hideOuts.UpgradeWasNotBoughtException;
+import com.xxgradzix.advancedguildsapi.exceptions.clan.ClanDoesNotExistException;
+import com.xxgradzix.advancedguildsapi.exceptions.clan.PlayerDoesNotBelongToClanException;
+import com.xxgradzix.advancedguildsapi.exceptions.hideOuts.HideOutDoesNotExistException;
+import com.xxgradzix.advancedguildsapi.exceptions.hideOuts.InvalidHideoutWorldNameException;
+import com.xxgradzix.advancedguildsapi.exceptions.hideOuts.UpgradeWasNotBoughtException;
 import me.xxgradzix.advancedclans.guildshideoutsystem.managers.countdown.Countdown;
+import me.xxgradzix.advancedclans.guildshideoutsystem.managers.countdown.CountdownOwner;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.messages.MessageType;
 import me.xxgradzix.advancedclans.utils.ColorFixer;
@@ -64,18 +69,18 @@ public class GuildHideOutDataService {
 
     public GuildHideout resetOrCreateHideOut(String hideOutWorldName) {
 
-        GuildHideout guildHideout = guildHideouts.get(hideOutWorldName);
+        GuildHideout guildHideoutImpl = guildHideouts.get(hideOutWorldName);
 
-        if (guildHideout == null) {
-            guildHideout = new GuildHideout(hideOutWorldName);
+        if (guildHideoutImpl == null) {
+            guildHideoutImpl = new GuildHideoutImpl(hideOutWorldName);
         }
 
-        Clan clan = ClanAndUserDataService.getCachedClan(guildHideout.getClanTag());
+        Clan clanImpl = ClanAndUserDataService.getCachedClan(guildHideoutImpl.getClanTag());
 
         List<Countdown> toRemove = new ArrayList<>();
         for (Countdown countdown : Countdown.countdowns.values()) {
-            if (countdown.getOwner() instanceof Clan fetchedClan) {
-                if (fetchedClan.equals(clan)) {
+            if (countdown.getOwner() instanceof ClanImpl fetchedClanImpl) {
+                if (fetchedClanImpl.equals(clanImpl)) {
                     countdown.killTask();
                     toRemove.add(countdown);
                 }
@@ -86,31 +91,31 @@ public class GuildHideOutDataService {
             Countdown.countdowns.values().remove(countdown);
         }
 
-        if(clan != null){
-            clan.setHideoutId(null);
-            ClanAndUserDataService.updateClan(clan);
+        if(clanImpl != null){
+            clanImpl.setHideoutId(null);
+            ClanAndUserDataService.updateClan(clanImpl);
         }
 
-        guildHideout.reset();
+        guildHideoutImpl.reset();
 
-        guildHideoutEntries.remove(guildHideout);
-        refreshHideoutOutpostHolograms(guildHideout, guildHideout.getEntryBlockLocation());
+        guildHideoutEntries.remove(guildHideoutImpl);
+        refreshHideoutOutpostHolograms(guildHideoutImpl, guildHideoutImpl.getEntryBlockLocation());
 
         try {
-            refreshRegion(guildHideout);
+            refreshRegion(guildHideoutImpl);
         } catch (InvalidFlagFormat e) {
             throw new RuntimeException(e);
         }
 
 
-        UpgradeInfoHolder storageUpgrade = new UpgradeInfoHolder((long) -1, true, Upgrade.STORAGE);
+        UpgradeInfoHolder storageUpgrade = new UpgradeInfoHolderImpl((long) -1, true, UpgradeImpl.STORAGE);
         storageUpgrade.setFinished();
 
-        guildHideout.setUpgradeHolder(storageUpgrade);
+        guildHideoutImpl.setUpgradeHolder(storageUpgrade);
         try {
-            guildHideouts.put(hideOutWorldName, guildHideout);
-            guildHideoutEntityRepository.createOrUpdateEntity(guildHideout);
-            return guildHideout;
+            guildHideouts.put(hideOutWorldName, guildHideoutImpl);
+            guildHideoutEntityRepository.createOrUpdateEntity(guildHideoutImpl);
+            return guildHideoutImpl;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -118,9 +123,9 @@ public class GuildHideOutDataService {
 
     private static final WorldGuard WORLD_GUARD = WorldGuard.getInstance();
 
-    private static void refreshRegion(GuildHideout guildHideout) throws InvalidFlagFormat {
+    private static void refreshRegion(GuildHideout guildHideoutImpl) throws InvalidFlagFormat {
 
-        World bukkkitWorld = Bukkit.getWorld(guildHideout.getHideoutID());
+        World bukkkitWorld = Bukkit.getWorld(guildHideoutImpl.getHideoutID());
 
         if(bukkkitWorld == null) return;
 
@@ -165,11 +170,11 @@ public class GuildHideOutDataService {
 
         region.setFlag(Flags.INTERACT, StateFlag.State.DENY);
 
-        if(guildHideout.getClanTag() != null && !guildHideout.getClanTag().isEmpty()) {
+        if(guildHideoutImpl.getClanTag() != null && !guildHideoutImpl.getClanTag().isEmpty()) {
 
             DefaultDomain defaultDomain = new DefaultDomain();
 
-            defaultDomain.addGroup(guildHideout.getClanTag().toLowerCase());
+            defaultDomain.addGroup(guildHideoutImpl.getClanTag().toLowerCase());
 
             region.setMembers(defaultDomain);
 
@@ -190,42 +195,42 @@ public class GuildHideOutDataService {
 
     }
 
-    public void setHideOutOperatingLocation(GuildHideout guildHideout, Location location) {
+    public void setHideOutOperatingLocation(GuildHideout guildHideoutImpl, Location location) {
         if(location == null) return;
 
         location = location.getBlock().getLocation();
 
-        guildHideout.setEntryBlockLocation(location);
+        guildHideoutImpl.setEntryBlockLocation(location);
 
-        updateHideOut(guildHideout);
-        guildHideoutEntries.put(guildHideout, location);
+        updateHideOut(guildHideoutImpl);
+        guildHideoutEntries.put(guildHideoutImpl, location);
 
-        refreshHideoutOutpostHolograms(guildHideout, location);
+        refreshHideoutOutpostHolograms(guildHideoutImpl, location);
         try {
-            refreshRegion(guildHideout);
+            refreshRegion(guildHideoutImpl);
         } catch (InvalidFlagFormat e) {
             throw new RuntimeException(e);
         }
 
     }
 
-    public void refreshHideoutOutpostHolograms(GuildHideout guildHideout, Location location) {
+    public void refreshHideoutOutpostHolograms(GuildHideout guildHideoutImpl, Location location) {
         if(location == null) return;
         location = location.getBlock().getLocation();
 
 
-        final String defaultHideoutHologram = guildHideout.getHideoutID() + DEFAULT_HIDEOUT_HOLOGRAM_SUFFIX;
-        final String occupiedHideoutHologram = guildHideout.getHideoutID() + OCCUPIED_HIDEOUT_HOLOGRAM_SUFFIX;
+        final String defaultHideoutHologram = guildHideoutImpl.getHideoutID() + DEFAULT_HIDEOUT_HOLOGRAM_SUFFIX;
+        final String occupiedHideoutHologram = guildHideoutImpl.getHideoutID() + OCCUPIED_HIDEOUT_HOLOGRAM_SUFFIX;
 
         DHAPI.removeHologram(defaultHideoutHologram);
         DHAPI.removeHologram(occupiedHideoutHologram);
 
-        if(guildHideout.getClanTag() == null || guildHideout.getClanTag().isEmpty()) {
+        if(guildHideoutImpl.getClanTag() == null || guildHideoutImpl.getClanTag().isEmpty()) {
             DHAPI.createHologram(defaultHideoutHologram, location.clone().add(0.5, 2, 0.5), Arrays.asList(ColorFixer.addColors("#b59651&lᴋʀʏᴊóᴡᴋᴀ ɢɪʟᴅʏᴊɴᴀ"), ColorFixer.addColors("&7ᴘᴏᴌóż"), ColorFixer.addColors("#55875fᴢᴇꜱᴛᴀᴡ ᴅᴏ ᴛᴡᴏʀᴢᴇɴɪᴀ ɢɪʟᴅɪɪ"), ColorFixer.addColors("&7ᴀʙʏ ᴢᴀᴊąć ᴛą ᴋʀʏᴊóᴡᴋę")));
-            paste(location, Upgrade.OUTPOST_PODEST.getSchemFile());
+            paste(location, UpgradeImpl.OUTPOST_PODEST.getSchemFile());
         } else {
-            DHAPI.createHologram(occupiedHideoutHologram, location.clone().add(0.5, 2, 0.5), Arrays.asList(ColorFixer.addColors("&7&lᴋʀʏᴊóᴡᴋᴀ ɢɪʟᴅɪɪ #b59651&l" + guildHideout.getClanTag()), ColorFixer.addColors("&7ᴋʟɪᴋɴɪᴊ ᴀʙʏ ᴢᴇᴊść ᴅᴏ ᴋʀʏᴊóᴡᴋɪ")));
-            paste(location, Upgrade.OUTPOST_HUT.getSchemFile());
+            DHAPI.createHologram(occupiedHideoutHologram, location.clone().add(0.5, 2, 0.5), Arrays.asList(ColorFixer.addColors("&7&lᴋʀʏᴊóᴡᴋᴀ ɢɪʟᴅɪɪ #b59651&l" + guildHideoutImpl.getClanTag()), ColorFixer.addColors("&7ᴋʟɪᴋɴɪᴊ ᴀʙʏ ᴢᴇᴊść ᴅᴏ ᴋʀʏᴊóᴡᴋɪ")));
+            paste(location, UpgradeImpl.OUTPOST_HUT.getSchemFile());
         }
     }
 
@@ -244,47 +249,47 @@ public class GuildHideOutDataService {
         return null;
     }
 
-    public void attemptTeleportToHideOut(Player player, GuildHideout guildHideout) throws HideOutDoesNotExistException, ClanDoesNotExistException, PlayerDoesNotBelongToClanException {
+    public void attemptTeleportToHideOut(Player player, GuildHideout guildHideoutImpl) throws HideOutDoesNotExistException, ClanDoesNotExistException, PlayerDoesNotBelongToClanException {
 
-        if (guildHideout == null) throw new HideOutDoesNotExistException("Hideout does not exist");
+        if (guildHideoutImpl == null) throw new HideOutDoesNotExistException("Hideout does not exist");
 
-        String clanTag = guildHideout.getClanTag();
+        String clanTag = guildHideoutImpl.getClanTag();
 
-        Clan clan = ClanAndUserDataService.getCachedClan(clanTag);
+        Clan clanImpl = ClanAndUserDataService.getCachedClan(clanTag);
 
-        if (clan == null) throw new ClanDoesNotExistException();
+        if (clanImpl == null) throw new ClanDoesNotExistException();
 
-        if(!clan.getMembers().contains(player.getUniqueId()) && !player.isOp()) throw new PlayerDoesNotBelongToClanException();
+        if(!clanImpl.getMembers().contains(player.getUniqueId()) && !player.isOp()) throw new PlayerDoesNotBelongToClanException();
 
-        Location teleportLocation = guildHideout.getTeleportLocation();
+        Location teleportLocation = guildHideoutImpl.getTeleportLocation();
         Bukkit.getScheduler().runTask(AdvancedGuilds.instance, () -> player.teleport(teleportLocation));
 
     }
 
-    public void attemptTeleportToOutpost(Player player, GuildHideout guildHideout) throws HideOutDoesNotExistException, ClanDoesNotExistException, PlayerDoesNotBelongToClanException {
+    public void attemptTeleportToOutpost(Player player, GuildHideout guildHideoutImpl) throws HideOutDoesNotExistException, ClanDoesNotExistException, PlayerDoesNotBelongToClanException {
 
-        if (guildHideout == null) throw new HideOutDoesNotExistException("Hideout does not exist");
+        if (guildHideoutImpl == null) throw new HideOutDoesNotExistException("Hideout does not exist");
 
-        String clanTag = guildHideout.getClanTag();
+        String clanTag = guildHideoutImpl.getClanTag();
 
-        Clan clan = ClanAndUserDataService.getCachedClan(clanTag);
+        Clan clanImpl = ClanAndUserDataService.getCachedClan(clanTag);
 
-        if (clan == null) throw new ClanDoesNotExistException();
+        if (clanImpl == null) throw new ClanDoesNotExistException();
 
-        if(!clan.getMembers().contains(player.getUniqueId()) && !player.isOp()) throw new PlayerDoesNotBelongToClanException();
+        if(!clanImpl.getMembers().contains(player.getUniqueId()) && !player.isOp()) throw new PlayerDoesNotBelongToClanException();
 
-        Location teleportLocation = guildHideout.getEntryBlockLocation();
+        Location teleportLocation = guildHideoutImpl.getEntryBlockLocation();
         Bukkit.getScheduler().runTask(AdvancedGuilds.instance, () -> player.teleport(teleportLocation));
 
     }
 
-    public void occupyHideOut(GuildHideout hideout, Clan clan) {
+    public void occupyHideOut(GuildHideout hideout, Clan clanImpl) {
 
         hideout = resetOrCreateHideOut(hideout.getHideoutID());
-        hideout.setClanTag(clan);
+        hideout.setClanTag(clanImpl);
 
-        clan.setHideoutId(hideout.getHideoutID());
-        ClanAndUserDataService.updateClan(clan);
+        clanImpl.setHideoutId(hideout.getHideoutID());
+        ClanAndUserDataService.updateClan(clanImpl);
 
         updateHideOut(hideout);
         refreshHideoutOutpostHolograms(hideout, hideout.getEntryBlockLocation());
@@ -333,23 +338,23 @@ public class GuildHideOutDataService {
         return guildHideouts.get(name);
     }
 
-    public boolean isHideoutOccupied(GuildHideout guildHideout) {
+    public boolean isHideoutOccupied(GuildHideout guildHideoutImpl) {
 
-        if(guildHideout == null) return false;
-        if(guildHideout.getClanTag() == null) return false;
-        Clan clan = ClanAndUserDataService.getCachedClan(guildHideout.getClanTag());
+        if(guildHideoutImpl == null) return false;
+        if(guildHideoutImpl.getClanTag() == null) return false;
+        Clan clanImpl = ClanAndUserDataService.getCachedClan(guildHideoutImpl.getClanTag());
 
-        return clan != null;
+        return clanImpl != null;
     }
 
-    public void upgradeHideOut(@NotNull GuildHideout hideout, Upgrade upgrade) {
+    public void upgradeHideOut(@NotNull GuildHideout hideout, Upgrade upgradeImpl) {
 
-        UpgradeInfoHolder upgradeHolder = hideout.getUpgradeHolder(upgrade);
+        UpgradeInfoHolder upgradeHolder = hideout.getUpgradeHolder(upgradeImpl);
 
-        final int upgradeTimeSeconds = upgrade.getCoolDown();
+        final int upgradeTimeSeconds = upgradeImpl.getCoolDown();
 
         if(upgradeHolder == null){
-            upgradeHolder = new UpgradeInfoHolder( (System.currentTimeMillis() + 1000L * upgradeTimeSeconds), true, upgrade);
+            upgradeHolder = new UpgradeInfoHolderImpl( (System.currentTimeMillis() + 1000L * upgradeTimeSeconds), true, upgradeImpl);
         } else {
             upgradeHolder.setBought(true);
             upgradeHolder.setTimeOfCompletion(System.currentTimeMillis() + 1000L * upgradeTimeSeconds);
@@ -364,11 +369,11 @@ public class GuildHideOutDataService {
 
         updateHideOut(hideout);
 
-        scheduleUpgrade(hideout, upgrade);
+        scheduleUpgrade(hideout, upgradeImpl);
     }
 
-    private void scheduleUpgrade(GuildHideout hideout, Upgrade upgrade) {
-        UpgradeInfoHolder upgradeHolder = hideout.getUpgradeHolder(upgrade);
+    private void scheduleUpgrade(GuildHideout hideout, Upgrade upgradeImpl) {
+        UpgradeInfoHolder upgradeHolder = hideout.getUpgradeHolder(upgradeImpl);
 
         if(upgradeHolder.isFinished()) return;
 
@@ -389,29 +394,33 @@ public class GuildHideOutDataService {
             return;
         }
 
-        Clan clan = ClanAndUserDataService.getCachedClan(hideout.getClanTag());
+        Clan clanImpl = ClanAndUserDataService.getCachedClan(hideout.getClanTag());
 
-        Countdown countdown = new Countdown(plugin, clan, Countdown.HologramType.GUILD_UPGRADE, Math.toIntExact(timeToCompletionSeconds)+1, upgrade.getHologramLocation(Bukkit.getWorld(hideout.getHideoutID())), () -> {
+        if(!(clanImpl instanceof CountdownOwner countdownOwner)) {
+            return;
+        }
 
-            if(clan != null) {
-                for(UUID playerUUID : clan.getMembers()) {
+        Countdown countdown = new Countdown(plugin, countdownOwner, Countdown.HologramType.GUILD_UPGRADE, Math.toIntExact(timeToCompletionSeconds)+1, upgradeImpl.getHologramLocation(Bukkit.getWorld(hideout.getHideoutID())), () -> {
+
+            if(clanImpl != null) {
+                for(UUID playerUUID : clanImpl.getMembers()) {
                     Player player = Bukkit.getPlayer(playerUUID);
 
                     if(player == null || !player.isOnline()) continue;
 
-                    MessageManager.sendMessageFormated(player, MessageManager.UPGRADE_READY.replace("{upgrade}", upgrade.getUpgradeName()), MessageType.CHAT);
+                    MessageManager.sendMessageFormated(player, MessageManager.UPGRADE_READY.replace("{upgrade}", upgradeImpl.getUpgradeName()), MessageType.CHAT);
 
                 }
             }
 
             Location loc = new Location(Bukkit.getWorld(hideout.getHideoutID()), 0, 100, 0);
-            paste(loc, upgrade.getSchemFile());
+            paste(loc, upgradeImpl.getSchemFile());
 
             upgradeHolder.setFinished();
 
             hideout.setUpgradeHolder(upgradeHolder);
 
-            hideout.getUpgradeHolder(upgrade);
+            hideout.getUpgradeHolder(upgradeImpl);
             updateHideOut(hideout);
 
             try {
@@ -467,12 +476,12 @@ public class GuildHideOutDataService {
         spawnArenaNpcDTO = new NpcNameAndSkinPersistentDTO("&#4F2000&lᴘ&#512607&lʀ&#542C0F&lᴢ&#563216&lᴇ&#58381D&lᴡ&#5B3D25&lᴏ&#5D432C&lź&#5F4933&lɴ&#624F3B&lɪ&#645542&lᴋ", "498afcab", "yTyaTlyHbZruHT0/06fCHEfwtf7QRmbQAOFeSmqQ5QFWKikrwTXEFq7+62pBM9aFmDzGVNIZ2b5wNd9ZVxKNhkfjKck9SHl3UiI5AvQNfbp6OXNNPeKArdLYvcgRzcddTbHe2yKVRpFVG4UUysCnl1oyk3frWAKTbUBaUwlWDg9HnAeXIVoaXqlNI6stdPwbrUczW/zh6Nb//+HHCEipbdGbU35EB0O3Vp6AlzeV3jn5wT/j8kItQU/m27TwtPA+6Urx8ypzNuTMmUipEMhfnRayqxgPEnssP82Nk02b7yno5vBtLjOU0O7JWLwwTkC2bE6OKXEu46Ul9Vuqwj0OrJDvC9LYn+t74spINNqV1pWCx5z7/LUO2NAyjyoxUjIbRO3NK/BnhtXAycOoKa0Rx6EThcgPeEGiLDaAOu5WNM/BMqYqmTqc9BNdZzzEwKv0Mbyth2XkRuw6sBdKijN+TnegQh1/PkD26+xEscvuC7dWKK0RLD1FxZKhI6j0dNhvq7aEKYuEV7nAvnZyOhrmPGJ4t3G6hJ8uTwxlRORatQUJ7CHlvw3U/Ee/JfdIBjxhDdEcqkoBEqPIP9Dr6ZNqu/06HRGgroDqES3kdTRQTkBWkrmgLShi23V/YE0HKZUdrKe9TfEFXFekSkmoSHlAjrP73b7Torjrk8kNVf1D++8=","eyJ0aW1lc3RhbXAiOjE1ODcxNzI2NTc2NTcsInByb2ZpbGVJZCI6ImIwZDczMmZlMDBmNzQwN2U5ZTdmNzQ2MzAxY2Q5OGNhIiwicHJvZmlsZU5hbWUiOiJPUHBscyIsInNpZ25hdHVyZVJlcXVpcmVkIjp0cnVlLCJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDU4NWRhNjA2Yzc5NTZmNmE4YjI0NzRjYTM5N2UwZTFlMTg1NTc0YjYyMmY5YTJlNzFlZjIzOWI4NDliNDVhYyIsIm1ldGFkYXRhIjp7Im1vZGVsIjoic2xpbSJ9fX19");
     }
 
-    public void resetNpcsForHideOut(GuildHideout guildHideout) {
+    public void resetNpcsForHideOut(GuildHideout guildHideoutImpl) {
 
-        NPCRegistry NPC_REGISTRY = CitizensAPI.getNamedNPCRegistry(guildHideout.getHideoutID() + "hideout_npc_registry");
+        NPCRegistry NPC_REGISTRY = CitizensAPI.getNamedNPCRegistry(guildHideoutImpl.getHideoutID() + "hideout_npc_registry");
 
         if(NPC_REGISTRY == null) {
-            NPC_REGISTRY = CitizensAPI.createNamedNPCRegistry(guildHideout.getHideoutID() + "hideout_npc_registry", new MemoryNPCDataStore());
+            NPC_REGISTRY = CitizensAPI.createNamedNPCRegistry(guildHideoutImpl.getHideoutID() + "hideout_npc_registry", new MemoryNPCDataStore());
         }
 
         NPC_REGISTRY.despawnNPCs(DespawnReason.PENDING_RESPAWN);
@@ -506,28 +515,28 @@ public class GuildHideOutDataService {
 
             id++;
         }
-        npcHashMap.get(traderDTO).spawn(new Location(Bukkit.getWorld(guildHideout.getHideoutID()), -7.5 , 97, -48.5));
-        npcHashMap.get(witchDTO).spawn(new Location(Bukkit.getWorld(guildHideout.getHideoutID()), 6.5 , 97, -49.5));
+        npcHashMap.get(traderDTO).spawn(new Location(Bukkit.getWorld(guildHideoutImpl.getHideoutID()), -7.5 , 97, -48.5));
+        npcHashMap.get(witchDTO).spawn(new Location(Bukkit.getWorld(guildHideoutImpl.getHideoutID()), 6.5 , 97, -49.5));
 
-        if(guildHideout.hasFinishedUpgrade(Upgrade.BLACKSMITH)) {
-            npcHashMap.get(blacksmithDTO).spawn(new Location(Bukkit.getWorld(guildHideout.getHideoutID()), 26.5 , 93, -50.5));
+        if(guildHideoutImpl.hasFinishedUpgrade(UpgradeImpl.BLACKSMITH)) {
+            npcHashMap.get(blacksmithDTO).spawn(new Location(Bukkit.getWorld(guildHideoutImpl.getHideoutID()), 26.5 , 93, -50.5));
         }
 
-        if(guildHideout.hasFinishedUpgrade(Upgrade.VENTURE)) {
-            npcHashMap.get(ventureDTO).spawn(new Location(Bukkit.getWorld(guildHideout.getHideoutID()), 34.5 , 93, -38.5));
+        if(guildHideoutImpl.hasFinishedUpgrade(UpgradeImpl.VENTURE)) {
+            npcHashMap.get(ventureDTO).spawn(new Location(Bukkit.getWorld(guildHideoutImpl.getHideoutID()), 34.5 , 93, -38.5));
         }
 
-        if(guildHideout.hasFinishedUpgrade(Upgrade.SORCERER)) {
-            npcHashMap.get(sorcererDTO).spawn(new Location(Bukkit.getWorld(guildHideout.getHideoutID()), 25.5 , 93, -37.5));
+        if(guildHideoutImpl.hasFinishedUpgrade(UpgradeImpl.SORCERER)) {
+            npcHashMap.get(sorcererDTO).spawn(new Location(Bukkit.getWorld(guildHideoutImpl.getHideoutID()), 25.5 , 93, -37.5));
         }
 
-        npcHashMap.get(teleportDTO).spawn(new Location(Bukkit.getWorld(guildHideout.getHideoutID()), -8.5 , 99, -10.5));
+        npcHashMap.get(teleportDTO).spawn(new Location(Bukkit.getWorld(guildHideoutImpl.getHideoutID()), -8.5 , 99, -10.5));
 
-        if(guildHideout.hasFinishedUpgrade(Upgrade.ILLEGAL_BUSINESS_HALL)) {
-            npcHashMap.get(blackMarketDealerDTO).spawn(new Location(Bukkit.getWorld(guildHideout.getHideoutID()), 8.5 , 92, -63.5));
-            npcHashMap.get(spawnArenaNpcDTO).spawn(new Location(Bukkit.getWorld(guildHideout.getHideoutID()), 7.5 , 91, -76.5));
-            npcHashMap.get(bookMakerDTO).spawn(new Location(Bukkit.getWorld(guildHideout.getHideoutID()), -13.5 , 92, -85.5));
-            npcHashMap.get(arenaMasterDTO).spawn(new Location(Bukkit.getWorld(guildHideout.getHideoutID()), 11 , 92, -86.5));
+        if(guildHideoutImpl.hasFinishedUpgrade(UpgradeImpl.ILLEGAL_BUSINESS_HALL)) {
+            npcHashMap.get(blackMarketDealerDTO).spawn(new Location(Bukkit.getWorld(guildHideoutImpl.getHideoutID()), 8.5 , 92, -63.5));
+            npcHashMap.get(spawnArenaNpcDTO).spawn(new Location(Bukkit.getWorld(guildHideoutImpl.getHideoutID()), 7.5 , 91, -76.5));
+            npcHashMap.get(bookMakerDTO).spawn(new Location(Bukkit.getWorld(guildHideoutImpl.getHideoutID()), -13.5 , 92, -85.5));
+            npcHashMap.get(arenaMasterDTO).spawn(new Location(Bukkit.getWorld(guildHideoutImpl.getHideoutID()), 11 , 92, -86.5));
         }
     }
 
@@ -536,25 +545,25 @@ public class GuildHideOutDataService {
     }
 
 
-    private void setHolograms(@NotNull GuildHideout guildHideout) throws InvalidObjectException {
+    private void setHolograms(@NotNull GuildHideout guildHideoutImpl) throws InvalidObjectException {
 
-        final String returnToOutpost = guildHideout.getHideoutID() + RETURN_TO_OUTPOST;
-        final String hideoutPanel = guildHideout.getHideoutID() + HIDEOUT_PANEL;
-        final String mainStorage = guildHideout.getHideoutID() + MAIN_STORAGE;
-        final String hideoutTrader = guildHideout.getHideoutID() + HIDEOUT_TRADER;
-        final String stationHall = guildHideout.getHideoutID() + STATION_HALL;
-        final String witch = guildHideout.getHideoutID() + HIDEOUT_WITCH;
-        final String teleport = guildHideout.getHideoutID() + HIDEOUT_TELEPORT;
+        final String returnToOutpost = guildHideoutImpl.getHideoutID() + RETURN_TO_OUTPOST;
+        final String hideoutPanel = guildHideoutImpl.getHideoutID() + HIDEOUT_PANEL;
+        final String mainStorage = guildHideoutImpl.getHideoutID() + MAIN_STORAGE;
+        final String hideoutTrader = guildHideoutImpl.getHideoutID() + HIDEOUT_TRADER;
+        final String stationHall = guildHideoutImpl.getHideoutID() + STATION_HALL;
+        final String witch = guildHideoutImpl.getHideoutID() + HIDEOUT_WITCH;
+        final String teleport = guildHideoutImpl.getHideoutID() + HIDEOUT_TELEPORT;
 
-        final String arenaUpgrade = guildHideout.getHideoutID() + ARENA_UPGRADE;
-        final String blackMarket = guildHideout.getHideoutID() + ARENA_UPGRADE + "_black_market";
-        final String bookMaker = guildHideout.getHideoutID() + ARENA_UPGRADE + "_book_maker";
-        final String arenaMaster = guildHideout.getHideoutID() + ARENA_UPGRADE + "_arena_master";
+        final String arenaUpgrade = guildHideoutImpl.getHideoutID() + ARENA_UPGRADE;
+        final String blackMarket = guildHideoutImpl.getHideoutID() + ARENA_UPGRADE + "_black_market";
+        final String bookMaker = guildHideoutImpl.getHideoutID() + ARENA_UPGRADE + "_book_maker";
+        final String arenaMaster = guildHideoutImpl.getHideoutID() + ARENA_UPGRADE + "_arena_master";
 
-        final String boughtVenture = guildHideout.getHideoutID() + HIDEOUT_BOUGHT_VENTURE;
-        final String hideoutVenture = guildHideout.getHideoutID() + HIDEOUT_VENTURE;
-        final String hideoutBlackSmith = guildHideout.getHideoutID() + HIDEOUT_BLACKSMITH;
-        final String hideoutEnchanter = guildHideout.getHideoutID() + HIDEOUT_ENCHANTER;
+        final String boughtVenture = guildHideoutImpl.getHideoutID() + HIDEOUT_BOUGHT_VENTURE;
+        final String hideoutVenture = guildHideoutImpl.getHideoutID() + HIDEOUT_VENTURE;
+        final String hideoutBlackSmith = guildHideoutImpl.getHideoutID() + HIDEOUT_BLACKSMITH;
+        final String hideoutEnchanter = guildHideoutImpl.getHideoutID() + HIDEOUT_ENCHANTER;
 
         DHAPI.removeHologram(returnToOutpost);
         DHAPI.removeHologram(hideoutPanel);
@@ -574,9 +583,9 @@ public class GuildHideOutDataService {
         DHAPI.removeHologram(hideoutBlackSmith);
         DHAPI.removeHologram(hideoutEnchanter);
 
-        World world = Bukkit.getWorld(guildHideout.getHideoutID());
+        World world = Bukkit.getWorld(guildHideoutImpl.getHideoutID());
 
-        if(world == null) throw new InvalidObjectException("World " + guildHideout.getHideoutID() + " does not exist");
+        if(world == null) throw new InvalidObjectException("World " + guildHideoutImpl.getHideoutID() + " does not exist");
 
         DHAPI.createHologram(returnToOutpost, new Location(world, 0.5, 102.5, 0.5), Arrays.asList(ColorFixer.addColors("#b59651&lᴅᴏ ɢóʀʏ"), ColorFixer.addColors("&7ᴋʟɪᴋɴɪᴊ, ᴡᴊᴇᴄʜᴀć ᴡɪɴᴅą ɴᴀ ɢóʀᴇ")));
         DHAPI.createHologram(hideoutPanel, new Location(world, -8.5 , 100.5, -24.5), Arrays.asList(ColorFixer.addColors("#b59651&lᴘᴀɴᴇʟ ɢɪʟᴅʏᴊɴʏ"), ColorFixer.addColors("&7ᴋʟɪᴋɴɪᴊ, ᴀʙʏ ᴜʟᴇᴘꜱᴢʏć ᴋʀʏᴊóᴡᴋę")));
@@ -585,22 +594,22 @@ public class GuildHideOutDataService {
         DHAPI.createHologram(witch, new Location(world, 5.5 , 100.5, -48.5), Arrays.asList(ColorFixer.addColors("#7830ab&lᴡɪᴇᴅźᴍᴀ ɢɪʟᴅʏᴊɴᴀ"), ColorFixer.addColors("&7ᴋʟɪɴɪᴊ, ᴀʙʏ ᴜᴢᴜᴘᴇᴌɴɪć ᴍɪᴋꜱᴛᴜʀʏ")));
         DHAPI.createHologram(teleport, new Location(world, -7.5 , 102.5, -10.0), Arrays.asList(ColorFixer.addColors("#35543b&lᴡᴏźɴɪᴄᴀ ɢɪʟᴅʏᴊɴʏ"), ColorFixer.addColors("&7ᴋʟɪɴɪᴊ, ᴀʙʏ ᴏᴛᴡᴏʀᴢʏć ᴍᴇɴᴜ ᴍᴏżʟɪᴡʏᴄʜ ᴅᴇꜱᴛʏɴᴀᴄᴊɪ")));
 
-        if(!guildHideout.hasBoughtUpgrade(Upgrade.STATION_HALL)) {
+        if(!guildHideoutImpl.hasBoughtUpgrade(UpgradeImpl.STATION_HALL)) {
             DHAPI.createHologram(stationHall, new Location(world, 12.5 , 99.5, -43.5), Arrays.asList(ColorFixer.addColors("#61edba&lʀᴏᴢʙᴜᴅᴏᴡᴀ ᴋʀʏᴊóᴡᴋɪ #b59651#1"), "&7ᴀʙʏ ᴛᴀᴍ ᴘʀᴢᴇᴊść ᴋᴜᴘ ᴜʟᴇᴘꜱᴢᴇɴɪᴇ ᴡ ᴘᴀɴᴇʟᴜ"));
 
         } else {
 
-            if(guildHideout.hasBoughtUpgrade(Upgrade.VENTURE)) {
+            if(guildHideoutImpl.hasBoughtUpgrade(UpgradeImpl.VENTURE)) {
                 DHAPI.createHologram(boughtVenture, new Location(world, 38 , 96, -41), Arrays.asList(ColorFixer.addColors("#b59651&lᴇᴋꜱᴘᴇᴅʏᴄᴊᴀ"), "%advancedguilds_expedition_objective_and_level%", "%advancedguilds_expedition_time_left_literal%", "%advancedguilds_expedition_time_left%", "%advancedguilds_expedition_speed_up%"));
             } else {
                 DHAPI.createHologram(hideoutVenture, new Location(world, 22.5 , 95.5, -41.5), Arrays.asList(ColorFixer.addColors("&lEkspedycje"), "&7ᴛᴜ ᴡʏśʟᴇꜱᴢ ᴇᴋꜱᴘᴇᴅʏᴄᴊᴇ ᴘᴏ ꜱᴜʀᴏᴡᴄᴇ"));
             }
 
-            if(!guildHideout.hasBoughtUpgrade(Upgrade.BLACKSMITH)) {
+            if(!guildHideoutImpl.hasBoughtUpgrade(UpgradeImpl.BLACKSMITH)) {
                 DHAPI.createHologram(hideoutBlackSmith, new Location(world, 22.5 , 9.5, -45.5), Arrays.asList(ColorFixer.addColors("&lKOWAL"), "&7ᴛᴜ ᴡʏꜱᴛᴀᴡɪꜱᴢ ᴘʀᴢᴇᴅᴍɪᴏᴛʏ ɴᴀ ᴀᴜᴋᴄᴊᴇ"));
             }
 
-            if(!guildHideout.hasBoughtUpgrade(Upgrade.SORCERER)) {
+            if(!guildHideoutImpl.hasBoughtUpgrade(UpgradeImpl.SORCERER)) {
                 DHAPI.createHologram(hideoutEnchanter, new Location(world, 22.5 , 95.5, -43.5), Arrays.asList(ColorFixer.addColors("&lZAKLINACZ"), "&7ᴛᴜ ᴡʏꜱᴛᴀᴡɪꜱᴢ ᴘʀᴢᴇᴅᴍɪᴏᴛʏ ɴᴀ ᴀᴜᴋᴄᴊᴇ"));
             }
 
@@ -608,7 +617,7 @@ public class GuildHideOutDataService {
 
         }
 
-        if(!guildHideout.hasBoughtUpgrade(Upgrade.ILLEGAL_BUSINESS_HALL)) {
+        if(!guildHideoutImpl.hasBoughtUpgrade(UpgradeImpl.ILLEGAL_BUSINESS_HALL)) {
             DHAPI.createHologram(arenaUpgrade, new Location(world, 0.5 , 99.5, -51), Arrays.asList(ColorFixer.addColors("#61edba&lʀᴏᴢʙᴜᴅᴏᴡᴀ ᴋʀʏᴊóᴡᴋɪ #b59651#2"), "&7ᴀʙʏ ᴛᴀᴍ ᴘʀᴢᴇᴊść ᴋᴜᴘ ᴜʟᴇᴘꜱᴢᴇɴɪᴇ ᴡ ᴘᴀɴᴇʟᴜ"));
         } else {
             DHAPI.createHologram(blackMarket, new Location(world, 6.5 , 95.5, -66.5), Arrays.asList(ColorFixer.addColors("#383734&lᴄᴢᴀʀɴʏ ʀʏɴᴇᴋ"), "&7ᴛᴜ ᴡʏꜱᴛᴀᴡɪꜱᴢ ᴘʀᴢᴇᴅᴍɪᴏᴛʏ ɴᴀ ᴀᴜᴋᴄᴊᴇ"));
@@ -618,29 +627,29 @@ public class GuildHideOutDataService {
 
     }
 
-    private void prepareHideOutHologramsAndNpcs(@NotNull GuildHideout guildHideout) throws InvalidObjectException {
-        setHolograms(guildHideout);
-        resetNpcsForHideOut(guildHideout);
+    private void prepareHideOutHologramsAndNpcs(@NotNull GuildHideout guildHideoutImpl) throws InvalidObjectException {
+        setHolograms(guildHideoutImpl);
+        resetNpcsForHideOut(guildHideoutImpl);
     }
 
 
     public void loadHideOuts() {
-        List<GuildHideout> guildHideouts = loadAllHideOuts();
+        List<GuildHideout> guildHideoutImpls = loadAllHideOuts();
 
-        for (GuildHideout guildHideout : guildHideouts) {
-            HashMap<Upgrade, UpgradeInfoHolder> hideoutUpgrades = guildHideout.getHideoutUpgrades();
+        for (GuildHideout guildHideoutImpl : guildHideoutImpls) {
+            HashMap<Upgrade, UpgradeInfoHolder> hideoutUpgrades = guildHideoutImpl.getHideoutUpgrades();
 
             for (Map.Entry<Upgrade, UpgradeInfoHolder> entry : hideoutUpgrades.entrySet()) {
-                Upgrade upgrade = entry.getKey();
+                Upgrade upgradeImpl = entry.getKey();
                 UpgradeInfoHolder upgradeInfoHolder = entry.getValue();
 
                 if(upgradeInfoHolder.isBought() && !upgradeInfoHolder.isFinished()) {
-                    scheduleUpgrade(guildHideout, upgrade);
+                    scheduleUpgrade(guildHideoutImpl, upgradeImpl);
                 }
             }
 
             try {
-                prepareHideOutHologramsAndNpcs(guildHideout);
+                prepareHideOutHologramsAndNpcs(guildHideoutImpl);
             } catch (InvalidObjectException e) {
                 throw new RuntimeException(e);
             }
@@ -655,29 +664,29 @@ public class GuildHideOutDataService {
 
         if(!world.getName().startsWith("guild_")) throw new InvalidHideoutWorldNameException();
 
-        GuildHideout guildHideout = resetOrCreateHideOut(worldName);
+        GuildHideout guildHideoutImpl = resetOrCreateHideOut(worldName);
 
         Location loc = new Location(world, 0, 100, 0);
 
-        paste(loc, Upgrade.RESET.getSchemFile());
-        prepareHideOutHologramsAndNpcs(guildHideout);
+        paste(loc, UpgradeImpl.RESET.getSchemFile());
+        prepareHideOutHologramsAndNpcs(guildHideoutImpl);
     }
 
 
-    public void addXPToHideout(GuildHideout guildHideout, int xp) {
-        if(guildHideout == null) return;
-        guildHideout.addExperience(xp);
-        updateHideOut(guildHideout);
+    public void addXPToHideout(GuildHideout guildHideoutImpl, int xp) {
+        if(guildHideoutImpl == null) return;
+        guildHideoutImpl.addExperience(xp);
+        updateHideOut(guildHideoutImpl);
     }
 
 
-    public void upgradeHideoutLevel(GuildHideout guildHideout) {
+    public void upgradeHideoutLevel(GuildHideout guildHideoutImpl) {
 
-        if(guildHideout == null) return;
+        if(guildHideoutImpl == null) return;
 
-        guildHideout.upgradeHideout();
+        guildHideoutImpl.upgradeHideout();
 
-        updateHideOut(guildHideout);
+        updateHideOut(guildHideoutImpl);
 
     }
 }

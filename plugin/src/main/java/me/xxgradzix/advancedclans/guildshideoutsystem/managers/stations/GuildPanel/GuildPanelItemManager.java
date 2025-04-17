@@ -1,8 +1,8 @@
 package me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.GuildPanel;
 
-import me.xxgradzix.advancedclans.data.database.entities.hideout.fields.Upgrade;
-import me.xxgradzix.advancedclans.data.database.entities.hideout.fields.UpgradeInfoHolder;
-import me.xxgradzix.advancedclans.exceptions.hideOuts.UpgradeWasNotBoughtException;
+import entities.fields.UpgradeInfoHolder;
+import me.xxgradzix.advancedclans.data.database.entities.hideout.fields.UpgradeImpl;
+import com.xxgradzix.advancedguildsapi.exceptions.hideOuts.UpgradeWasNotBoughtException;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.utils.ColorFixer;
 import org.bukkit.Material;
@@ -477,9 +477,10 @@ public class GuildPanelItemManager {
             itemMeta = item.getItemMeta();
 
             switch (upgradeInfoHolder.getUpgrade()) {
-                case Upgrade.STORAGE -> itemMeta.setCustomModelData(20101);
-                case Upgrade.STATION_HALL -> itemMeta.setCustomModelData(20202);
-                case Upgrade.ILLEGAL_BUSINESS_HALL -> itemMeta.setCustomModelData(20203);
+                case UpgradeImpl.STORAGE -> itemMeta.setCustomModelData(20101);
+                case UpgradeImpl.STATION_HALL -> itemMeta.setCustomModelData(20202);
+                case UpgradeImpl.ILLEGAL_BUSINESS_HALL -> itemMeta.setCustomModelData(20203);
+                default -> throw new IllegalStateException("Unexpected value: " + upgradeInfoHolder.getUpgrade());
             }
 
         } else {
@@ -487,9 +488,10 @@ public class GuildPanelItemManager {
             itemMeta = item.getItemMeta();
 
             switch (upgradeInfoHolder.getUpgrade()) {
-                case Upgrade.STORAGE -> itemMeta.setCustomModelData(20101);
-                case Upgrade.STATION_HALL -> itemMeta.setCustomModelData(20102);
-                case Upgrade.ILLEGAL_BUSINESS_HALL -> itemMeta.setCustomModelData(20103);
+                case UpgradeImpl.STORAGE -> itemMeta.setCustomModelData(20101);
+                case UpgradeImpl.STATION_HALL -> itemMeta.setCustomModelData(20102);
+                case UpgradeImpl.ILLEGAL_BUSINESS_HALL -> itemMeta.setCustomModelData(20103);
+                default -> throw new IllegalStateException("Unexpected value: " + upgradeInfoHolder.getUpgrade());
             }
         }
 
@@ -511,8 +513,8 @@ public class GuildPanelItemManager {
             lore.add(ColorFixer.addColors("&c&lᴢᴀʙʟᴏᴋᴏᴡᴀɴᴇ"));
             lore.add(ColorFixer.addColors("&7ᴏᴅʙʟᴏᴋᴏᴡᴜᴊᴇ ᴅᴏᴅᴀᴛᴋᴏᴡą̨ ᴘʀᴢᴇꜱᴛʀᴢᴇń ɴᴀ ʀᴏᴢᴡóᴊ ɢɪʟᴅɪ"));
             lore.add(ColorFixer.addColors(" "));
-            lore.add(ColorFixer.addColors("&7ᴄᴇɴᴀ ᴏᴅʙʟᴏᴋᴏᴡᴀɴɪᴀ: &e" + Upgrade.STATION_HALL.getPrice() + " ᴍᴏɴᴇᴛ"));
-            lore.add(ColorFixer.addColors("&7ᴄᴢᴀꜱ ᴛᴡᴏʀᴢᴇɴɪᴀ: &e" + MessageManager.secondsToTimeFormatSkipSeconds(Upgrade.STATION_HALL.getCoolDown())));
+            lore.add(ColorFixer.addColors("&7ᴄᴇɴᴀ ᴏᴅʙʟᴏᴋᴏᴡᴀɴɪᴀ: &e" + UpgradeImpl.STATION_HALL.getPrice() + " ᴍᴏɴᴇᴛ"));
+            lore.add(ColorFixer.addColors("&7ᴄᴢᴀꜱ ᴛᴡᴏʀᴢᴇɴɪᴀ: &e" + MessageManager.secondsToTimeFormatSkipSeconds(UpgradeImpl.STATION_HALL.getCoolDown())));
             lore.add(ColorFixer.addColors(" "));
             lore.add(ColorFixer.addColors("&7ᴋʟɪᴋɴɪᴊ ᴀʙʏ ᴋᴜᴘɪć ᴜʟᴇᴘꜱᴢᴇɴɪᴇ"));
             lore.add(ColorFixer.addColors(" "));

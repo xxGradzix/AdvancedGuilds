@@ -3,12 +3,15 @@ package me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.GuildPa
 import dev.triumphteam.gui.components.GuiType;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
+import entities.Clan;
+import entities.GuildHideout;
+import entities.User;
+import entities.fields.UpgradeInfoHolder;
 import me.xxgradzix.advancedclans.data.database.controllers.hideouts.GuildHideOutController;
-import me.xxgradzix.advancedclans.data.database.entities.clan.Clan;
-import me.xxgradzix.advancedclans.data.database.entities.clan.User;
-import me.xxgradzix.advancedclans.data.database.entities.hideout.fields.Upgrade;
-import me.xxgradzix.advancedclans.data.database.entities.hideout.fields.UpgradeInfoHolder;
-import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideout;
+import me.xxgradzix.advancedclans.data.database.entities.clan.ClanImpl;
+import me.xxgradzix.advancedclans.data.database.entities.clan.UserImpl;
+import me.xxgradzix.advancedclans.data.database.entities.hideout.fields.UpgradeImpl;
+import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideoutImpl;
 import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataService;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.messages.MessageType;
@@ -30,7 +33,7 @@ import java.util.stream.IntStream;
 public class GideoutGui {
 
     private Player player;
-    private final Clan clan;
+    private final Clan clanImpl;
     private GuildHideout hideout;
 
     /** GUI ITEMS **/
@@ -90,13 +93,13 @@ public class GideoutGui {
 
         this.player = player;
 
-        User user = ClanAndUserDataService.getCachedUser(player.getUniqueId());
+        User userImpl = ClanAndUserDataService.getCachedUser(player.getUniqueId());
 
-        clan = ClanAndUserDataService.getCachedClan(user.getClanTag());
+        clanImpl = ClanAndUserDataService.getCachedClan(userImpl.getClanTag());
 
-        if (clan == null) return;
+        if (clanImpl == null) return;
 
-        hideout = GuildHideOutController.getHideOut(clan.getHideoutId());
+        hideout = GuildHideOutController.getHideOut(clanImpl.getHideoutId());
 
         if (hideout == null) return;
 
@@ -253,8 +256,8 @@ public class GideoutGui {
 
         StringBuilder title = new StringBuilder("&f七七七七七七七七".replace("&", "§"));
 
-        boolean isLeader = clan.getOwnerUUID().equals(target.getUniqueId());
-        boolean isOfficer = clan.getDeputyOwnerUUID().equals(target.getUniqueId());
+        boolean isLeader = clanImpl.getOwnerUUID().equals(target.getUniqueId());
+        boolean isOfficer = clanImpl.getDeputyOwnerUUID().equals(target.getUniqueId());
 
         title.append(isLeader ? "≙" : (isOfficer ? "≘" : "≗"));
         title.append("§0").append(getNameWithOffset(target.getName(), 73));
@@ -306,7 +309,7 @@ public class GideoutGui {
     private void openStorageGui() {
 
 
-        UpgradeInfoHolder stationHallUpgradeInfoHolder = hideout.getUpgradeHolder(Upgrade.STATION_HALL);
+        UpgradeInfoHolder stationHallUpgradeInfoHolder = hideout.getUpgradeHolder(UpgradeImpl.STATION_HALL);
 
         boolean isFinished = stationHallUpgradeInfoHolder.isFinished();
 
@@ -321,13 +324,13 @@ public class GideoutGui {
 
         int vertSlot = 5;
         int storageNum = 1;
-        for (Upgrade upgrade : List.of(
-                Upgrade.STORAGE_1,
-                Upgrade.STORAGE_2,
-                Upgrade.STORAGE_3
+        for (UpgradeImpl upgradeImpl : List.of(
+                UpgradeImpl.STORAGE_1,
+                UpgradeImpl.STORAGE_2,
+                UpgradeImpl.STORAGE_3
         )) {
 
-            UpgradeInfoHolder upgradeInfoHolder = hideout.getUpgradeHolder(upgrade);
+            UpgradeInfoHolder upgradeInfoHolder = hideout.getUpgradeHolder(upgradeImpl);
 
             GuiItem guiItem = new GuiItem(GuildPanelItemManager.getStorageBuyButton(upgradeInfoHolder, storageNum));
 
@@ -340,12 +343,12 @@ public class GideoutGui {
                     TransactionProduct transactionProduct = new TransactionActionProduct() {
                         @Override
                         public void execute() {
-                            GuildHideOutController.upgradeHideOut(hideout, upgrade);
+                            GuildHideOutController.upgradeHideOut(hideout, upgradeImpl);
                             openStorageGui();
                         }
                     };
 
-                    TransactionEconomyPriceType transactionPriceType = new TransactionEconomyPriceType(upgrade.getPrice());
+                    TransactionEconomyPriceType transactionPriceType = new TransactionEconomyPriceType(upgradeImpl.getPrice());
 
                     TransactionUtils.TransactionResponse purchase = TransactionUtils.purchase(player, List.of(transactionProduct), List.of(transactionPriceType));
 
@@ -369,7 +372,7 @@ public class GideoutGui {
 
         StringBuilder title = new StringBuilder("&f七七七七七七七七".replace("&", "§"));
 
-        UpgradeInfoHolder stationHallUpgradeInfoHolder = hideout.getUpgradeHolder(Upgrade.STATION_HALL);
+        UpgradeInfoHolder stationHallUpgradeInfoHolder = hideout.getUpgradeHolder(UpgradeImpl.STATION_HALL);
 
         boolean isFinished = stationHallUpgradeInfoHolder.isFinished();
 
@@ -390,9 +393,9 @@ public class GideoutGui {
 
             int vertSlot = 5;
             for (UpgradeInfoHolder workshopUpgradeInfoHolder : List.of(
-                    hideout.getUpgradeHolder(Upgrade.BLACKSMITH),
-                    hideout.getUpgradeHolder(Upgrade.VENTURE),
-                    hideout.getUpgradeHolder(Upgrade.SORCERER)
+                    hideout.getUpgradeHolder(UpgradeImpl.BLACKSMITH),
+                    hideout.getUpgradeHolder(UpgradeImpl.VENTURE),
+                    hideout.getUpgradeHolder(UpgradeImpl.SORCERER)
             )) {
 
                 GuiItem button = new GuiItem(GuildPanelItemManager.getWorkshopBuyButton(workshopUpgradeInfoHolder));
@@ -469,7 +472,7 @@ public class GideoutGui {
 
         StringBuilder title = new StringBuilder("&f七七七七七七七七".replace("&", "§"));
 
-        UpgradeInfoHolder illegalBusinessButton = hideout.getUpgradeHolder(Upgrade.ILLEGAL_BUSINESS_HALL);
+        UpgradeInfoHolder illegalBusinessButton = hideout.getUpgradeHolder(UpgradeImpl.ILLEGAL_BUSINESS_HALL);
 
         title.append("≢");
 
@@ -533,7 +536,7 @@ public class GideoutGui {
 
         setCommonButtons(playerListGui);
 
-        List<UUID> members = clan.getMembers();
+        List<UUID> members = clanImpl.getMembers();
 
         int pageSize = 8;
         int maxPage = (members.size() + pageSize - 1) / pageSize;
@@ -558,8 +561,8 @@ public class GideoutGui {
 
             OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(member);
 
-            boolean isLeader = clan.getOwnerUUID().equals(member);
-            boolean isOfficer = clan.getDeputyOwnerUUID().equals(member);
+            boolean isLeader = clanImpl.getOwnerUUID().equals(member);
+            boolean isOfficer = clanImpl.getDeputyOwnerUUID().equals(member);
 
             String role = isLeader ? ColorFixer.addColors("&cʟɪᴅᴇʀ") : (isOfficer ? ColorFixer.addColors("&bᴢᴀꜱᴛęᴘᴄᴀ") : ColorFixer.addColors("&7ᴄᴢłᴏɴᴇᴋ"));
             String name = isLeader ? ColorFixer.addColors("&c&l" + offlinePlayer.getName()) : (isOfficer ? ColorFixer.addColors("&b&l" + offlinePlayer.getName()) : ColorFixer.addColors("&7&l" + offlinePlayer.getName()));
@@ -611,7 +614,7 @@ public class GideoutGui {
         gui.setItem(2, 3, allianceGuiItem);
 
 
-        UpgradeInfoHolder storageUpgradeInfoHolder = hideout.getUpgradeHolder(Upgrade.STORAGE);
+        UpgradeInfoHolder storageUpgradeInfoHolder = hideout.getUpgradeHolder(UpgradeImpl.STORAGE);
 
         GuiItem storageItemButton = new GuiItem(GuildPanelItemManager.areaUpgradeButton(storageUpgradeInfoHolder));
         storageItemButton.setAction((event) -> {
@@ -620,7 +623,7 @@ public class GideoutGui {
         gui.setItem(4, 1, storageItemButton);
 
 
-        UpgradeInfoHolder stationHallUpgradeInfoHolder = hideout.getUpgradeHolder(Upgrade.STATION_HALL);
+        UpgradeInfoHolder stationHallUpgradeInfoHolder = hideout.getUpgradeHolder(UpgradeImpl.STATION_HALL);
 
         GuiItem stationHallItem = new GuiItem(GuildPanelItemManager.areaUpgradeButton(stationHallUpgradeInfoHolder));
         stationHallItem.setAction((event) -> {
@@ -628,7 +631,7 @@ public class GideoutGui {
         });
         gui.setItem(4, 2, stationHallItem);
 
-        UpgradeInfoHolder illegalBusinessUpgradeHolder = hideout.getUpgradeHolder(Upgrade.ILLEGAL_BUSINESS_HALL);
+        UpgradeInfoHolder illegalBusinessUpgradeHolder = hideout.getUpgradeHolder(UpgradeImpl.ILLEGAL_BUSINESS_HALL);
 
         GuiItem blackMarketItem = new GuiItem(GuildPanelItemManager.areaUpgradeButton(illegalBusinessUpgradeHolder));
         blackMarketItem.setAction((event) -> {

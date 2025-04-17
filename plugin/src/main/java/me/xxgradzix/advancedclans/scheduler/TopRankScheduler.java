@@ -1,7 +1,9 @@
 package me.xxgradzix.advancedclans.scheduler;
 
-import me.xxgradzix.advancedclans.data.database.entities.clan.Clan;
-import me.xxgradzix.advancedclans.data.database.entities.clan.User;
+import entities.Clan;
+import entities.User;
+import me.xxgradzix.advancedclans.data.database.entities.clan.ClanImpl;
+import me.xxgradzix.advancedclans.data.database.entities.clan.UserImpl;
 import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataService;
 import me.xxgradzix.advancedclans.data.database.entities.clans.PlayerStat;
 import me.xxgradzix.advancedclans.data.database.entities.clans.RankType;
@@ -35,11 +37,11 @@ public class TopRankScheduler extends BukkitRunnable {
     }
 
     private void implementsClan() {
-        Queue<Clan> clanQueue = new LinkedList<>(ClanAndUserDataService.getAllCachedClans());
-        int size = clanQueue.size();
+        Queue<Clan> clanImplQueue = new LinkedList<>(ClanAndUserDataService.getAllCachedClans());
+        int size = clanImplQueue.size();
         for (int i = 0; i < size; i++) {
-            Clan clan = clanQueue.poll();
-            addClan(clan);
+            Clan clanImpl = clanImplQueue.poll();
+            addClan(clanImpl);
         }
     }
 
@@ -50,41 +52,41 @@ public class TopRankScheduler extends BukkitRunnable {
         rankData.put(RankType.CLAN_POINTS, new PriorityQueue<>(comparator));
     }
     private void implementsUser() {
-        Queue<User> userQueue = new LinkedList<>(ClanAndUserDataService.getAllCachedUsers());
-        int queueSize = userQueue.size();
+        Queue<User> userImplQueue = new LinkedList<>(ClanAndUserDataService.getAllCachedUsers());
+        int queueSize = userImplQueue.size();
         for (int i = 0; i < queueSize; i++) {
-            User user = userQueue.poll();
-            assert user != null;
-            addUser(user);
+            User userImpl = userImplQueue.poll();
+            assert userImpl != null;
+            addUser(userImpl);
         }
     }
 
-    public void addUser(User user) {
-        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(user.getUuid());
-        int death = user.getDeath();
-        int kills = user.getKills();
-        int points = user.getPoints();
+    public void addUser(User userImpl) {
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(userImpl.getUuid());
+        int death = userImpl.getDeath();
+        int kills = userImpl.getKills();
+        int points = userImpl.getPoints();
         String name = offlinePlayer.getName();
         addStats(name, kills, death, points);
     }
 
-    public void addClan(Clan clan) {
+    public void addClan(Clan clanImpl) {
         // check size of members fulfill threshold to counting a ranking
-        if(!clanController.doesClanFulfillThreshold(clan)) {
+        if(!clanController.doesClanFulfillThreshold(clanImpl)) {
             return;
         }
-        String tag = clan.getTag();
-        String averagePoint = clanController.getAveragePoint(clan);
+        String tag = clanImpl.getTag();
+        String averagePoint = clanController.getAveragePoint(clanImpl);
 
         PriorityQueue<PlayerStat> playerStats = rankData.get(RankType.CLAN_POINTS);
         playerStats.add(new PlayerStat(tag, Integer.parseInt(averagePoint)));
     }
 
-    public void removeClan(Clan clan) {
+    public void removeClan(Clan clanImpl) {
         PriorityQueue<PlayerStat> playerStats = rankData.get(RankType.CLAN_POINTS);
         PriorityQueue<PlayerStat> newQueue = new PriorityQueue<>(playerStats.comparator());
         for (PlayerStat stat : playerStats) {
-            if (!stat.getName().equals(clan.getTag())) {
+            if (!stat.getName().equals(clanImpl.getTag())) {
                 newQueue.add(stat);
             }
         }

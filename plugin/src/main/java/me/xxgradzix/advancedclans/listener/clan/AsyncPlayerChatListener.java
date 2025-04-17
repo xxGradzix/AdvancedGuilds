@@ -1,9 +1,11 @@
 package me.xxgradzix.advancedclans.listener.clan;
 
+import entities.Clan;
+import entities.User;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
-import me.xxgradzix.advancedclans.data.database.entities.clan.Clan;
-import me.xxgradzix.advancedclans.data.database.entities.clan.User;
+import me.xxgradzix.advancedclans.data.database.entities.clan.ClanImpl;
+import me.xxgradzix.advancedclans.data.database.entities.clan.UserImpl;
 import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataService;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCore.UserController;
 import me.xxgradzix.advancedclans.messages.MessageManager;
@@ -43,11 +45,11 @@ public class AsyncPlayerChatListener implements Listener {
         TextComponent textMessage = (TextComponent) messageComponent;
         String message = textMessage.content();
 
-        User user = ClanAndUserDataService.getCachedUser(player.getUniqueId());
-        if(!user.hasClan())
+        User userImpl = ClanAndUserDataService.getCachedUser(player.getUniqueId());
+        if(!userImpl.hasClan())
             return;
 
-        Clan clan = ClanAndUserDataService.getCachedClan(user.getClanTag());
+        Clan clanImpl = ClanAndUserDataService.getCachedClan(userImpl.getClanTag());
         if(message.startsWith("!!"))
         {
             event.setCancelled(true);
@@ -55,8 +57,8 @@ public class AsyncPlayerChatListener implements Listener {
             if(message.length()==0)
                 return;
 
-            Set<UUID> uuids = new HashSet<>(clan.getMembers());
-            for (String allianceTag : clan.getAlliances()) {
+            Set<UUID> uuids = new HashSet<>(clanImpl.getMembers());
+            for (String allianceTag : clanImpl.getAlliances()) {
                 Clan alliance = ClanAndUserDataService.getCachedClan(allianceTag);
                 if(alliance == null)
                     continue;
@@ -67,7 +69,7 @@ public class AsyncPlayerChatListener implements Listener {
                 if(memberPlayer == null || memberPlayer.isOnline())
                     continue;
                 MessageManager.sendMessageFormated(memberPlayer, MessageManager.ALLIANCE_CHAT_FORMAT
-                        .replace("{tag}", clan.getTag())
+                        .replace("{tag}", clanImpl.getTag())
                         .replace("{message}", message)
                         .replace("{player}", player.getName()), MessageType.CHAT);
 
@@ -83,12 +85,12 @@ public class AsyncPlayerChatListener implements Listener {
                 return;
 
 
-            for (UUID memberUUID : clan.getMembers()) {
+            for (UUID memberUUID : clanImpl.getMembers()) {
                 Player memberPlayer = Bukkit.getPlayer(memberUUID);
                 if(memberPlayer == null || memberPlayer.isOnline())
                     continue;
                 MessageManager.sendMessageFormated(memberPlayer, MessageManager.ALLIANCE_CHAT_FORMAT
-                        .replace("{tag}", clan.getTag())
+                        .replace("{tag}", clanImpl.getTag())
                         .replace("{message}", message)
                         .replace("{player}", player.getName()), MessageType.CHAT);
             }

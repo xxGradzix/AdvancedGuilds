@@ -18,9 +18,9 @@ import me.xxgradzix.advancedclans.data.database.repositories.hideout.storage.Hid
 import me.xxgradzix.advancedclans.data.database.repositories.hideout.storage.PersonalStorageRepository;
 import me.xxgradzix.advancedclans.data.database.repositories.hideout.venture.VentureRewardRepository;
 import me.xxgradzix.advancedclans.data.database.services.hideout.GuildHideOutDataService;
-import me.xxgradzix.advancedclans.data.database.entities.clan.Clan;
-import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideout;
-import me.xxgradzix.advancedclans.data.database.entities.clan.User;
+import me.xxgradzix.advancedclans.data.database.entities.clan.ClanImpl;
+import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideoutImpl;
+import me.xxgradzix.advancedclans.data.database.entities.clan.UserImpl;
 import me.xxgradzix.advancedclans.data.database.repositories.clans.ClanEntityRepository;
 import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataService;
 import me.xxgradzix.advancedclans.data.database.repositories.hideout.GuildHideoutEntityRepository;
@@ -123,9 +123,9 @@ public final class AdvancedGuilds extends JavaPlugin {
 
         this.connectionSource = new JdbcConnectionSource(databaseUrl, user, password);
 
-        TableUtils.createTableIfNotExists(connectionSource, User.class);
-        TableUtils.createTableIfNotExists(connectionSource, GuildHideout.class);
-        TableUtils.createTableIfNotExists(connectionSource, Clan.class);
+        TableUtils.createTableIfNotExists(connectionSource, UserImpl.class);
+        TableUtils.createTableIfNotExists(connectionSource, GuildHideoutImpl.class);
+        TableUtils.createTableIfNotExists(connectionSource, ClanImpl.class);
         TableUtils.createTableIfNotExists(connectionSource, VentureReward.class);
         TableUtils.createTableIfNotExists(connectionSource, PersonalStorageEntity.class);
         TableUtils.createTableIfNotExists(connectionSource, GuildlStorageEntity.class);

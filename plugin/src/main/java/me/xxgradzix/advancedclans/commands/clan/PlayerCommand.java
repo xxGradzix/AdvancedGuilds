@@ -1,6 +1,8 @@
 package me.xxgradzix.advancedclans.commands.clan;
 
-import me.xxgradzix.advancedclans.data.database.entities.clan.User;
+import com.xxgradzix.advancedguildsapi.TestEvent;
+import entities.User;
+import me.xxgradzix.advancedclans.data.database.entities.clan.UserImpl;
 import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataService;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCore.UserController;
 import me.xxgradzix.advancedclans.messages.MessageManager;
@@ -33,6 +35,8 @@ public class PlayerCommand implements CommandExecutor {
             return false;
         }
 
+        Bukkit.getPluginManager().callEvent(new TestEvent(player, "test"));
+
         if(strings.length != 1) {
             sendHelpMessage(player);
             return false;
@@ -47,14 +51,14 @@ public class PlayerCommand implements CommandExecutor {
             return false;
         }
 
-        User user = ClanAndUserDataService.getCachedUser(targetUUIDOptional.get());
+        User userImpl = ClanAndUserDataService.getCachedUser(targetUUIDOptional.get());
 
-        if(user==null) {
+        if(userImpl ==null) {
             MessageManager.sendMessageFormated(player, MessageManager.PLAYER_NOT_FOUND, MessageType.CHAT);
             return false;
         }
 
-        userController.infoPlayer(player, user);
+        userController.infoPlayer(player, userImpl);
 
         return false;
     }

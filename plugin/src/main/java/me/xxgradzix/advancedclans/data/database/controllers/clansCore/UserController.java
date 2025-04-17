@@ -1,8 +1,9 @@
 package me.xxgradzix.advancedclans.data.database.controllers.clansCore;
 
+import entities.User;
 import lombok.Setter;
 import me.xxgradzix.advancedclans.config.Config;
-import me.xxgradzix.advancedclans.data.database.entities.clan.User;
+import me.xxgradzix.advancedclans.data.database.entities.clan.UserImpl;
 import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataService;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.messages.MessageType;
@@ -24,55 +25,55 @@ public class UserController {
 
     public void loadUser(Player player)
     {
-        User user = ClanAndUserDataService.getCachedUser(player.getUniqueId());
-        if(user==null)
+        User userImpl = ClanAndUserDataService.getCachedUser(player.getUniqueId());
+        if(userImpl ==null)
         {
-            user = new User(player, Config.defaultPoints);
-            topRankScheduler.addUser(user);
-            ClanAndUserDataService.updateUser(user);
+            userImpl = new UserImpl(player, Config.defaultPoints);
+            topRankScheduler.addUser(userImpl);
+            ClanAndUserDataService.updateUser(userImpl);
         }
     }
 
-    public void resetUser(User user) {
-        user.setPoints(Config.defaultPoints);
-        user.resetKill();
-        user.resetDeath();
+    public void resetUser(User userImpl) {
+        userImpl.setPoints(Config.defaultPoints);
+        userImpl.resetKill();
+        userImpl.resetDeath();
 
-        ClanAndUserDataService.updateUser(user);
+        ClanAndUserDataService.updateUser(userImpl);
     }
-    public void resetPoints(User user) {
-        user.setPoints(Config.defaultPoints);
-        ClanAndUserDataService.updateUser(user);
-    }
-
-    public void resetKill(User user) {
-        user.resetKill();
-        ClanAndUserDataService.updateUser(user);
+    public void resetPoints(User userImpl) {
+        userImpl.setPoints(Config.defaultPoints);
+        ClanAndUserDataService.updateUser(userImpl);
     }
 
-    public void resetDeath(User user) {
-        user.resetDeath();
-        ClanAndUserDataService.updateUser(user);
+    public void resetKill(User userImpl) {
+        userImpl.resetKill();
+        ClanAndUserDataService.updateUser(userImpl);
+    }
+
+    public void resetDeath(User userImpl) {
+        userImpl.resetDeath();
+        ClanAndUserDataService.updateUser(userImpl);
     }
 
 
-    public void infoPlayer(Player player, User user) {
+    public void infoPlayer(Player player, User userImpl) {
         // get player object
-        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(user.getUuid());
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(userImpl.getUuid());
 
         OptionalInt clanRankIndexByTag = topRankScheduler.getUserRankByName(offlinePlayer.getName());
         int index = 9999;
         if(clanRankIndexByTag.isPresent())
             index = clanRankIndexByTag.getAsInt()+1;
 
-        String clan = (!user.hasClan()) ? "config.noneTag" : ColorFixer.addColors("config.formatTag.replace({tag}, " + user.getClanTag());
+        String clan = (!userImpl.hasClan()) ? "config.noneTag" : ColorFixer.addColors("config.formatTag.replace({tag}, " + userImpl.getClanTag());
 
         String infoMessage = MessageManager.PLAYER_INFO;
 
         infoMessage = infoMessage.replace("{player}", Objects.requireNonNull(offlinePlayer.getName()))
-                .replace("{kills}", String.valueOf(user.getKills()))
-                .replace("{deaths}", String.valueOf(user.getDeath()))
-                .replace("{points}", String.valueOf(user.getPoints()))
+                .replace("{kills}", String.valueOf(userImpl.getKills()))
+                .replace("{deaths}", String.valueOf(userImpl.getDeath()))
+                .replace("{points}", String.valueOf(userImpl.getPoints()))
                 .replace("{tag}", clan)
                 .replace("{rank}", String.valueOf(index));
 
@@ -84,8 +85,8 @@ public class UserController {
     public static Optional<User> findUserByUUID(UUID uuid) {
         return Optional.ofNullable(ClanAndUserDataService.getCachedUser(uuid));
     }
-    public static void updateUser(User user) {
-        ClanAndUserDataService.updateUser(user);
+    public static void updateUser(User userImpl) {
+        ClanAndUserDataService.updateUser(userImpl);
     }
 
     public Optional<User> findUserByPlayer(Player player) {

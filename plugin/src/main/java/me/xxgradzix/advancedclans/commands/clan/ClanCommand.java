@@ -1,6 +1,7 @@
 package me.xxgradzix.advancedclans.commands.clan;
 
-import me.xxgradzix.advancedclans.data.database.entities.clan.Clan;
+import entities.Clan;
+import me.xxgradzix.advancedclans.data.database.entities.clan.ClanImpl;
 import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataService;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCore.ClanController;
 import me.xxgradzix.advancedclans.messages.MessageManager;
@@ -78,12 +79,12 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
                         sendHelpMessage(player);
                         return false;
                     }
-                    Clan clan = clanController.getClan(args[1]);
-                    if (clan == null) {
+                    Clan clanImpl = clanController.getClan(args[1]);
+                    if (clanImpl == null) {
                         MessageManager.sendMessageFormated(player, MessageManager.CLAN_NOT_FOUND.replace("{clan}", args[1]), MessageType.CHAT);
                         return false;
                     }
-                    clanController.infoClan(player, clan);
+                    clanController.infoClan(player, clanImpl);
                 }
                 break;
             case USUN: {
@@ -170,12 +171,12 @@ public class ClanCommand implements CommandExecutor, TabCompleter {
                     sendHelpMessage(player);
                     return false;
                 }
-                Clan clan = clanController.getClan(args[1]);
-                if (clan == null) {
+                Clan clanImpl = clanController.getClan(args[1]);
+                if (clanImpl == null) {
                     MessageManager.sendMessageFormated(player, MessageManager.CLAN_NOT_FOUND.replace("{clan}", args[1]), MessageType.CHAT);
                     return false;
                 }
-                clanController.joinClan(player, clan);
+                clanController.joinClan(player, clanImpl);
                 }
                 break;
         }

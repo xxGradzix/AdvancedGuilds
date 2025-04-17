@@ -3,14 +3,17 @@ package me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.expedit
 import dev.triumphteam.gui.components.GuiType;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
+import entities.Clan;
+import entities.GuildHideout;
+import entities.User;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCore.ClanController;
 import me.xxgradzix.advancedclans.data.database.controllers.hideouts.GuildHideOutController;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCore.UserController;
-import me.xxgradzix.advancedclans.data.database.entities.clan.Clan;
-import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideout;
-import me.xxgradzix.advancedclans.data.database.entities.clan.User;
-import me.xxgradzix.advancedclans.data.database.entities.hideout.fields.Upgrade;
+import me.xxgradzix.advancedclans.data.database.entities.clan.ClanImpl;
+import me.xxgradzix.advancedclans.data.database.entities.hideout.GuildHideoutImpl;
+import me.xxgradzix.advancedclans.data.database.entities.clan.UserImpl;
+import me.xxgradzix.advancedclans.data.database.entities.hideout.fields.UpgradeImpl;
 import me.xxgradzix.advancedclans.data.database.entities.hideout.venture.VentureReward;
 import me.xxgradzix.advancedclans.data.database.services.hideout.VentureRewardDataService;
 import me.xxgradzix.advancedclans.globalGuis.FastForwardGui;
@@ -67,16 +70,16 @@ public class ExpeditionGui {
 
     public static void openExpeditionGui(Player player) {
 
-        User user = UserController.findUserByUUID(player.getUniqueId()).orElseThrow();
+        User userImpl = UserController.findUserByUUID(player.getUniqueId()).orElseThrow();
 
-        if (!user.hasClan()) {
+        if (!userImpl.hasClan()) {
             Bukkit.getLogger().warning("User " + player.getName() + " tried to open expedition gui without clan");
             return;
         }
 
-        Clan clan = clanController.getClan(user.getClanTag());
+        Clan clanImpl = clanController.getClan(userImpl.getClanTag());
 
-        if (clan == null) {
+        if (clanImpl == null) {
             Bukkit.getLogger().warning("User " + player.getName() + " tried to open expedition gui with wrong clan");
             return;
         }
@@ -88,7 +91,7 @@ public class ExpeditionGui {
             return;
         }
 
-        boolean hasFinishedUpgrade = hideout.hasFinishedUpgrade(Upgrade.VENTURE);
+        boolean hasFinishedUpgrade = hideout.hasFinishedUpgrade(UpgradeImpl.VENTURE);
 
         if (!hasFinishedUpgrade) {
             MessageManager.sendMessageFormated(player, MessageManager.YOUR_HIDEOUT_DOES_NOT_HAVE_ACCESS_TO_THIS, MessageType.CHAT);

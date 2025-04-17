@@ -1,11 +1,12 @@
 package me.xxgradzix.advancedclans.listener.clan;
 
+import entities.User;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
 import me.xxgradzix.advancedclans.config.Config;
-import me.xxgradzix.advancedclans.data.database.entities.clan.User;
+import me.xxgradzix.advancedclans.data.database.entities.clan.UserImpl;
 import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataService;
 import me.xxgradzix.advancedclans.data.database.entities.clans.AntySystemRank;
-import me.xxgradzix.advancedclans.events.clan.PointsChangeUserEvent;
+import com.xxgradzix.advancedguildsapi.events.clan.PointsChangeUserEvent;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCore.UserController;
 import me.xxgradzix.advancedclans.messages.MessageManager;
 import me.xxgradzix.advancedclans.messages.MessageType;
@@ -38,13 +39,13 @@ public class PlayerDeathListener implements Listener {
         Player player = event.getEntity();
         Player killer = player.getKiller();
 
-        User userDeath = ClanAndUserDataService.getCachedUser(player.getUniqueId());
+        User userImplDeath = ClanAndUserDataService.getCachedUser(player.getUniqueId());
 
-        if(userDeath == null)
+        if(userImplDeath == null)
             return;
 
         // increase death
-        userDeath.increaseDeath();
+        userImplDeath.increaseDeath();
 
         if(killer == null) {
             // message after the death
@@ -56,12 +57,12 @@ public class PlayerDeathListener implements Listener {
             return;
         }
 
-        User userKiller = ClanAndUserDataService.getCachedUser(killer.getUniqueId());
-        if(userKiller == null)
+        User userImplKiller = ClanAndUserDataService.getCachedUser(killer.getUniqueId());
+        if(userImplKiller == null)
             return;
 
 
-        userKiller.increaseKill();
+        userImplKiller.increaseKill();
 
         if (Config.antiAbuseSystemEnabled) {
             String playerIp = player.getAddress().getAddress().getHostAddress();
@@ -83,11 +84,11 @@ public class PlayerDeathListener implements Listener {
             }
         }
 
-        int newPointDeath = SystemPoint.calculateEloRating(userDeath.getPoints(), userKiller.getPoints(), 0);
-        int newPointKiller = SystemPoint.calculateEloRating(userKiller.getPoints(), userDeath.getPoints(), 1);
+        int newPointDeath = SystemPoint.calculateEloRating(userImplDeath.getPoints(), userImplKiller.getPoints(), 0);
+        int newPointKiller = SystemPoint.calculateEloRating(userImplKiller.getPoints(), userImplDeath.getPoints(), 1);
 
-        int deathPointTake = userDeath.getPoints()-newPointDeath;
-        int killerPointAdd = newPointKiller-userKiller.getPoints();
+        int deathPointTake = userImplDeath.getPoints()-newPointDeath;
+        int killerPointAdd = newPointKiller- userImplKiller.getPoints();
 
         PointsChangeUserEvent pointsChangeUserEvent = new PointsChangeUserEvent(killer, player, killerPointAdd, deathPointTake);
         Bukkit.getPluginManager().callEvent(pointsChangeUserEvent);
@@ -96,8 +97,8 @@ public class PlayerDeathListener implements Listener {
 
         if(newPointDeath>=0)
         {
-            userKiller.addPoint(pointsChangeUserEvent.getPointKiller());
-            userDeath.takePoint(pointsChangeUserEvent.getPointVictim());
+            userImplKiller.addPoint(pointsChangeUserEvent.getPointKiller());
+            userImplDeath.takePoint(pointsChangeUserEvent.getPointVictim());
         }
 
         // message after the death

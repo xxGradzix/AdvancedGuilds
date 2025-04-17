@@ -1,9 +1,11 @@
 package me.xxgradzix.advancedclans.listener.clan;
 
+import entities.Clan;
+import entities.User;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
 import me.xxgradzix.advancedclans.config.Config;
-import me.xxgradzix.advancedclans.data.database.entities.clan.Clan;
-import me.xxgradzix.advancedclans.data.database.entities.clan.User;
+import me.xxgradzix.advancedclans.data.database.entities.clan.ClanImpl;
+import me.xxgradzix.advancedclans.data.database.entities.clan.UserImpl;
 import me.xxgradzix.advancedclans.data.database.services.clansCore.ClanAndUserDataService;
 import me.xxgradzix.advancedclans.data.database.controllers.clansCore.UserController;
 import org.bukkit.entity.Player;
@@ -34,28 +36,28 @@ public class EntityDamageListener implements Listener {
         Player victim = (Player) event.getEntity();
         Player attacker = (Player) event.getDamager();
 
-        User victimUserData = ClanAndUserDataService.getCachedUser(victim.getUniqueId());
-        if (victimUserData == null || ClanAndUserDataService.getCachedClan(victimUserData.getClanTag()) == null) {
+        User victimUserImplData = ClanAndUserDataService.getCachedUser(victim.getUniqueId());
+        if (victimUserImplData == null || ClanAndUserDataService.getCachedClan(victimUserImplData.getClanTag()) == null) {
             return;
         }
 
-        Clan victimClan = ClanAndUserDataService.getCachedClan(victimUserData.getClanTag());
+        Clan victimClanImpl = ClanAndUserDataService.getCachedClan(victimUserImplData.getClanTag());
 
-        if (victimClan.isMember(attacker.getUniqueId())) {
-            if (!victimClan.isPvpEnable()) {
+        if (victimClanImpl.isMember(attacker.getUniqueId())) {
+            if (!victimClanImpl.isPvpEnable()) {
                 event.setCancelled(true);
             }
             return;
         }
 
-        User attackerUserData = ClanAndUserDataService.getCachedUser(attacker.getUniqueId());
-        if (attackerUserData == null || ClanAndUserDataService.getCachedClan(attackerUserData.getClanTag()) == null) {
+        User attackerUserImplData = ClanAndUserDataService.getCachedUser(attacker.getUniqueId());
+        if (attackerUserImplData == null || ClanAndUserDataService.getCachedClan(attackerUserImplData.getClanTag()) == null) {
             return;
         }
 
-        Clan attackerClan = ClanAndUserDataService.getCachedClan(attackerUserData.getClanTag());
+        Clan attackerClanImpl = ClanAndUserDataService.getCachedClan(attackerUserImplData.getClanTag());
 
-        if (victimClan.isAlliance(attackerClan.getTag())) {
+        if (victimClanImpl.isAlliance(attackerClanImpl.getTag())) {
             if (!Config.pvpAllianceEnabledGlobally) {
                 event.setCancelled(true);
             }

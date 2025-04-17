@@ -1,11 +1,2 @@
 jdk:
   - openjdk-21
-
-maven:
-  version: 3.9.4
-
-build:
-  commands:
-    - mvn clean install
-    - mkdir -p $DEPLOY_DIR
-    - cp AdvancedGuilds-API/target/AdvancedGuild-API-1.0-SNAPSHOT.jar $DEPLOY_DIR

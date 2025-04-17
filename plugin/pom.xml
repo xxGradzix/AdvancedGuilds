@@ -142,10 +142,18 @@
 
 
   <dependencies>
+
+<!--      <dependency>-->
+<!--          <groupId>com.github.xxGradzix</groupId>-->
+<!--          <artifactId>AdvancedGuild-API</artifactId>-->
+<!--          <version>v1.03</version>-->
+<!--      </dependency>-->
+
+
       <dependency>
-          <groupId>com.github.xxGradzix</groupId>
-          <artifactId>AdvancedGuilds</artifactId>
-          <version>v1.02</version>
+          <groupId>com.github.jitpack.maven-modular</groupId>
+          <artifactId>module1</artifactId>
+          <version>1.1</version>
       </dependency>
 
       <dependency>

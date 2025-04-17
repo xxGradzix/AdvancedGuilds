@@ -1,6 +1,5 @@
 package me.xxgradzix.advancedclans.listener.clan;
 
-import com.xxgradzix.advancedguildsapi.events.clan.TestEvent;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import me.xxgradzix.advancedclans.AdvancedGuilds;
 import me.xxgradzix.advancedclans.data.database.entities.clan.Clan;

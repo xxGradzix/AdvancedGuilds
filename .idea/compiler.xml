@@ -7,8 +7,16 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="AdvancedClans (1)" />
+      </profile>
+      <profile name="Annotation profile for AdvancedGuildsM" enabled="true">
+        <sourceOutputDir name="../api/target/generated-sources/annotations" />
+        <sourceTestOutputDir name="../api/target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
         <module name="api" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="AdvancedGuilds-API" target="21" />
+    </bytecodeTargetLevel>
   </component>
 </project>

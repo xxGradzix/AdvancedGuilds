@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="babedae8-3259-4559-b2a0-cd1022b7c244" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/AdvancedGuilds-API/dependency-reduced-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/AdvancedGuilds-API/dependency-reduced-pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdvancedGuilds-API/output/AdvancedClansApi.jar" beforeDir="false" afterPath="$PROJECT_DIR$/AdvancedGuilds-API/output/AdvancedClansApi.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AdvancedGuilds-API/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/AdvancedGuilds-API/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugin/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugin/C:/Users/kuba/Desktop/spigot1_17_1/plugins/AdvancedClans.jar" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/C:/Users/kuba/Desktop/spigot1_17_1/plugins/AdvancedClans.jar" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -202,7 +204,7 @@
       <workItem from="1740696449948" duration="15565000" />
       <workItem from="1744039941417" duration="1881000" />
       <workItem from="1744308550559" duration="949000" />
-      <workItem from="1744897090863" duration="11990000" />
+      <workItem from="1744897090863" duration="12194000" />
     </task>
     <servers />
   </component>

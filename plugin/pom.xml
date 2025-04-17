@@ -23,7 +23,7 @@
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-shade-plugin</artifactId>
-            <version>3.5.0</version>
+            <version>3.6.0</version>
 
             <configuration>
                 <createDependencyReducedPom>false</createDependencyReducedPom>
@@ -142,12 +142,6 @@
 
 
   <dependencies>
-
-<!--      <dependency>-->
-<!--          <groupId>com.github.xxGradzix</groupId>-->
-<!--          <artifactId>AdvancedGuild-API</artifactId>-->
-<!--          <version>v1.03</version>-->
-<!--      </dependency>-->
 
 
       <dependency>

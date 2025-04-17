@@ -1,4 +1,0 @@
-name: AdvancedGuildsApi
-version: '1.0-SNAPSHOT'
-main: com.xxgradzix.me.advancedGuildsApi.AdvancedGuildsApi
-api-version: '1.21'

@@ -11,10 +11,10 @@
 
   <name>api</name>
 
-  <properties>
-    <java.version>21</java.version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+<!--  <properties>-->
+<!--    <java.version>21</java.version>-->
+<!--    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
+<!--  </properties>-->
 
 
   <distributionManagement>
@@ -24,36 +24,36 @@
     </repository>
   </distributionManagement>
 
-  <build>
+<!--  <build>-->
 
-    <defaultGoal>clean package</defaultGoal>
+<!--    <defaultGoal>clean package</defaultGoal>-->
 
-    <plugins>
+<!--    <plugins>-->
 
-      <plugin>
+<!--      <plugin>-->
 
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <configuration>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
-        </configuration>
+<!--        <groupId>org.apache.maven.plugins</groupId>-->
+<!--        <artifactId>maven-compiler-plugin</artifactId>-->
+<!--        <version>3.8.1</version>-->
+<!--        <configuration>-->
+<!--          <source>${java.version}</source>-->
+<!--          <target>${java.version}</target>-->
+<!--        </configuration>-->
 
-      </plugin>
+<!--      </plugin>-->
 
 
-    </plugins>
+<!--    </plugins>-->
 
-    <resources>
+<!--    <resources>-->
 
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-      </resource>
+<!--      <resource>-->
+<!--        <directory>src/main/resources</directory>-->
+<!--        <filtering>true</filtering>-->
+<!--      </resource>-->
 
-    </resources>
-  </build>
+<!--    </resources>-->
+<!--  </build>-->
 
   <repositories>
 

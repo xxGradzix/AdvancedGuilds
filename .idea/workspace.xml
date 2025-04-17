@@ -6,8 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="babedae8-3259-4559-b2a0-cd1022b7c244" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/advanced-guild-api/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/advanced-guild-api/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jitpack.yml" beforeDir="false" afterPath="$PROJECT_DIR$/jitpack.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,44 +53,44 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Maven.AdvancedClans [install].executor": "Run",
-    "Maven.AdvancedClans [site].executor": "Run",
-    "Maven.AdvancedGuilds [clean].executor": "Run",
-    "Maven.AdvancedGuilds [install].executor": "Run",
-    "Maven.AdvancedGuildsM [clean].executor": "Run",
-    "Maven.AdvancedGuildsM [install].executor": "Run",
-    "Maven.advanced-guilds-root [clean].executor": "Run",
-    "Maven.advanced-guilds-root [install].executor": "Run",
-    "Maven.api [clean].executor": "Run",
-    "Maven.api [install].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "guild__system",
-    "jdk.selected.JDK": "corretto-21",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/jakubgrad/IdeaProjects/AdvancedGuilds/plugin/src/main/java/me/xxgradzix/advancedclans",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "reference.settings.project.maven.runner",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Maven.AdvancedClans [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.AdvancedClans [site].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.AdvancedGuilds [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.AdvancedGuilds [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.AdvancedGuildsM [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.AdvancedGuildsM [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.advanced-guilds-root [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.advanced-guilds-root [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.api [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.api [install].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;guild__system&quot;,
+    &quot;jdk.selected.JDK&quot;: &quot;corretto-21&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/jakubgrad/IdeaProjects/AdvancedGuilds/plugin/src/main/java/me/xxgradzix/advancedclans&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.runner&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
     ],
-    "jdk.preference.JDK": [
-      "22=/Users/jakubgrad/Library/Java/JavaVirtualMachines/openjdk-22.0.2/Contents/Home"
+    &quot;jdk.preference.JDK&quot;: [
+      &quot;22=/Users/jakubgrad/Library/Java/JavaVirtualMachines/openjdk-22.0.2/Contents/Home&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="me.xxgradzix.advancedclans.guildshideoutsystem.managers.stations.storage" />
@@ -208,7 +206,7 @@
       <workItem from="1740696449948" duration="15565000" />
       <workItem from="1744039941417" duration="1881000" />
       <workItem from="1744308550559" duration="949000" />
-      <workItem from="1744897090863" duration="21588000" />
+      <workItem from="1744897090863" duration="21900000" />
     </task>
     <servers />
   </component>

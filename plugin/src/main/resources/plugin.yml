@@ -1,0 +1,45 @@
+name: AdvancedGuilds
+version: '${project.version}'
+main: me.xxgradzix.advancedclans.AdvancedGuilds
+api-version: '1.17'
+
+depend: [FastAsyncWorldEdit, Vault, Citizens]
+
+commands:
+  klan:
+    description: klan
+
+  gracz:
+    description: gracz
+
+  stworzkryjowke:
+    description: dla admina
+    permission: advancedclans.admin
+
+  ekspedycja:
+    description: dla admia
+    permission: advancedclans.admin
+
+
+
+  sklep:
+    description: dla admia
+    permission: advancedclans.admin
+
+  itemShopConfig:
+    description: dla admia
+    permission: advancedclans.admin
+
+  stankonta:
+    description: stan konta
+
+
+  upgradeshopeditor:
+    description: tworzy sklepy ulepszec
+    permission: gradzixcore.upgradeshop
+
+  upgradeshop:
+    description: otwiera sklep
+
+  universalupgradeshop:
+    description: otwiera sklep23
